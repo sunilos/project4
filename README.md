@@ -18,7 +18,7 @@ ORS is a web application to provide marksheet and user management online.
 1. MySQL 5.x
 1. Java Mail API
 
-# Tools
+## Tools
 1. Eclipse Kepler
 1. SQLYog
 1. AroUML
