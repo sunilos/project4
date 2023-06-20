@@ -22,38 +22,9 @@ import org.apache.log4j.Logger;
  * @version 1.0
  * @Copyright (c) SUNRAYS Technologies
  */
-public class StudentModel {
+public class StudentModel extends BaseModel<StudentBean> {
 
 	private static Logger log = Logger.getLogger(StudentModel.class);
-
-	/**
-	 * Find next PK of Student
-	 * 
-	 * @throws DatabaseException
-	 */
-	public Integer nextPK() throws DatabaseException {
-		log.debug("Model nextPK Started");
-		Connection conn = null;
-		int pk = 0;
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn
-					.prepareStatement("SELECT MAX(ID) FROM STUDENT");
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				pk = rs.getInt(1);
-			}
-			rs.close();
-
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			throw new DatabaseException("Exception : Exception in getting PK");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-		log.debug("Model nextPK End");
-		return pk + 1;
-	}
 
 	/**
 	 * Add a Student
@@ -62,8 +33,7 @@ public class StudentModel {
 	 * @throws DatabaseException
 	 * 
 	 */
-	public long add(StudentBean bean) throws ApplicationException,
-			DuplicateRecordException {
+	public long add(StudentBean bean) throws ApplicationException, DuplicateRecordException {
 		log.debug("Model add Started");
 		Connection conn = null;
 
@@ -85,8 +55,7 @@ public class StudentModel {
 			// Get auto-generated next primary key
 			System.out.println(pk + " in ModelJDBC");
 			conn.setAutoCommit(false); // Begin transaction
-			PreparedStatement pstmt = conn
-					.prepareStatement("INSERT INTO STUDENT VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
+			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO STUDENT VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
 			pstmt.setInt(1, pk);
 			pstmt.setLong(2, bean.getCollegeId());
 			pstmt.setString(3, bean.getCollegeName());
@@ -107,11 +76,9 @@ public class StudentModel {
 			try {
 				conn.rollback();
 			} catch (Exception ex) {
-				throw new ApplicationException(
-						"Exception : add rollback exception " + ex.getMessage());
+				throw new ApplicationException("Exception : add rollback exception " + ex.getMessage());
 			}
-			throw new ApplicationException(
-					"Exception : Exception in add Student");
+			throw new ApplicationException("Exception : Exception in add Student");
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
@@ -120,54 +87,16 @@ public class StudentModel {
 	}
 
 	/**
-	 * Delete a Student
-	 * 
-	 * @param bean
-	 * @throws DatabaseException
-	 */
-	public void delete(StudentBean bean) throws ApplicationException {
-		log.debug("Model delete Started");
-		Connection conn = null;
-		try {
-			conn = JDBCDataSource.getConnection();
-			conn.setAutoCommit(false); // Begin transaction
-			PreparedStatement pstmt = conn
-					.prepareStatement("DELETE FROM STUDENT WHERE ID=?");
-			pstmt.setLong(1, bean.getId());
-			pstmt.executeUpdate();
-			conn.commit(); // End transaction
-			pstmt.close();
-
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			try {
-				conn.rollback();
-			} catch (Exception ex) {
-				throw new ApplicationException(
-						"Exception : Delete rollback exception "
-								+ ex.getMessage());
-			}
-			throw new ApplicationException(
-					"Exception : Exception in delete Student");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-		log.debug("Model delete Started");
-	}
-
-	/**
 	 * Find User by Student
 	 * 
-	 * @param Email
-	 *            : get parameter
+	 * @param Email : get parameter
 	 * @return bean
 	 * @throws DatabaseException
 	 */
 
 	public StudentBean findByEmailId(String Email) throws ApplicationException {
 		log.debug("Model findBy Email Started");
-		StringBuffer sql = new StringBuffer(
-				"SELECT * FROM STUDENT WHERE EMAIL=?");
+		StringBuffer sql = new StringBuffer("SELECT * FROM STUDENT WHERE EMAIL=?");
 		StudentBean bean = null;
 		Connection conn = null;
 		try {
@@ -194,8 +123,7 @@ public class StudentModel {
 			rs.close();
 		} catch (Exception e) {
 			log.error("Database Exception..", e);
-			throw new ApplicationException(
-					"Exception : Exception in getting User by Email");
+			throw new ApplicationException("Exception : Exception in getting User by Email");
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
@@ -206,8 +134,7 @@ public class StudentModel {
 	/**
 	 * Find Student by PK
 	 * 
-	 * @param pk
-	 *            : get parameter
+	 * @param pk : get parameter
 	 * @return bean
 	 * @throws DatabaseException
 	 */
@@ -240,8 +167,7 @@ public class StudentModel {
 			rs.close();
 		} catch (Exception e) {
 			log.error("Database Exception..", e);
-			throw new ApplicationException(
-					"Exception : Exception in getting User by pk");
+			throw new ApplicationException("Exception : Exception in getting User by pk");
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
@@ -256,8 +182,7 @@ public class StudentModel {
 	 * @throws DatabaseException
 	 */
 
-	public void update(StudentBean bean) throws ApplicationException,
-			DuplicateRecordException {
+	public void update(StudentBean bean) throws ApplicationException, DuplicateRecordException {
 		log.debug("Model update Started");
 		Connection conn = null;
 
@@ -278,8 +203,8 @@ public class StudentModel {
 			conn = JDBCDataSource.getConnection();
 
 			conn.setAutoCommit(false); // Begin transaction
-			PreparedStatement pstmt = conn
-					.prepareStatement("UPDATE STUDENT SET COLLEGE_ID=?,COLLEGE_NAME=?,FIRST_NAME=?,LAST_NAME=?,DATE_OF_BIRTH=?,MOBILE_NO=?,EMAIL=?,CREATED_BY=?,MODIFIED_BY=?,CREATED_DATETIME=?,MODIFIED_DATETIME=? WHERE ID=?");
+			PreparedStatement pstmt = conn.prepareStatement(
+					"UPDATE STUDENT SET COLLEGE_ID=?,COLLEGE_NAME=?,FIRST_NAME=?,LAST_NAME=?,DATE_OF_BIRTH=?,MOBILE_NO=?,EMAIL=?,CREATED_BY=?,MODIFIED_BY=?,CREATED_DATETIME=?,MODIFIED_DATETIME=? WHERE ID=?");
 			pstmt.setLong(1, bean.getCollegeId());
 			pstmt.setString(2, bean.getCollegeName());
 			pstmt.setString(3, bean.getFirstName());
@@ -300,9 +225,7 @@ public class StudentModel {
 			try {
 				conn.rollback();
 			} catch (Exception ex) {
-				throw new ApplicationException(
-						"Exception : Delete rollback exception "
-								+ ex.getMessage());
+				throw new ApplicationException("Exception : Delete rollback exception " + ex.getMessage());
 			}
 			throw new ApplicationException("Exception in updating Student ");
 		} finally {
@@ -312,33 +235,17 @@ public class StudentModel {
 	}
 
 	/**
-	 * Search Student
-	 * 
-	 * @param bean
-	 *            : Search Parameters
-	 * @throws DatabaseException
-	 */
-
-	public List search(StudentBean bean) throws ApplicationException {
-		return search(bean, 0, 0);
-	}
-
-	/**
 	 * Search Student with pagination
 	 * 
 	 * @return list : List of Students
-	 * @param bean
-	 *            : Search Parameters
-	 * @param pageNo
-	 *            : Current Page No.
-	 * @param pageSize
-	 *            : Size of Page
+	 * @param bean     : Search Parameters
+	 * @param pageNo   : Current Page No.
+	 * @param pageSize : Size of Page
 	 * 
 	 * @throws DatabaseException
 	 */
 
-	public List search(StudentBean bean, int pageNo, int pageSize)
-			throws ApplicationException {
+	public List search(StudentBean bean, int pageNo, int pageSize) throws ApplicationException {
 		log.debug("Model search Started");
 		StringBuffer sql = new StringBuffer("SELECT * FROM STUDENT WHERE 1=1");
 
@@ -347,8 +254,7 @@ public class StudentModel {
 				sql.append(" AND id = " + bean.getId());
 			}
 			if (bean.getFirstName() != null && bean.getFirstName().length() > 0) {
-				sql.append(" AND FIRST_NAME like '" + bean.getFirstName()
-						+ "%'");
+				sql.append(" AND FIRST_NAME like '" + bean.getFirstName() + "%'");
 			}
 			if (bean.getLastName() != null && bean.getLastName().length() > 0) {
 				sql.append(" AND LAST_NAME like '" + bean.getLastName() + "%'");
@@ -362,8 +268,7 @@ public class StudentModel {
 			if (bean.getEmail() != null && bean.getEmail().length() > 0) {
 				sql.append(" AND EMAIL like '" + bean.getEmail() + "%'");
 			}
-			if (bean.getCollegeName() != null
-					&& bean.getCollegeName().length() > 0) {
+			if (bean.getCollegeName() != null && bean.getCollegeName().length() > 0) {
 				sql.append(" AND COLLEGE_NAME = " + bean.getCollegeName());
 			}
 
@@ -403,8 +308,7 @@ public class StudentModel {
 			rs.close();
 		} catch (Exception e) {
 			log.error("Database Exception..", e);
-			throw new ApplicationException(
-					"Exception : Exception in search Student");
+			throw new ApplicationException("Exception : Exception in search Student");
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
@@ -414,24 +318,11 @@ public class StudentModel {
 	}
 
 	/**
-	 * Get List of Student
-	 * 
-	 * @return list : List of Student
-	 * @throws DatabaseException
-	 */
-
-	public List list() throws ApplicationException {
-		return list(0, 0);
-	}
-
-	/**
 	 * Get List of Student with pagination
 	 * 
 	 * @return list : List of Student
-	 * @param pageNo
-	 *            : Current Page No.
-	 * @param pageSize
-	 *            : Size of Page
+	 * @param pageNo   : Current Page No.
+	 * @param pageSize : Size of Page
 	 * @throws DatabaseException
 	 */
 
@@ -471,8 +362,7 @@ public class StudentModel {
 			rs.close();
 		} catch (Exception e) {
 			log.error("Database Exception..", e);
-			throw new ApplicationException(
-					"Exception : Exception in getting list of Student");
+			throw new ApplicationException("Exception : Exception in getting list of Student");
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
@@ -481,4 +371,10 @@ public class StudentModel {
 		return list;
 
 	}
+
+	@Override
+	public String getTable() {
+		return "STUDENT";
+	}
+
 }

@@ -1,11 +1,5 @@
 package in.co.sunrays.proj4.model;
 
-import in.co.sunrays.proj4.bean.CollegeBean;
-import in.co.sunrays.proj4.exception.ApplicationException;
-import in.co.sunrays.proj4.exception.DatabaseException;
-import in.co.sunrays.proj4.exception.DuplicateRecordException;
-import in.co.sunrays.proj4.util.JDBCDataSource;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,6 +8,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import in.co.sunrays.proj4.bean.CollegeBean;
+import in.co.sunrays.proj4.exception.ApplicationException;
+import in.co.sunrays.proj4.exception.DatabaseException;
+import in.co.sunrays.proj4.exception.DuplicateRecordException;
+import in.co.sunrays.proj4.util.JDBCDataSource;
+
 /**
  * JDBC Implementation of CollegeModel
  * 
@@ -21,38 +21,9 @@ import org.apache.log4j.Logger;
  * @version 1.0
  * @Copyright (c) SUNRAYS Technologies
  */
-public class CollegeModel {
+public class CollegeModel extends BaseModel<CollegeBean> {
 
 	private static Logger log = Logger.getLogger(CollegeModel.class);
-
-	/**
-	 * Find next PK of College
-	 * 
-	 * @throws DatabaseException
-	 */
-	public Integer nextPK() throws DatabaseException {
-		log.debug("Model nextPK Started");
-		Connection conn = null;
-		int pk = 0;
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn
-					.prepareStatement("SELECT MAX(ID) FROM ST_COLLEGE");
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				pk = rs.getInt(1);
-			}
-			rs.close();
-
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			throw new DatabaseException("Exception : Exception in getting PK");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-		log.debug("Model nextPK End");
-		return pk + 1;
-	}
 
 	/**
 	 * Add a College
@@ -61,8 +32,7 @@ public class CollegeModel {
 	 * @throws DatabaseException
 	 * 
 	 */
-	public long add(CollegeBean bean) throws ApplicationException,
-			DuplicateRecordException {
+	public long add(CollegeBean bean) throws ApplicationException, DuplicateRecordException {
 		log.debug("Model add Started");
 		Connection conn = null;
 		int pk = 0;
@@ -78,8 +48,7 @@ public class CollegeModel {
 			pk = nextPK();
 			// Get auto-generated next primary key
 			conn.setAutoCommit(false); // Begin transaction
-			PreparedStatement pstmt = conn
-					.prepareStatement("INSERT INTO ST_COLLEGE VALUES(?,?,?,?,?,?,?,?,?,?)");
+			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO ST_COLLEGE VALUES(?,?,?,?,?,?,?,?,?,?)");
 			pstmt.setInt(1, pk);
 			pstmt.setString(2, bean.getName());
 			pstmt.setString(3, bean.getAddress());
@@ -99,11 +68,9 @@ public class CollegeModel {
 				conn.rollback();
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				throw new ApplicationException(
-						"Exception : add rollback exception " + ex.getMessage());
+				throw new ApplicationException("Exception : add rollback exception " + ex.getMessage());
 			}
-			throw new ApplicationException(
-					"Exception : Exception in add College");
+			throw new ApplicationException("Exception : Exception in add College");
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
@@ -112,53 +79,15 @@ public class CollegeModel {
 	}
 
 	/**
-	 * Delete a College
-	 * 
-	 * @param bean
-	 * @throws DatabaseException
-	 */
-	public void delete(CollegeBean bean) throws ApplicationException {
-		log.debug("Model delete Started");
-		Connection conn = null;
-		try {
-			conn = JDBCDataSource.getConnection();
-			conn.setAutoCommit(false); // Begin transaction
-			PreparedStatement pstmt = conn
-					.prepareStatement("DELETE FROM ST_COLLEGE WHERE ID=?");
-			pstmt.setLong(1, bean.getId());
-			pstmt.executeUpdate();
-			conn.commit(); // End transaction
-			pstmt.close();
-
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			try {
-				conn.rollback();
-			} catch (Exception ex) {
-				throw new ApplicationException(
-						"Exception : Delete rollback exception "
-								+ ex.getMessage());
-			}
-			throw new ApplicationException(
-					"Exception : Exception in delete college");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-		log.debug("Model delete Started");
-	}
-
-	/**
 	 * Find User by College
 	 * 
-	 * @param login
-	 *            : get parameter
+	 * @param login : get parameter
 	 * @return bean
 	 * @throws DatabaseException
 	 */
 	public CollegeBean findByName(String name) throws ApplicationException {
 		log.debug("Model findByName Started");
-		StringBuffer sql = new StringBuffer(
-				"SELECT * FROM ST_COLLEGE WHERE NAME=?");
+		StringBuffer sql = new StringBuffer("SELECT * FROM ST_COLLEGE WHERE NAME=?");
 		CollegeBean bean = null;
 		Connection conn = null;
 		try {
@@ -183,8 +112,7 @@ public class CollegeModel {
 			rs.close();
 		} catch (Exception e) {
 			log.error("Database Exception..", e);
-			throw new ApplicationException(
-					"Exception : Exception in getting College by Name");
+			throw new ApplicationException("Exception : Exception in getting College by Name");
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
@@ -195,15 +123,13 @@ public class CollegeModel {
 	/**
 	 * Find User by College
 	 * 
-	 * @param pk
-	 *            : get parameter
+	 * @param pk : get parameter
 	 * @return bean
 	 * @throws DatabaseException
 	 */
 	public CollegeBean findByPK(long pk) throws ApplicationException {
 		log.debug("Model findByPK Started");
-		StringBuffer sql = new StringBuffer(
-				"SELECT * FROM ST_COLLEGE WHERE ID=?");
+		StringBuffer sql = new StringBuffer("SELECT * FROM ST_COLLEGE WHERE ID=?");
 		CollegeBean bean = null;
 		Connection conn = null;
 		try {
@@ -229,8 +155,7 @@ public class CollegeModel {
 			rs.close();
 		} catch (Exception e) {
 			log.error("Database Exception..", e);
-			throw new ApplicationException(
-					"Exception : Exception in getting College by pk");
+			throw new ApplicationException("Exception : Exception in getting College by pk");
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
@@ -244,8 +169,7 @@ public class CollegeModel {
 	 * @param bean
 	 * @throws DatabaseException
 	 */
-	public void update(CollegeBean bean) throws ApplicationException,
-			DuplicateRecordException {
+	public void update(CollegeBean bean) throws ApplicationException, DuplicateRecordException {
 		log.debug("Model update Started");
 		Connection conn = null;
 
@@ -262,8 +186,8 @@ public class CollegeModel {
 			conn = JDBCDataSource.getConnection();
 
 			conn.setAutoCommit(false); // Begin transaction
-			PreparedStatement pstmt = conn
-					.prepareStatement("UPDATE ST_COLLEGE SET NAME=?,ADDRESS=?,STATE=?,CITY=?,PHONE_NO=?,CREATED_BY=?,MODIFIED_BY=?,CREATED_DATETIME=?,MODIFIED_DATETIME=? WHERE ID=?");
+			PreparedStatement pstmt = conn.prepareStatement(
+					"UPDATE ST_COLLEGE SET NAME=?,ADDRESS=?,STATE=?,CITY=?,PHONE_NO=?,CREATED_BY=?,MODIFIED_BY=?,CREATED_DATETIME=?,MODIFIED_DATETIME=? WHERE ID=?");
 			pstmt.setString(1, bean.getName());
 			pstmt.setString(2, bean.getAddress());
 			pstmt.setString(3, bean.getState());
@@ -282,9 +206,7 @@ public class CollegeModel {
 			try {
 				conn.rollback();
 			} catch (Exception ex) {
-				throw new ApplicationException(
-						"Exception : Delete rollback exception "
-								+ ex.getMessage());
+				throw new ApplicationException("Exception : Delete rollback exception " + ex.getMessage());
 			}
 			throw new ApplicationException("Exception in updating College ");
 		} finally {
@@ -297,20 +219,15 @@ public class CollegeModel {
 	 * Search College with pagination
 	 * 
 	 * @return list : List of Users
-	 * @param bean
-	 *            : Search Parameters
-	 * @param pageNo
-	 *            : Current Page No.
-	 * @param pageSize
-	 *            : Size of Page
+	 * @param bean     : Search Parameters
+	 * @param pageNo   : Current Page No.
+	 * @param pageSize : Size of Page
 	 * 
 	 * @throws DatabaseException
 	 */
-	public List search(CollegeBean bean, int pageNo, int pageSize)
-			throws ApplicationException {
+	public List search(CollegeBean bean, int pageNo, int pageSize) throws ApplicationException {
 		log.debug("Model search Started");
-		StringBuffer sql = new StringBuffer(
-				"SELECT * FROM ST_COLLEGE WHERE 1=1");
+		StringBuffer sql = new StringBuffer("SELECT * FROM ST_COLLEGE WHERE 1=1");
 
 		if (bean != null) {
 			if (bean.getId() > 0) {
@@ -366,8 +283,7 @@ public class CollegeModel {
 			rs.close();
 		} catch (Exception e) {
 			log.error("Database Exception..", e);
-			throw new ApplicationException(
-					"Exception : Exception in search college");
+			throw new ApplicationException("Exception : Exception in search college");
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
@@ -377,34 +293,11 @@ public class CollegeModel {
 	}
 
 	/**
-	 * Search College
-	 * 
-	 * @param bean
-	 *            : Search Parameters
-	 * @throws DatabaseException
-	 */
-	public List search(CollegeBean bean) throws ApplicationException {
-		return search(bean, 0, 0);
-	}
-
-	/**
-	 * Get List of College
-	 * 
-	 * @return list : List of College
-	 * @throws DatabaseException
-	 */
-	public List list() throws ApplicationException {
-		return list(0, 0);
-	}
-
-	/**
 	 * Get List of College with pagination
 	 * 
 	 * @return list : List of College
-	 * @param pageNo
-	 *            : Current Page No.
-	 * @param pageSize
-	 *            : Size of Page
+	 * @param pageNo   : Current Page No.
+	 * @param pageSize : Size of Page
 	 * @throws DatabaseException
 	 */
 	public List list(int pageNo, int pageSize) throws ApplicationException {
@@ -441,8 +334,7 @@ public class CollegeModel {
 			rs.close();
 		} catch (Exception e) {
 			log.error("Database Exception..", e);
-			throw new ApplicationException(
-					"Exception : Exception in getting list of users");
+			throw new ApplicationException("Exception : Exception in getting list of users");
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
@@ -450,5 +342,10 @@ public class CollegeModel {
 		log.debug("Model list End");
 		return list;
 
+	}
+
+	@Override
+	public String getTable() {
+		return "ST_COLLEGE";
 	}
 }
