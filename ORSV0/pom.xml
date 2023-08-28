@@ -1,0 +1,106 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.sunilos</groupId>
+	<artifactId>ORSV0</artifactId>
+	<packaging>war</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>ORSV0 Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+	<dependencies>
+
+		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.5</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/c3p0/c3p0 -->
+		<dependency>
+			<groupId>c3p0</groupId>
+			<artifactId>c3p0</artifactId>
+			<version>0.9.1.2</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.30</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<properties>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+		<tomcat.home>E:/java/apache-tomcat-8.5.69</tomcat.home>
+	</properties>
+
+	<build>
+		<finalName>ORSV0</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>3.0.0</version> <!-- Use the latest version -->
+				<executions>
+					<execution>
+						<id>stop-tomcat</id>
+						<phase>pre-integration-test</phase> <!-- Choose an appropriate phase -->
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<echo message="Starting tomcat" />
+								<!-- Ant tasks to stop Tomcat -->
+								<exec executable="${tomcat.home}/bin/catalina.bat" dir="${tomcat.home}/bin">
+									<arg line="stop" />
+								</exec>
+								<exec executable="${tomcat.home}/bin/catalina.bat" dir="${tomcat.home}/bin">
+									<arg line="start" />
+								</exec>
+							</target>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-war</id>
+						<phase>package</phase> <!-- Run the goal during the package phase -->
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<delete dir="${tomcat.home}/webapps/${project.build.finalName}" />
+								<delete file="${tomcat.home}/webapps/${project.build.finalName}.war" />
+								<!-- Copy the WAR file to C:\temp -->
+								<copy file="${project.build.directory}/${project.build.finalName}.war" tofile="E:/java/apache-tomcat-8.5.69/webapps/${project.build.finalName}.war" />
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
