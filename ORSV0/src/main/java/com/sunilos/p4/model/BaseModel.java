@@ -121,6 +121,39 @@ public abstract class BaseModel<T extends BaseBean> {
 	}
 
 	/**
+	 * Delete a record by primary key
+	 * 
+	 * @param id
+	 * @throws ApplicationException
+	 */
+	public void delete(int id) throws ApplicationException {
+
+		Connection conn = null;
+
+		try {
+			conn = JDBCDataSource.getConnection();
+			conn.setAutoCommit(false); // Begin transaction
+			PreparedStatement pstmt = conn.prepareStatement("DELETE FROM " + getTable() + " WHERE ID=?");
+			pstmt.setLong(1, id);
+			pstmt.executeUpdate();
+			conn.commit(); // End transaction
+			pstmt.close();
+
+		} catch (Exception e) {
+			log.error("Database Exception..", e);
+			try {
+				conn.rollback();
+			} catch (Exception ex) {
+				throw new ApplicationException("Exception : Delete rollback exception " + ex.getMessage());
+			}
+			throw new ApplicationException("Exception : Exception in delete Role");
+		} finally {
+			JDBCDataSource.closeConnection(conn);
+		}
+		log.debug("Model delete Started");
+	}
+
+	/**
 	 * Searches record on the basis of not-null values passed in the bean object.
 	 * 
 	 * @param bean

@@ -132,37 +132,28 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
 
 		String op = DataUtility.getString(request.getParameter("operation"));
 
-		// Handle cancel operation
-		if (OP_CANCEL.equalsIgnoreCase(op)) {
-			ServletUtility.redirect(getView(op), request, response);
-			return;
-		}
-
-		// Handle Delete operation
-		if (OP_DELETE.equalsIgnoreCase(op)) {
-			doDelete(request, response);
-			return;
-		}
-
+		/*
+		 * // Handle cancel operation if (OP_CANCEL.equalsIgnoreCase(op)) {
+		 * ServletUtility.redirect(getView(op), request, response); return; } else if
+		 * (OP_DELETE.equalsIgnoreCase(op)) { // Handle Delete operation
+		 * doDelete(request, response); return; }
+		 */
 		BaseBean bean = populateBean(request);
 
 		// Perform validation if form is submitted using POST method
 		if ("POST".equals(request.getMethod()) && !validate(request)) {
 			ServletUtility.setBean(bean, request);
-			ServletUtility.forward(getView(), request, response);
+			ServletUtility.forwardPage(getView(), request, response);
 			return;
 		}
 
 		try {
 			super.service(request, response);
-		} catch (ApplicationException e) {
-			// Handle if any application exception
-			ServletUtility.handleException(e, request, response);
 		} catch (DuplicateRecordException e) {
 			// Handle if any duplicate record exception
 			ServletUtility.setBean(bean, request);
 			ServletUtility.setErrorMessage(e.getMessage(), request);
-			ServletUtility.forward(getView(), request, response);
+			ServletUtility.forwardPage(getView(), request, response);
 		}
 
 	}
@@ -180,16 +171,11 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
 		long id = DataUtility.getLong(request.getParameter("id"));
 
 		if (id > 0 || op != null) {
-			try {
-				System.out.println("--->getModel().findByPK(id " + getModel().findByPK(id));
-				ServletUtility.setBean(getModel().findByPK(id), request);
-			} catch (ApplicationException e) {
-				ServletUtility.handleException(e, request, response);
-				return;
-			}
+			BaseBean bean = getModel().findByPK(id);
+			ServletUtility.setBean(bean, request);
 		}
 
-		ServletUtility.forward(getView(), request, response);
+		ServletUtility.forwardPage(getView(), request, response);
 
 	}
 
@@ -219,7 +205,7 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
 		}
 		ServletUtility.setBean(bean, request);
 		ServletUtility.setSuccessMessage("Data is successfully saved", request);
-		ServletUtility.forward(getView(), request, response);
+		ServletUtility.forwardPage(getView(), request, response);
 
 	}
 

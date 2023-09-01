@@ -12,13 +12,12 @@ import org.apache.log4j.Logger;
 
 import com.sunilos.p4.bean.BaseBean;
 import com.sunilos.p4.ctl.BaseCtl;
-import com.sunilos.p4.ctl.LoginCtl;
 import com.sunilos.p4.ctl.ORSView;
 
 /**
- * This class provides utility operation for Servlet container like forward,
- * redirect, handle generic exception, manage success and error message, manage
- * default Bean and List, manage pagination parameters
+ * This is a utility class that provides basic servlet operations like forward,
+ * redirect, generic exception handling, access success and error messages, set
+ * and get default Bean and List objects, manage pagination parameters
  * 
  * @author Rays Technologies
  * @version 1.0
@@ -44,6 +43,18 @@ public class ServletUtility {
 		rd.forward(request, response);
 	}
 
+	public static void forwardPage(String page, HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		request.setAttribute("p", page);
+		if (page.startsWith("/")) {
+			page = page.substring(1);
+		}
+		System.out.println("----------------forwarding to " + page);
+		RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
+		System.out.println("----------------forwarded to " + "/index.jsp");
+		rd.forward(request, response);
+	}
+
 	/**
 	 * Redirect to given JSP/Servlet
 	 * 
@@ -59,7 +70,7 @@ public class ServletUtility {
 	}
 
 	/**
-	 * Redirect to Application Error Handler Page
+	 * Handle an exception and redirect to the application Error Handler Page
 	 * 
 	 * @param e
 	 * @param request
@@ -76,45 +87,40 @@ public class ServletUtility {
 	}
 
 	/**
-	 * Gets error message from request
+	 * Gets a message from the request object
+	 * 
+	 * @param key
+	 * @param request
+	 * @return
+	 */
+	public static String getMessage(String key, HttpServletRequest request) {
+		String val = (String) request.getAttribute(key);
+		if (DataValidator.isNull(val))
+			val = "";
+		return val;
+	}
+
+	/**
+	 * Sets a message in the request object
 	 * 
 	 * @param property
 	 * @param request
 	 * @return
 	 */
-	public static String getErrorMessage(String property, HttpServletRequest request) {
-		String val = (String) request.getAttribute(property);
-		if (val == null) {
-			return "";
-		} else {
-			return val;
+	public static void setMessage(String key, String msg, HttpServletRequest request) {
+		if (DataValidator.isNotNull(key) && DataValidator.isNotNull(msg)) {
+			request.setAttribute(key, msg);
 		}
 	}
 
 	/**
-	 * Gets a message from request
-	 * 
-	 * @param property
-	 * @param request
-	 * @return
-	 */
-	public static String getMessage(String property, HttpServletRequest request) {
-		String val = (String) request.getAttribute(property);
-		if (val == null) {
-			return "";
-		} else {
-			return val;
-		}
-	}
-
-	/**
-	 * Sets error message to request
+	 * Sets error message in the request object
 	 * 
 	 * @param msg
 	 * @param request
 	 */
 	public static void setErrorMessage(String msg, HttpServletRequest request) {
-		request.setAttribute(BaseCtl.MSG_ERROR, msg);
+		setMessage(BaseCtl.MSG_ERROR, msg, request);
 	}
 
 	/**
@@ -124,22 +130,28 @@ public class ServletUtility {
 	 * @return
 	 */
 	public static String getErrorMessage(HttpServletRequest request) {
-		String val = (String) request.getAttribute(BaseCtl.MSG_ERROR);
-		if (val == null) {
-			return "";
-		} else {
-			return val;
-		}
+		return getMessage(BaseCtl.MSG_ERROR, request);
 	}
 
 	/**
-	 * Sets success message to request
+	 * Gets error message for given key
+	 * 
+	 * @param key
+	 * @param request
+	 * @return
+	 */
+	public static String getErrorMessage(String key, HttpServletRequest request) {
+		return getMessage(key, request);
+	}
+
+	/**
+	 * Sets success message to the request
 	 * 
 	 * @param msg
 	 * @param request
 	 */
 	public static void setSuccessMessage(String msg, HttpServletRequest request) {
-		request.setAttribute(BaseCtl.MSG_SUCCESS, msg);
+		setMessage(BaseCtl.MSG_SUCCESS, msg, request);
 	}
 
 	/**
@@ -149,12 +161,7 @@ public class ServletUtility {
 	 * @return
 	 */
 	public static String getSuccessMessage(HttpServletRequest request) {
-		String val = (String) request.getAttribute(BaseCtl.MSG_SUCCESS);
-		if (val == null) {
-			return "";
-		} else {
-			return val;
-		}
+		return getMessage(BaseCtl.MSG_SUCCESS, request);
 	}
 
 	/**
@@ -187,12 +194,10 @@ public class ServletUtility {
 	 */
 
 	public static String getParameter(String property, HttpServletRequest request) {
-		String val = (String) request.getParameter(property);
-		if (val == null) {
-			return "";
-		} else {
-			return val;
-		}
+		String val = request.getParameter(property);
+		if (DataValidator.isNull(val))
+			val = "";
+		return val;
 	}
 
 	/**
@@ -255,4 +260,8 @@ public class ServletUtility {
 		return (int) request.getAttribute("pageSize");
 	}
 
+	public static void main(String[] args) {
+		Integer val = null;
+		int i = val;
+	}
 }

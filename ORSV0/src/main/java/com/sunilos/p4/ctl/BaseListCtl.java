@@ -10,15 +10,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.sunilos.p4.bean.BaseBean;
-import com.sunilos.p4.exception.ApplicationException;
 import com.sunilos.p4.model.BaseModel;
 import com.sunilos.p4.util.DataUtility;
+import com.sunilos.p4.util.DataValidator;
 import com.sunilos.p4.util.PropertyReader;
 import com.sunilos.p4.util.ServletUtility;
 
 /**
- * Base controller class of project. It contain (1) Generic operations (2)
- * Generic constants (3) Generic work flow
+ * Base list controller class is extended by all the list pages in the
+ * application. It contains search and pagination operation of a list page.
+ * 
+ * इस बेस लिस्ट कंट्रोलर क्लास को एप्लीकेशन के सारे लिस्ट पेजेज इन्हेरिट करते
+ * है। एसकेअंदर किसी भी लिस्ट पेज के सर्च एवं पेजिनेशन के लॉजिक लिखे गए है
  * 
  * @author Rays Technologies
  * @version 1.0
@@ -29,16 +32,42 @@ public abstract class BaseListCtl<B extends BaseBean, M extends BaseModel> exten
 
 	private static Logger log = Logger.getLogger(BaseListCtl.class);
 
+	/**
+	 * It does call doPost method
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		doPost(request, response);
 	}
 
+	/**
+	 * It contains search and pagination operations os a list page.
+	 * 
+	 * एसकेअंदर लिस्ट पेज के सर्च एवं पेजिनेशन के लॉजिक लिखे गए है
+	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		log.debug("CollegeListCtl doGet Start");
+
+		log.debug("List toPost started");
+
+		// Get the operation
+		// ऑपरेशन पैरामीटर रिक्वेस्ट ऑब्जेक्ट से निकाले
+		String op = DataUtility.getString(request.getParameter("operation"));
+
+		// Create model
+		M model = getModel();
+
+		// Delete selected records
+		if (OP_DELETE.equals(op)) {
+			String[] ids = request.getParameterValues("ids");
+			if (ids != null) {
+				for (String id : ids) {
+					model.delete(DataUtility.getInt(id));
+				}
+			}
+		}
 
 		// Get page number from request
 		// पेज नंबर को रिक्वेस्ट ऑब्जेक्ट से निकाले
@@ -60,42 +89,47 @@ public abstract class BaseListCtl<B extends BaseBean, M extends BaseModel> exten
 		// यूजर डाटा रिक्वेस्ट ऑब्जेक्ट में से निकाल कर बिन ऑब्जेक्ट में सेट करे
 		BaseBean bean = populateBean(request);
 
-		// Get the operation
-		// ऑपरेशन पैरामीटर रिक्वेस्ट ऑब्जेक्ट से निकाले
-		String op = DataUtility.getString(request.getParameter("operation"));
+		// Calculate page number
+		if (DataValidator.isNotNull(op)) {
 
-		try {
-
-			if (OP_SEARCH.equalsIgnoreCase(op) || OP_NEXT.equalsIgnoreCase(op) || OP_PREVIOUS.equalsIgnoreCase(op)) {
-				if (OP_SEARCH.equalsIgnoreCase(op)) {
-					pageNo = 1;
-				} else if (OP_NEXT.equalsIgnoreCase(op)) {
-					pageNo++;
-				} else if (OP_PREVIOUS.equalsIgnoreCase(op) && pageNo > 1) {
+			switch (op) {
+			case OP_SEARCH:
+				pageNo = 1;
+				break;
+			case OP_NEXT:
+				pageNo++;
+				break;
+			case OP_PREVIOUS:
+				if (pageNo > 1)
 					pageNo--;
-				}
-
+				break;
 			}
-
-			// Search objects with the help of model object on the basis of bean attribute
-			// values
-			List<B> list = getModel().search(bean, pageNo, pageSize);
-			ServletUtility.setList(list, request);
-			if (list == null || list.size() == 0) {
-				ServletUtility.setErrorMessage("No record found ", request);
-			}
-			ServletUtility.setList(list, request);
-
-			ServletUtility.setPageNo(pageNo, request);
-			ServletUtility.setPageSize(pageSize, request);
-			ServletUtility.forward(getView(op), request, response);
-
-		} catch (ApplicationException e) {
-			log.error(e);
-			ServletUtility.handleException(e, request, response);
-			return;
 		}
-		log.debug("CollegeListCtl doGet End");
+
+		// Search and get the list from model object
+		// मॉडल ऑब्जेक्ट से सर्च करने के बाद लिस्ट प्राप्त करे
+		List<B> list = model.search(bean, pageNo, pageSize);
+
+		// Store list into request object
+		// लिस्ट को रिक्वेस्ट ऑब्जेक्ट में स्टोर कर।
+		ServletUtility.setList(list, request);
+
+		// If list is empty then set error message
+		// यदि लिस्ट खाली है तो एरर मैसेज सेट करे
+		if (list == null || list.size() == 0) {
+			ServletUtility.setErrorMessage("No record found ", request);
+		}
+
+		// Set page number and page size in the request object
+		// पेज नंबर एवं पेज साइज को रिक्वेस्ट ऑब्जेक्ट में सेट करे
+		ServletUtility.setPageNo(pageNo, request);
+		ServletUtility.setPageSize(pageSize, request);
+
+		// Forward to view page
+		// व्यू पेज पर फॉरवर्ड करे
+		ServletUtility.forwardPage(getView(op), request, response);
+
+		log.debug("List do post finish");
 
 	}
 

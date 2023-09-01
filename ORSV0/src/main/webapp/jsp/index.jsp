@@ -15,7 +15,6 @@
 		<br> <br> <a href="<%=ORSView.MARKSHEET_LIST_VIEW%>"><b>Click Here
 				</b></a>
 
-
 		<%@ include file="Footer.jsp"%>
 </body>
 </html>

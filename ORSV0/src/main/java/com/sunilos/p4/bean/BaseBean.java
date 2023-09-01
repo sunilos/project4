@@ -15,12 +15,13 @@ import java.sql.Timestamp;
 public abstract class BaseBean implements Serializable, DropdownListBean, Comparable<BaseBean> {
 
 	/**
-	 * Non Business primary key
+	 * Non Business primary key इसमें नॉन बिज़नेस के स्टोर की जाती है
 	 */
 	protected long id;
 
 	/**
-	 * Contains USER ID who created this database record
+	 * Contains USER ID who created this database record. इसमें रिकॉर्ड क्रिएट करने
+	 * वाले यूजर का ID स्टोर किया जाता है
 	 */
 	protected String createdBy;
 
@@ -82,6 +83,7 @@ public abstract class BaseBean implements Serializable, DropdownListBean, Compar
 		this.modifiedDatetime = modifiedDatetime;
 	}
 
+	@Override
 	public int compareTo(BaseBean next) {
 		return getValue().compareTo(next.getValue());
 	}

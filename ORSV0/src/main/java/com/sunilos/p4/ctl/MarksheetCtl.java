@@ -1,25 +1,19 @@
 package com.sunilos.p4.ctl;
 
-import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
 import com.sunilos.p4.bean.MarksheetBean;
 import com.sunilos.p4.exception.ApplicationException;
-import com.sunilos.p4.exception.DuplicateRecordException;
 import com.sunilos.p4.model.MarksheetModel;
 import com.sunilos.p4.model.StudentModel;
 import com.sunilos.p4.util.DataUtility;
 import com.sunilos.p4.util.DataValidator;
 import com.sunilos.p4.util.PropertyReader;
-import com.sunilos.p4.util.ServletUtility;
 
 /**
  * Marksheet functionality Controller. Performs operation for add, update,
@@ -31,6 +25,8 @@ import com.sunilos.p4.util.ServletUtility;
  */
 @WebServlet("/ctl/MarksheetCtl")
 public class MarksheetCtl extends BaseCtl<MarksheetBean, MarksheetModel> {
+
+	private static final long serialVersionUID = 1L;
 
 	private static Logger log = Logger.getLogger(MarksheetCtl.class);
 
@@ -131,85 +127,6 @@ public class MarksheetCtl extends BaseCtl<MarksheetBean, MarksheetModel> {
 		return bean;
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
-		log.debug("MarksheetCtl Method doGet Started");
-
-		String op = DataUtility.getString(request.getParameter("operation"));
-		// get model
-		MarksheetModel model = new MarksheetModel();
-
-		long id = DataUtility.getLong(request.getParameter("id"));
-
-		if (OP_SAVE.equalsIgnoreCase(op)) {
-
-			MarksheetBean bean = populateBean(request);
-			try {
-				if (id > 0) {
-					model.update(bean);
-				} else {
-					long pk = model.add(bean);
-					bean.setId(pk);
-				}
-				ServletUtility.setBean(bean, request);
-				ServletUtility.setSuccessMessage("Data is successfully saved", request);
-
-			} catch (ApplicationException e) {
-				log.error(e);
-				ServletUtility.handleException(e, request, response);
-				return;
-			} catch (DuplicateRecordException e) {
-				ServletUtility.setBean(bean, request);
-				ServletUtility.setErrorMessage("Roll no already exists", request);
-			}
-
-		} else if (OP_DELETE.equalsIgnoreCase(op)) {
-
-			MarksheetBean bean = populateBean(request);
-			System.out.println("in try");
-			try {
-				model.delete(bean);
-				ServletUtility.redirect(ORSView.MARKSHEET_LIST_CTL, request, response);
-				System.out.println("in try");
-				return;
-			} catch (ApplicationException e) {
-				System.out.println("in catch");
-				log.error(e);
-				ServletUtility.handleException(e, request, response);
-				return;
-			}
-
-		} else if (OP_CANCEL.equalsIgnoreCase(op)) {
-
-			ServletUtility.redirect(ORSView.MARKSHEET_LIST_CTL, request, response);
-			return;
-
-		} else { // View page
-
-			if (id > 0 || op != null) {
-				MarksheetBean bean;
-				try {
-					bean = model.findByPK(id);
-					ServletUtility.setBean(bean, request);
-				} catch (ApplicationException e) {
-					log.error(e);
-					ServletUtility.handleException(e, request, response);
-					return;
-				}
-			}
-		}
-
-		ServletUtility.forward(ORSView.MARKSHEET_VIEW, request, response);
-
-		log.debug("MarksheetCtl Method doGet Ended");
-	}
-
 	@Override
 	protected String getView() {
 		return getView(null);
@@ -223,9 +140,9 @@ public class MarksheetCtl extends BaseCtl<MarksheetBean, MarksheetModel> {
 	@Override
 	protected String getView(String op) {
 		if (OP_CANCEL.equalsIgnoreCase(op) || OP_DELETE.equalsIgnoreCase(op)) {
-			return ORSView.MARKSHEET_VIEW;
-		} else {
 			return ORSView.MARKSHEET_LIST_CTL;
+		} else {
+			return ORSView.MARKSHEET_VIEW;
 		}
 	}
 

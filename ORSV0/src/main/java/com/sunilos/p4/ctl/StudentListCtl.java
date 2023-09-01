@@ -26,9 +26,21 @@ public class StudentListCtl extends BaseListCtl<StudentBean, StudentModel> {
 	@Override
 	protected StudentBean populateBean(HttpServletRequest request) {
 		StudentBean bean = new StudentBean();
+
+		bean.setId(DataUtility.getLong(request.getParameter("id")));
+
 		bean.setFirstName(DataUtility.getString(request.getParameter("firstName")));
+
 		bean.setLastName(DataUtility.getString(request.getParameter("lastName")));
+
+		bean.setDob(DataUtility.getDate(request.getParameter("dob")));
+
+		bean.setMobileNo(DataUtility.getString(request.getParameter("mobileNo")));
+
 		bean.setEmail(DataUtility.getString(request.getParameter("email")));
+
+		bean.setCollegeId(DataUtility.getLong(request.getParameter("collegeId")));
+
 		return bean;
 	}
 
