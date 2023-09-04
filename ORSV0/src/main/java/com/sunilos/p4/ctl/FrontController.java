@@ -29,9 +29,11 @@ import com.sunilos.p4.util.ServletUtility;
 @WebFilter("/ctl/*")
 public class FrontController implements Filter {
 
-	public void destroy() {
+	@Override
+	public void init(FilterConfig conf) throws ServletException {
 	}
 
+	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
 			throws IOException, ServletException {
 
@@ -41,14 +43,16 @@ public class FrontController implements Filter {
 		HttpSession session = request.getSession(true);
 
 		if (session.getAttribute("user") == null) {
-			request.setAttribute("message", "Your session has been expired. Please re-Login.");
-			ServletUtility.forward(ORSView.LOGIN_CTL, request, response);
+			ServletUtility.setErrorMessage("OOPS!! your session has been expired, please relogin", request);
+			String queryParam = "?" + BaseCtl.MSG_ERROR + "=OOPS!! your session has been expired, please relogin";
+			ServletUtility.redirect(ORSView.LOGIN_CTL + queryParam, request, response);
 		} else {
 			chain.doFilter(req, resp);
 		}
 	}
 
-	public void init(FilterConfig conf) throws ServletException {
+	@Override
+	public void destroy() {
 	}
 
 }

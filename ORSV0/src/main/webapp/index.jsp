@@ -2,10 +2,13 @@
 <%@page import="com.sunilos.p4.util.DataValidator"%>
 <html>
    
+   <%
+    String contextPath = request.getContextPath();
+   %>
    <head>
-      <link rel="icon" href="../img/favicon.ico" type="image/x-icon">
-      <link rel="stylesheet" href="../css/app.css">
-      <script type="text/javascript" src="../js/calendar.js"></script>
+      <link rel="icon" href="<%= contextPath %>/img/favicon.ico" type="image/x-icon">
+      <link rel="stylesheet" href="<%= contextPath %>/css/app.css">
+      <script type="text/javascript" src="<%= contextPath %>/js/calendar.js"></script>
    </head>
    
    <body>

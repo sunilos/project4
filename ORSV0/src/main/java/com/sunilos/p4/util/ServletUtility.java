@@ -129,7 +129,11 @@ public class ServletUtility {
 	 * @return
 	 */
 	public static String getErrorMessage(HttpServletRequest request) {
-		return getMessage(BaseCtl.MSG_ERROR, request);
+		String msg = getMessage(BaseCtl.MSG_ERROR, request);
+		if (DataValidator.isNull(msg)) {
+			msg = request.getParameter(BaseCtl.MSG_ERROR);
+		}
+		return DataUtility.getStringData(msg);
 	}
 
 	/**
@@ -160,7 +164,11 @@ public class ServletUtility {
 	 * @return
 	 */
 	public static String getSuccessMessage(HttpServletRequest request) {
-		return getMessage(BaseCtl.MSG_SUCCESS, request);
+		String msg = getMessage(BaseCtl.MSG_SUCCESS, request);
+		if (DataValidator.isNull(msg)) {
+			msg = request.getParameter(BaseCtl.MSG_SUCCESS);
+		}
+		return DataUtility.getStringData(msg);
 	}
 
 	/**
