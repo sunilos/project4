@@ -1,5 +1,7 @@
 package com.sunilos.p4.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,11 +26,9 @@ public class DataUtility {
 	/**
 	 * Date formatter
 	 */
-	private static final SimpleDateFormat formatter = new SimpleDateFormat(
-			APP_DATE_FORMAT);
+	private static final SimpleDateFormat formatter = new SimpleDateFormat(APP_DATE_FORMAT);
 
-	private static final SimpleDateFormat timeFormatter = new SimpleDateFormat(
-			APP_TIME_FORMAT);
+	private static final SimpleDateFormat timeFormatter = new SimpleDateFormat(APP_TIME_FORMAT);
 
 	/**
 	 * Trims and trailing and leading spaces of a String
@@ -174,8 +174,45 @@ public class DataUtility {
 		}
 	}
 
+	/**
+	 * Converts exception into a string
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public static String exceptionToString(Exception e) {
+		StringBuffer errorBuffer = new StringBuffer();
+
+		// Create a ByteArrayOutputStream to capture the output
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+		// Create a custom PrintStream that writes to the ByteArrayOutputStream
+		PrintStream printStream = new PrintStream(byteArrayOutputStream);
+
+		// Redirect System.err to the custom PrintStream
+		System.setErr(printStream);
+
+		// Print the error message and stack trace to System.err
+		e.printStackTrace();
+
+		// Capture the error message and stack trace from the ByteArrayOutputStream
+		String errorMessageAndStackTrace = byteArrayOutputStream.toString();
+
+		// Close the custom PrintStream and reset System.err
+		printStream.close();
+
+		System.setErr(System.err); // Reset System.err to its original state
+
+		return errorMessageAndStackTrace;
+	}
+
 	public static void main(String[] args) {
-		System.out.println(getInt("124"));
+		try {
+			throw new RuntimeException("This is test message");
+		} catch (Exception e) {
+			System.out.println(DataUtility.exceptionToString(e));
+		}
+
 	}
 
 }
