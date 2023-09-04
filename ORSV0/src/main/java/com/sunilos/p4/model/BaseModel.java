@@ -201,4 +201,5 @@ public abstract class BaseModel<T extends BaseBean> {
 	 * @return
 	 */
 	public abstract String getTable();
+
 }

@@ -21,6 +21,7 @@
    <input type="hidden" name="modifiedDatetime" value="<%=DataUtility.getTimestamp(bean.getModifiedDatetime())%>">
 
    <center>
+   
       <p class="success-message">
          <%=ServletUtility.getSuccessMessage(request)%>
       </p>

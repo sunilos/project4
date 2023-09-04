@@ -38,6 +38,7 @@ public class UserModel extends BaseModel<UserBean> {
 	 * @throws DatabaseException
 	 * 
 	 */
+	@Override
 	public long add(UserBean bean) throws ApplicationException, DuplicateRecordException {
 		log.debug("Model add Started");
 		Connection conn = null;
@@ -156,6 +157,7 @@ public class UserModel extends BaseModel<UserBean> {
 	 * @throws DatabaseException
 	 */
 
+	@Override
 	public UserBean findByPK(long pk) throws ApplicationException {
 		log.debug("Model findByPK Started");
 		StringBuffer sql = new StringBuffer("SELECT * FROM ST_USER WHERE ID=?");
@@ -208,6 +210,7 @@ public class UserModel extends BaseModel<UserBean> {
 	 * @throws DatabaseException
 	 */
 
+	@Override
 	public void update(UserBean bean) throws ApplicationException, DuplicateRecordException {
 		log.debug("Model update Started");
 		Connection conn = null;
@@ -259,7 +262,6 @@ public class UserModel extends BaseModel<UserBean> {
 		log.debug("Model update End");
 	}
 
-
 	/**
 	 * Search User with pagination
 	 * 
@@ -271,6 +273,7 @@ public class UserModel extends BaseModel<UserBean> {
 	 * @throws DatabaseException
 	 */
 
+	@Override
 	public List search(UserBean bean, int pageNo, int pageSize) throws ApplicationException {
 		log.debug("Model search Started");
 		StringBuffer sql = new StringBuffer("SELECT * FROM ST_USER WHERE 1=1");
@@ -369,8 +372,6 @@ public class UserModel extends BaseModel<UserBean> {
 		return list;
 	}
 
-
-
 	/**
 	 * Get List of User with pagination
 	 * 
@@ -380,6 +381,7 @@ public class UserModel extends BaseModel<UserBean> {
 	 * @throws DatabaseException
 	 */
 
+	@Override
 	public List list(int pageNo, int pageSize) throws ApplicationException {
 		log.debug("Model list Started");
 		ArrayList list = new ArrayList();
@@ -441,49 +443,12 @@ public class UserModel extends BaseModel<UserBean> {
 	 */
 
 	public UserBean authenticate(String login, String password) throws ApplicationException {
-		log.debug("Model authenticate Started");
-		StringBuffer sql = new StringBuffer("SELECT * FROM ST_USER WHERE LOGIN = ? AND PASSWORD = ?");
-		UserBean bean = null;
-		Connection conn = null;
-
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setString(1, login);
-			pstmt.setString(2, password);
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				bean = new UserBean();
-				bean.setId(rs.getLong(1));
-				bean.setFirstName(rs.getString(2));
-				bean.setLastName(rs.getString(3));
-				bean.setLogin(rs.getString(4));
-				bean.setPassword(rs.getString(5));
-				bean.setDob(rs.getDate(6));
-				bean.setMobileNo(rs.getString(7));
-				bean.setRoleId(rs.getLong(8));
-				bean.setUnSuccessfulLogin(rs.getInt(9));
-				bean.setGender(rs.getString(10));
-				bean.setLastLogin(rs.getTimestamp(11));
-				bean.setLock(rs.getString(12));
-				bean.setRegisteredIP(rs.getString(13));
-				bean.setLastLoginIP(rs.getString(14));
-				bean.setCreatedBy(rs.getString(15));
-				bean.setModifiedBy(rs.getString(16));
-				bean.setCreatedDatetime(rs.getTimestamp(17));
-				bean.setModifiedDatetime(rs.getTimestamp(18));
-
-			}
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			throw new ApplicationException("Exception : Exception in get roles");
-
-		} finally {
-			JDBCDataSource.closeConnection(conn);
+		UserBean bean = findByLogin(login);
+		if (bean != null && bean.getPassword().equals(password)) {
+			return bean;
+		} else {
+			return null;
 		}
-
-		log.debug("Model authenticate End");
-		return bean;
 	}
 
 	/**
@@ -581,42 +546,46 @@ public class UserModel extends BaseModel<UserBean> {
 			throws RecordNotFoundException, ApplicationException {
 
 		log.debug("model changePassword Started");
+
 		boolean flag = false;
 		UserBean beanExist = null;
-
 		beanExist = findByPK(id);
 		if (beanExist != null && beanExist.getPassword().equals(oldPassword)) {
 			beanExist.setPassword(newPassword);
-			try {
-				update(beanExist);
-			} catch (DuplicateRecordException e) {
-				log.error(e);
-				throw new ApplicationException("LoginId is already exist");
-			}
+			update(beanExist);
 			flag = true;
 		} else {
+			flag = false;
 			throw new RecordNotFoundException("Login not exist");
 		}
 
-		HashMap<String, String> map = new HashMap<String, String>();
+		// Email new password
+		try {
+			HashMap<String, String> map = new HashMap<String, String>();
 
-		map.put("login", beanExist.getLogin());
-		map.put("password", beanExist.getPassword());
-		map.put("firstName", beanExist.getFirstName());
-		map.put("lastName", beanExist.getLastName());
+			map.put("login", beanExist.getLogin());
+			map.put("password", beanExist.getPassword());
+			map.put("firstName", beanExist.getFirstName());
+			map.put("lastName", beanExist.getLastName());
 
-		String message = EmailBuilder.getChangePasswordMessage(map);
+			String message = EmailBuilder.getChangePasswordMessage(map);
 
-		EmailMessage msg = new EmailMessage();
+			EmailMessage msg = new EmailMessage();
 
-		msg.setTo(beanExist.getLogin());
-		msg.setSubject("SUNARYS ORS Password has been changed Successfully.");
-		msg.setMessage(message);
-		msg.setMessageType(EmailMessage.HTML_MSG);
+			msg.setTo(beanExist.getLogin());
+			msg.setSubject("ORS Password has been changed Successfully.");
+			msg.setMessage(message);
+			msg.setMessageType(EmailMessage.HTML_MSG);
 
-		EmailUtility.sendMail(msg);
+			EmailUtility.sendMail(msg);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ApplicationException ae = new ApplicationException(e.getMessage());
+			throw ae;
+		}
 
 		log.debug("Model changePassword End");
+
 		return flag;
 
 	}

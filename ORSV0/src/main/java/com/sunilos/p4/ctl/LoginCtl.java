@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -13,7 +12,6 @@ import org.apache.log4j.Logger;
 
 import com.sunilos.p4.bean.RoleBean;
 import com.sunilos.p4.bean.UserBean;
-import com.sunilos.p4.exception.ApplicationException;
 import com.sunilos.p4.model.RoleModel;
 import com.sunilos.p4.model.UserModel;
 import com.sunilos.p4.util.DataUtility;
@@ -47,11 +45,6 @@ public class LoginCtl extends BaseCtl<UserBean, UserModel> {
 
 		boolean pass = true;
 
-		String op = request.getParameter("operation");
-		if (OP_SIGN_UP.equals(op) || OP_LOG_OUT.equals(op)) {
-			return pass;
-		}
-
 		String login = request.getParameter("login");
 
 		if (DataValidator.isNull(login)) {
@@ -74,12 +67,10 @@ public class LoginCtl extends BaseCtl<UserBean, UserModel> {
 	@Override
 	protected UserBean populateBean(HttpServletRequest request) {
 
-		log.debug("LoginCtl Method populatebean Started");
-
 		UserBean bean = new UserBean();
 
-		bean.setId(DataUtility.getLong(request.getParameter("id")));
 		bean.setLogin(DataUtility.getString(request.getParameter("login")));
+
 		bean.setPassword(DataUtility.getString(request.getParameter("password")));
 
 		log.debug("LoginCtl Method populatebean Ended");
@@ -87,37 +78,12 @@ public class LoginCtl extends BaseCtl<UserBean, UserModel> {
 		return bean;
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		String op = DataUtility.getString(request.getParameter("operation"));
-
-		if (OP_LOG_OUT.equals(op)) {
-			HttpSession session = request.getSession();
-			// destroy the session
-			session.invalidate();
-			ServletUtility.redirect(ORSView.LOGIN_CTL, request, response);
-			return;
-		}
-
-		long id = DataUtility.getLong(request.getParameter("id"));
-
-		if (id > 0 || op != null) {
-			try {
-				UserBean userbean = getModel().findByPK(id);
-				ServletUtility.setBean(userbean, request);
-			} catch (ApplicationException e) {
-				ServletUtility.handleException(e, request, response);
-			}
-		}
-
-		ServletUtility.forward(getView(), request, response);
-
+		HttpSession session = request.getSession(true);
+		session.invalidate();
+		super.doGet(request, response);
 	}
 
 	@Override
@@ -127,39 +93,35 @@ public class LoginCtl extends BaseCtl<UserBean, UserModel> {
 		log.debug(" Method doGet Started");
 
 		String op = DataUtility.getString(request.getParameter("operation"));
-
-		// get model
+		String login = DataUtility.getString(request.getParameter("login"));
+		String password = DataUtility.getString(request.getParameter("password"));
 
 		UserModel model = getModel();
-		RoleModel role = new RoleModel();
+		UserBean bean = model.authenticate(login, password);
 
-		UserBean bean = populateBean(request);
-
-		try {
-
-			bean = model.authenticate(bean.getLogin(), bean.getPassword());
-
-			if (bean != null) {
-				HttpSession session = request.getSession(true);
-				session.setAttribute("user", bean);
-				long rollId = bean.getRoleId();
-				RoleBean rolebean = role.findByPK(rollId);
-				if (rolebean != null) {
-					session.setAttribute("role", rolebean.getName());
-				}
-				ServletUtility.forward(ORSView.WELCOME_VIEW, request, response);
-				return;
-			} else {
-				bean = populateBean(request);
-				ServletUtility.setBean(bean, request);
-				ServletUtility.setErrorMessage("Invalid LoginId And Password", request);
-			}
-
-		} catch (ApplicationException e) {
-			ServletUtility.handleException(e, request, response);
+		// if user is not found
+		if (bean == null) {
+			bean = populateBean(request);
+			ServletUtility.setBean(bean, request);
+			ServletUtility.setErrorMessage("Invalid Login/Password, try again", request);
+			ServletUtility.forwardPage(getView(), request, response);
 			return;
 		}
-		ServletUtility.forward(getView(), request, response);
+
+		HttpSession session = request.getSession(true);
+		session.setAttribute("user", bean);
+
+		long rollId = bean.getRoleId();
+		RoleModel role = new RoleModel();
+		RoleBean rolebean = role.findByPK(rollId);
+		if (rolebean != null) {
+			session.setAttribute("role", rolebean.getName());
+		} else {
+			session.setAttribute("role", "invalid role id " + rollId);
+		}
+
+		ServletUtility.forwardPage(ORSView.WELCOME_VIEW, request, response);
+
 	}
 
 	@Override

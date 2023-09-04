@@ -45,13 +45,12 @@ public class ServletUtility {
 
 	public static void forwardPage(String page, HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		request.setAttribute("p", page);
+		System.out.println("Forwarding to page : " + page);
 		if (page.startsWith("/")) {
 			page = page.substring(1);
 		}
-		System.out.println("----------------forwarding to " + page);
+		request.setAttribute("p", page);
 		RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
-		System.out.println("----------------forwarded to " + "/index.jsp");
 		rd.forward(request, response);
 	}
 

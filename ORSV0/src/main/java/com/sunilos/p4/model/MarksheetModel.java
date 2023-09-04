@@ -34,6 +34,7 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 	 * 
 	 */
 
+	@Override
 	public long add(MarksheetBean bean) throws ApplicationException, DuplicateRecordException {
 
 		log.debug("Model add Started");
@@ -141,6 +142,7 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 	 * @throws DatabaseException
 	 */
 
+	@Override
 	public MarksheetBean findByPK(long pk) throws ApplicationException {
 		log.debug("Model findByPK Started");
 
@@ -185,6 +187,7 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 	 * @throws DatabaseException
 	 */
 
+	@Override
 	public void update(MarksheetBean bean) throws ApplicationException, DuplicateRecordException {
 
 		log.debug("Model update Started");
@@ -249,6 +252,7 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 	 * @throws DatabaseException
 	 */
 
+	@Override
 	public List search(MarksheetBean bean, int pageNo, int pageSize) throws ApplicationException {
 
 		log.debug("Model  search Started");
@@ -329,6 +333,7 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 	 * @throws DatabaseException
 	 */
 
+	@Override
 	public List list(int pageNo, int pageSize) throws ApplicationException {
 
 		log.debug("Model  list Started");
@@ -385,7 +390,7 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 	 * @throws DatabaseException
 	 */
 
-	public List getMeritList(int pageNo, int pageSize) throws ApplicationException {
+	public List getMeritList(int pageNo, int pageSize) {
 		log.debug("Model  MeritList Started");
 		ArrayList list = new ArrayList();
 		StringBuffer sql = new StringBuffer(

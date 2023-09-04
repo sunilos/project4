@@ -9,11 +9,10 @@ package com.sunilos.p4.exception;
  * 
  */
 
-public class RecordNotFoundException extends Exception{
+public class RecordNotFoundException extends RuntimeException {
 
 	/**
-	 * @param msg
-	 *            error message
+	 * @param msg error message
 	 */
 	public RecordNotFoundException(String msg) {
 		super(msg);

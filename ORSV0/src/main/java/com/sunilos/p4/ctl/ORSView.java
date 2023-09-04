@@ -12,16 +12,14 @@ public interface ORSView {
 
 	public String APP_CONTEXT = "/ORSV0";
 
-	
-
 	public String PAGE_FOLDER = "/jsp";
-	
+
 	public String JAVA_DOC_VIEW = APP_CONTEXT + "/doc/index.html";
-	
+
 	public String ERROR_VIEW = PAGE_FOLDER + "/MarksheetListView.jsp";
 
 	public String MARKSHEET_VIEW = PAGE_FOLDER + "/MarksheetView.jsp";
-	
+
 	public String MARKSHEET_LIST_VIEW = PAGE_FOLDER + "/MarksheetListView.jsp";
 	public String GET_MARKSHEET_VIEW = PAGE_FOLDER + "/GetMarksheetView.jsp";
 	public String USER_VIEW = PAGE_FOLDER + "/UserView.jsp";
@@ -36,14 +34,12 @@ public interface ORSView {
 	public String LOGIN_VIEW = PAGE_FOLDER + "/LoginView.jsp";
 	public String WELCOME_VIEW = PAGE_FOLDER + "/Welcome.jsp";
 	public String CHANGE_PASSWORD_VIEW = PAGE_FOLDER + "/ChangePasswordView.jsp";
-	public String  MY_PROFILE_VIEW = PAGE_FOLDER + "/MyProfileView.jsp";
-	public String  FORGET_PASSWORD_VIEW = PAGE_FOLDER + "/ForgetPasswordView.jsp";
-	public String  MARKSHEET_MERIT_LIST_VIEW = PAGE_FOLDER + "/MarksheetMeritListView.jsp";
+	public String MY_PROFILE_VIEW = PAGE_FOLDER + "/MyProfileView.jsp";
+	public String FORGET_PASSWORD_VIEW = PAGE_FOLDER + "/ForgetPasswordView.jsp";
+	public String MARKSHEET_MERIT_LIST_VIEW = PAGE_FOLDER + "/MarksheetMeritListView.jsp";
 
-	
 	public String ERROR_CTL = "/ctl/MarksheetCtl";
 
-	
 	public String MARKSHEET_CTL = APP_CONTEXT + "/ctl/MarksheetCtl";
 	public String MARKSHEET_LIST_CTL = APP_CONTEXT + "/ctl/MarksheetListCtl";
 	public String USER_CTL = APP_CONTEXT + "/ctl/UserCtl";
@@ -54,8 +50,7 @@ public interface ORSView {
 	public String STUDENT_LIST_CTL = APP_CONTEXT + "/ctl/StudentListCtl";
 	public String ROLE_CTL = APP_CONTEXT + "/ctl/RoleCtl";
 	public String ROLE_LIST_CTL = APP_CONTEXT + "/ctl/RoleListCtl";
-	public String USER_REGISTRATION_CTL = APP_CONTEXT
-			+ "/UserRegistrationCtl";
+	public String USER_REGISTRATION_CTL = APP_CONTEXT + "/UserRegistrationCtl";
 	public String LOGIN_CTL = APP_CONTEXT + "/LoginCtl";
 	public String WELCOME_CTL = APP_CONTEXT + "/WelcomeCtl";
 	public String LOGOUT_CTL = APP_CONTEXT + "/LoginCtl";
@@ -66,5 +61,3 @@ public interface ORSView {
 	public String MARKSHEET_MERIT_LIST_CTL = APP_CONTEXT + "/ctl/MarksheetMeritListCtl";
 
 }
-
-

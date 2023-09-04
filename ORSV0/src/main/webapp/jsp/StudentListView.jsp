@@ -72,8 +72,6 @@
             }
             %>
       </table>
+      <%@ include file="ListFooter.jsp"%>
    </div>
-   
-   <%@ include file="ListFooter.jsp"%>
-
 </form>

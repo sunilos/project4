@@ -3,6 +3,7 @@ package com.sunilos.p4.ctl;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,8 +12,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import com.sunilos.p4.bean.UserBean;
-import com.sunilos.p4.exception.ApplicationException;
-import com.sunilos.p4.exception.RecordNotFoundException;
 import com.sunilos.p4.model.UserModel;
 import com.sunilos.p4.util.DataUtility;
 import com.sunilos.p4.util.DataValidator;
@@ -28,6 +27,7 @@ import com.sunilos.p4.util.ServletUtility;
  * @Copyright (c) Rays Technologies
  */
 
+@WebServlet("/ctl/ChangePasswordCtl")
 public class ChangePasswordCtl extends BaseCtl<UserBean, UserModel> {
 
 	public static final String OP_CHANGE_MY_PROFILE = "Change My Profile";
@@ -43,10 +43,6 @@ public class ChangePasswordCtl extends BaseCtl<UserBean, UserModel> {
 
 		String op = request.getParameter("operation");
 
-		if (OP_CHANGE_MY_PROFILE.equalsIgnoreCase(op)) {
-
-			return pass;
-		}
 		if (DataValidator.isNull(request.getParameter("oldPassword"))) {
 			request.setAttribute("oldPassword", PropertyReader.getValue("error.require", "Old Password"));
 			pass = false;
@@ -93,52 +89,45 @@ public class ChangePasswordCtl extends BaseCtl<UserBean, UserModel> {
 	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		HttpSession session = request.getSession(true);
 
 		log.debug("ChangePasswordCtl Method doGet Started");
 
 		String op = DataUtility.getString(request.getParameter("operation"));
-
-		// get model
-		UserModel model = new UserModel();
+		String oldPassword = DataUtility.getString(request.getParameter("oldPassword"));
+		String newPassword = DataUtility.getString(request.getParameter("newPassword"));
+		String confirmPassword = DataUtility.getString(request.getParameter("confirmPassword"));
 
 		UserBean bean = populateBean(request);
 
-		UserBean UserBean = (UserBean) session.getAttribute("user");
-
-		String newPassword = request.getParameter("newPassword");
-
-		long id = UserBean.getId();
-
-		if (OP_SAVE.equalsIgnoreCase(op)) {
-
-			try {
-				boolean flag = model.changePassword(id, bean.getPassword(), newPassword);
-				if (flag == true) {
-					bean = model.findByLogin(UserBean.getLogin());
-					session.setAttribute("user", bean);
-					ServletUtility.setBean(bean, request);
-					ServletUtility.setSuccessMessage("Password has been changed Successfully.", request);
-				}
-			} catch (ApplicationException e) {
-				log.error(e);
-				ServletUtility.handleException(e, request, response);
-				return;
-
-			} catch (RecordNotFoundException e) {
-				ServletUtility.setErrorMessage("Old PassWord is Invalid", request);
-			}
-
-		} else if (OP_CHANGE_MY_PROFILE.equalsIgnoreCase(op)) {
-			ServletUtility.redirect(ORSView.MY_PROFILE_CTL, request, response);
+		if (!newPassword.equals(confirmPassword)) {
+			ServletUtility.setErrorMessage("New passwodr and confirmed password does not match", request);
+			ServletUtility.setBean(bean, request);
+			ServletUtility.forwardPage(getView(op), request, response);
 			return;
-
 		}
 
-		ServletUtility.forward(ORSView.CHANGE_PASSWORD_VIEW, request, response);
+		// get model
+		UserModel model = getModel();
+		HttpSession session = request.getSession(true);
+		UserBean UserBean = (UserBean) session.getAttribute("user");
+		long id = UserBean.getId();
+
+		try {
+			boolean flag = model.changePassword(id, oldPassword, newPassword);
+
+			if (flag == true) {
+				bean = model.findByLogin(UserBean.getLogin());
+				session.setAttribute("user", bean);
+				ServletUtility.setBean(bean, request);
+				ServletUtility.setSuccessMessage("Password has been changed Successfully.", request);
+			}
+		} catch (Exception e) {
+			ServletUtility.setErrorMessage(e.getMessage(), request);
+		}
+		ServletUtility.forwardPage(getView(op), request, response);
+
 		log.debug("ChangePasswordCtl Method doGet Ended");
 	}
 

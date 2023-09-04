@@ -12,8 +12,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import com.sunilos.p4.bean.UserBean;
-import com.sunilos.p4.exception.ApplicationException;
-import com.sunilos.p4.exception.DuplicateRecordException;
 import com.sunilos.p4.model.UserModel;
 import com.sunilos.p4.util.DataUtility;
 import com.sunilos.p4.util.DataValidator;
@@ -46,12 +44,10 @@ public class MyProfileCtl extends BaseCtl<UserBean, UserModel> {
 		String op = DataUtility.getString(request.getParameter("operation"));
 
 		if (OP_CHANGE_MY_PASSWORD.equalsIgnoreCase(op) || op == null) {
-
 			return pass;
 		}
 
 		if (DataValidator.isNull(request.getParameter("firstName"))) {
-			System.out.println("firstName" + request.getParameter("firstName"));
 			request.setAttribute("firstName", PropertyReader.getValue("error.require", "First Name"));
 			pass = false;
 		}
@@ -83,7 +79,6 @@ public class MyProfileCtl extends BaseCtl<UserBean, UserModel> {
 
 	@Override
 	protected UserBean populateBean(HttpServletRequest request) {
-		log.debug("MyProfileCtl Method populatebean Started");
 
 		UserBean bean = new UserBean();
 
@@ -113,62 +108,32 @@ public class MyProfileCtl extends BaseCtl<UserBean, UserModel> {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
 		HttpSession session = request.getSession(true);
-		log.debug("MyprofileCtl Method doGet Started");
 
-		UserBean UserBean = (UserBean) session.getAttribute("user");
-		long id = UserBean.getId();
-		String op = DataUtility.getString(request.getParameter("operation"));
+		UserBean userBean = (UserBean) session.getAttribute("user");
 
-		// get model
-		UserModel model = new UserModel();
+		long id = userBean.getId();
 
-		if (OP_SAVE.equalsIgnoreCase(op)) {
-			UserBean bean = populateBean(request);
-			try {
-				if (id > 0) {
-					UserBean.setFirstName(bean.getFirstName());
-					UserBean.setLastName(bean.getLastName());
-					UserBean.setGender(bean.getGender());
-					UserBean.setMobileNo(bean.getMobileNo());
-					UserBean.setDob(bean.getDob());
-					model.update(UserBean);
+		UserModel model = getModel();
 
-				}
-				ServletUtility.setBean(bean, request);
-				ServletUtility.setSuccessMessage("Profile has been updated Successfully. ", request);
-			} catch (ApplicationException e) {
-				log.error(e);
-				ServletUtility.handleException(e, request, response);
-				return;
-			} catch (DuplicateRecordException e) {
-				ServletUtility.setBean(bean, request);
-				ServletUtility.setErrorMessage("Login id already exists", request);
-			}
-		} else if (OP_CHANGE_MY_PASSWORD.equalsIgnoreCase(op)) {
+		UserBean bean = model.findByPK(id);
 
-			ServletUtility.redirect(ORSView.CHANGE_PASSWORD_CTL, request, response);
-			return;
+		ServletUtility.setBean(bean, request);
 
-		} else { // View page
-			if (id > 0 || op != null) {
-				System.out.println("in id > 0  condition");
-				UserBean bean;
-				try {
-					bean = model.findByPK(id);
-					ServletUtility.setBean(bean, request);
-				} catch (ApplicationException e) {
-					log.error(e);
-					ServletUtility.handleException(e, request, response);
-					return;
-				}
-			}
+		ServletUtility.forwardPage(getView(null), request, response);
 
-		}
+	}
 
-		ServletUtility.forward(ORSView.MY_PROFILE_VIEW, request, response);
-
-		log.debug("MyProfileCtl Method doGet Ended");
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		UserBean bean = populateBean(request);
+		UserModel model = getModel();
+		model.update(bean);
+		ServletUtility.setBean(bean, request);
+		ServletUtility.setSuccessMessage("Data is successfully saved", request);
+		ServletUtility.forwardPage(getView(), request, response);
 	}
 
 	@Override

@@ -79,14 +79,14 @@
 
 /* Error Message Styles */
 .error-message {
-  color: #ff0000; /* Red text color for error messages */
-  font-size: 14px; /* Adjust font size as needed */
+  color: red; /* Red text color for error messages */
+  font-size: 18px; /* Adjust font size as needed */
   margin-top: 5px; /* Add spacing above the error message */
 }
 
 .success-message {
-  color: #ff0000; /* Red text color for error messages */
-  font-size: 14px; /* Adjust font size as needed */
+  color: grean; /* Red text color for error messages */
+  font-size: 18px; /* Adjust font size as needed */
   margin-top: 5px; /* Add spacing above the error message */
 }
 
