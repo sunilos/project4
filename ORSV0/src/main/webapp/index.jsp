@@ -7,6 +7,7 @@
    %>
    <head>
       <link rel="icon" href="<%= contextPath %>/img/favicon.ico" type="image/x-icon">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
       <link rel="stylesheet" href="<%= contextPath %>/css/app.css">
       <script type="text/javascript" src="<%= contextPath %>/js/calendar.js"></script>
    </head>

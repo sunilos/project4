@@ -18,13 +18,14 @@
    %>
 <table width="100%" border="0">
    <tr>
-      <td width="90%" ><a href="<%=ORSView.WELCOME_CTL%>">Welcome</b></a> |
+      <td width="90%" >
+      		<a class="primary-btn" href="<%=ORSView.WELCOME_CTL%>">Home<i class="fas fa-home"></i></a> 
          <%
             if (userLoggedIn) {
-            %> <a href="<%=ORSView.LOGIN_CTL%>?operation=<%=LoginCtl.OP_LOG_OUT%>">Logout</b></a>
+            %> <a class="primary-btn" href="<%=ORSView.LOGIN_CTL%>?operation=<%=LoginCtl.OP_LOG_OUT%>">Logout</b></a>
          <%
             } else {
-            %> <a href="<%=ORSView.LOGIN_CTL%>">Login</b></a> <%
+            %> <a class="primary-btn" href="<%=ORSView.LOGIN_CTL%>">Login</b> <i class="fas fa-star"></i> </a> <%
             }
             %>
       </td>
@@ -47,25 +48,27 @@
       %>
    <tr>
       <td colspan="2" >
-         <a href="<%=ORSView.GET_MARKSHEET_CTL%>">Get Marksheet</b></a> |
-         <a href="<%=ORSView.MARKSHEET_MERIT_LIST_CTL%>">Marksheet Merit
-         List</b>
-         </a> | <a href="<%=ORSView.MY_PROFILE_CTL%>">MyProfile</b></a> | <a
-            href="<%=ORSView.CHANGE_PASSWORD_CTL%>">Change Password</b></a> | <a
-            href="<%=ORSView.JAVA_DOC_VIEW%>">Java Doc</b></a> | <%
+         <a class="primary-btn" href="<%=ORSView.GET_MARKSHEET_CTL%>">Get Marksheet</b></a> |
+         <a class="primary-btn" href="<%=ORSView.MARKSHEET_MERIT_LIST_CTL%>">Marksheet Merit List</b></a> | 
+         <%
             if (userBean.getRoleId() == RoleBean.ADMIN) {
-            %> <a href="<%=ORSView.MARKSHEET_CTL%>">Add Marksheet</b></a> | <a
-            href="<%=ORSView.MARKSHEET_LIST_CTL%>">Marksheet List</b></a> | 
-         <a href="<%=ORSView.USER_CTL%>">Add User</b></a> | <a
-            href="<%=ORSView.USER_LIST_CTL%>">User List</b></a> | <a
-            href="<%=ORSView.COLLEGE_CTL%>">Add College</b></a> | <a
-            href="<%=ORSView.COLLEGE_LIST_CTL%>">College List</b></a> | <a
-            href="<%=ORSView.STUDENT_CTL%>">Add Student</b></a> | <a
-            href="<%=ORSView.STUDENT_LIST_CTL%>">Student List</b></a> | <a
-            href="<%=ORSView.ROLE_CTL%>">Add Role</b></a> | <a
-            href="<%=ORSView.ROLE_LIST_CTL%>">Role List</b></a> | | <%
+         %> 
+         <a class="primary-btn" href="<%=ORSView.ROLE_CTL%>">Add Role</b></a>  
+         <a class="primary-btn" href="<%=ORSView.ROLE_LIST_CTL%>">Role List</b></a>   
+         <a class="primary-btn" href="<%=ORSView.USER_CTL%>">Add User</b></a>  
+         <a class="primary-btn" href="<%=ORSView.USER_LIST_CTL%>">User List</b></a>  
+         <a class="primary-btn" href="<%=ORSView.COLLEGE_CTL%>">Add College</b></a>  
+         <a class="primary-btn" href="<%=ORSView.COLLEGE_LIST_CTL%>">College List</b></a>  
+         <a class="primary-btn" href="<%=ORSView.STUDENT_CTL%>">Add Student</b></a>  
+         <a class="primary-btn" href="<%=ORSView.STUDENT_LIST_CTL%>">Student List</b></a>  
+         <a class="primary-btn" href="<%=ORSView.MARKSHEET_CTL%>">Add Marksheet</b></a>  
+         <a class="primary-btn" href="<%=ORSView.MARKSHEET_LIST_CTL%>">Marksheet List</b></a>  
+         <%
             }
-            %>
+         %>
+         <a class="primary-btn" href="<%=ORSView.MY_PROFILE_CTL%>">MyProfile</b></a>  
+         <a class="primary-btn" href="<%=ORSView.CHANGE_PASSWORD_CTL%>">Change Password</b></a>  
+         <a class="primary-btn" href="<%=ORSView.JAVA_DOC_VIEW%>">Java Doc</b></a> 
       </td>
    </tr>
    <%
