@@ -18,7 +18,12 @@
    %>
 <table width="100%" border="0">
    <tr>
-      <td width="90%" >
+      <td rowspan="2" align="left">
+         <h1 >
+            <img src="<%=ORSView.APP_CONTEXT%>/img/customLogo.jpg" height="45">
+         </h1>
+      </td>
+      <td align="right" >
       		<a class="primary-btn" href="<%=ORSView.WELCOME_CTL%>">Home<i class="fas fa-home"></i></a> 
          <%
             if (userLoggedIn) {
@@ -29,15 +34,10 @@
             }
             %>
       </td>
-      <td rowspan="2">
-         <h1 align="Right">
-            <img src="<%=ORSView.APP_CONTEXT%>/img/customLogo.jpg" width="318"
-               height="90">
-         </h1>
-      </td>
+
    </tr>
    <tr>
-      <td >
+      <td align="right">
          <h3>
             <%=welcomeMsg%>
          </h3>

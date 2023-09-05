@@ -1,5 +1,8 @@
 package com.sunilos.p4.bean;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  * Marksheet JavaBean encapsulates Marksheet attributes
  * 
@@ -96,6 +99,22 @@ public class MarksheetBean extends BaseBean {
 	@Override
 	public String getValue() {
 		return rollNo;
+	}
+
+	@Override
+	public void setResultset(ResultSet rs) {
+
+		try {
+			super.setResultset(rs);
+			this.setRollNo(rs.getString(2));
+			this.setStudentId(rs.getLong(3));
+			this.setName(rs.getString(4));
+			this.setPhysics(rs.getInt(5));
+			this.setChemistry(rs.getInt(6));
+			this.setMaths(rs.getInt(7));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -3,6 +3,7 @@ package com.sunilos.p4.model;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -65,7 +66,60 @@ public abstract class BaseModel<T extends BaseBean> {
 	 * @return
 	 * @throws ApplicationException
 	 */
-	public abstract T findByPK(long pk) throws ApplicationException;
+
+	public T findByPK(long pk) throws ApplicationException {
+		log.debug("Model findByPK Started");
+		StringBuffer sql = new StringBuffer("SELECT * FROM " + getTable() + " WHERE ID=?");
+		T bean = null;
+		Connection conn = null;
+		try {
+			conn = JDBCDataSource.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+			pstmt.setLong(1, pk);
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				bean = getBean();
+				bean.setResultset(rs);
+			}
+			rs.close();
+		} catch (Exception e) {
+			log.error("Database Exception..", e);
+			throw new ApplicationException("Exception : Exception in getting User by pk");
+		} finally {
+			JDBCDataSource.closeConnection(conn);
+		}
+		log.debug("Model findByPK End");
+		return bean;
+	}
+
+	public T findByUniqueColumn(String column, String value) throws ApplicationException {
+
+		log.debug("Model findBy EmailId Started");
+
+		StringBuffer sql = new StringBuffer("SELECT * FROM " + getTable() + " WHERE " + column + "='" + value + "'");
+
+		T bean = null;
+		Connection conn = null;
+
+		try {
+			conn = JDBCDataSource.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+			pstmt.setString(1, value);
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				bean = getBean();
+				bean.setResultset(rs);
+			}
+			rs.close();
+		} catch (Exception e) {
+			log.error("Database Exception..", e);
+			throw new ApplicationException("Exception : Exception in getting User by emailId");
+		} finally {
+			JDBCDataSource.closeConnection(conn);
+		}
+		log.debug("Model findBy EmailId End");
+		return bean;
+	}
 
 	/**
 	 * Adds a new record in the table
@@ -172,7 +226,42 @@ public abstract class BaseModel<T extends BaseBean> {
 	 * @return
 	 * @throws ApplicationException
 	 */
-	public abstract List<T> search(T bean, int pageNo, int pageSize) throws ApplicationException;
+	public List<T> search(T bean, int pageNo, int pageSize) throws ApplicationException {
+
+		log.debug("Model search Started");
+		StringBuffer sql = new StringBuffer("SELECT * FROM " + getTable() + " WHERE 1=1");
+		sql.append(this.getWhereClause(bean));
+
+		// if page size is greater than zero then apply pagination
+		if (pageSize > 0) {
+			// Calculate start record index
+			pageNo = (pageNo - 1) * pageSize;
+			sql.append(" Limit " + pageNo + ", " + pageSize);
+			// sql.append(" limit " + pageNo + "," + pageSize);
+		}
+
+		ArrayList<T> list = new ArrayList<T>();
+		Connection conn = null;
+		try {
+			conn = JDBCDataSource.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				bean = getBean();
+				bean.setResultset(rs);
+				list.add(bean);
+			}
+			rs.close();
+		} catch (Exception e) {
+			log.error("Database Exception..", e);
+			throw new ApplicationException("Exception : Exception in search Student");
+		} finally {
+			JDBCDataSource.closeConnection(conn);
+		}
+
+		log.debug("Model search End");
+		return list;
+	}
 
 	/**
 	 * Returns all records of a table.
@@ -193,7 +282,45 @@ public abstract class BaseModel<T extends BaseBean> {
 	 * @return
 	 * @throws ApplicationException
 	 */
-	public abstract List list(int pageNo, int pageSize) throws ApplicationException;
+	public List<T> list(int pageNo, int pageSize) throws ApplicationException {
+
+		log.debug("Model list Started");
+		ArrayList list = new ArrayList();
+
+		StringBuffer sql = new StringBuffer("select * from " + getTable());
+
+		// if page size is greater than zero then apply pagination
+		if (pageSize > 0) {
+			// Calculate start record index
+			pageNo = (pageNo - 1) * pageSize;
+			sql.append(" limit " + pageNo + "," + pageSize);
+		}
+
+		Connection conn = null;
+
+		try {
+			conn = JDBCDataSource.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				T bean = getBean();
+				bean.setResultset(rs);
+				list.add(bean);
+			}
+			rs.close();
+		} catch (Exception e) {
+			log.error("Database Exception..", e);
+			throw new ApplicationException("Exception : Exception in getting list of users");
+		} finally {
+			JDBCDataSource.closeConnection(conn);
+		}
+
+		log.debug("Model list End");
+		return list;
+
+	}
+
+	public abstract String getWhereClause(T bean);
 
 	/**
 	 * Returns the name of the table of current model.
@@ -201,5 +328,7 @@ public abstract class BaseModel<T extends BaseBean> {
 	 * @return
 	 */
 	public abstract String getTable();
+
+	public abstract T getBean();
 
 }

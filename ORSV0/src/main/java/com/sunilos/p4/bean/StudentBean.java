@@ -1,5 +1,7 @@
 package com.sunilos.p4.bean;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 
 /**
@@ -12,6 +14,9 @@ import java.util.Date;
  */
 
 public class StudentBean extends BaseBean {
+
+	public StudentBean() {
+	}
 
 	/**
 	 * First Name of Student
@@ -110,6 +115,22 @@ public class StudentBean extends BaseBean {
 	@Override
 	public String getValue() {
 		return firstName + " " + lastName;
+	}
+
+	@Override
+	public void setResultset(ResultSet rs) {
+		try {
+			super.setResultset(rs);
+			this.setCollegeId(rs.getLong(2));
+			this.setCollegeName(rs.getString(3));
+			this.setFirstName(rs.getString(4));
+			this.setLastName(rs.getString(5));
+			this.setDob(rs.getDate(6));
+			this.setMobileNo(rs.getString(7));
+			this.setEmail(rs.getString(8));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

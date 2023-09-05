@@ -2,9 +2,6 @@ package com.sunilos.p4.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -33,6 +30,7 @@ public class StudentModel extends BaseModel<StudentBean> {
 	 * @throws DatabaseException
 	 * 
 	 */
+	@Override
 	public long add(StudentBean bean) throws ApplicationException, DuplicateRecordException {
 		log.debug("Model add Started");
 		Connection conn = null;
@@ -89,90 +87,13 @@ public class StudentModel extends BaseModel<StudentBean> {
 	/**
 	 * Find User by Student
 	 * 
-	 * @param Email : get parameter
+	 * @param email : get parameter
 	 * @return bean
 	 * @throws DatabaseException
 	 */
 
-	public StudentBean findByEmailId(String Email) throws ApplicationException {
-		log.debug("Model findBy Email Started");
-		StringBuffer sql = new StringBuffer("SELECT * FROM STUDENT WHERE EMAIL=?");
-		StudentBean bean = null;
-		Connection conn = null;
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setString(1, Email);
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				bean = new StudentBean();
-				bean.setId(rs.getLong(1));
-				bean.setCollegeId(rs.getLong(2));
-				bean.setCollegeName(rs.getString(3));
-				bean.setFirstName(rs.getString(4));
-				bean.setLastName(rs.getString(5));
-				bean.setDob(rs.getDate(6));
-				bean.setMobileNo(rs.getString(7));
-				bean.setEmail(rs.getString(8));
-				bean.setCreatedBy(rs.getString(9));
-				bean.setModifiedBy(rs.getString(10));
-				bean.setCreatedDatetime(rs.getTimestamp(11));
-				bean.setModifiedDatetime(rs.getTimestamp(12));
-
-			}
-			rs.close();
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			throw new ApplicationException("Exception : Exception in getting User by Email");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-		log.debug("Model findBy Email End");
-		return bean;
-	}
-
-	/**
-	 * Find Student by PK
-	 * 
-	 * @param pk : get parameter
-	 * @return bean
-	 * @throws DatabaseException
-	 */
-
-	public StudentBean findByPK(long pk) throws ApplicationException {
-		log.debug("Model findByPK Started");
-		StringBuffer sql = new StringBuffer("SELECT * FROM STUDENT WHERE ID=?");
-		StudentBean bean = null;
-		Connection conn = null;
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setLong(1, pk);
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				bean = new StudentBean();
-				bean.setId(rs.getLong(1));
-				bean.setCollegeId(rs.getLong(2));
-				bean.setCollegeName(rs.getString(3));
-				bean.setFirstName(rs.getString(4));
-				bean.setLastName(rs.getString(5));
-				bean.setDob(rs.getDate(6));
-				bean.setMobileNo(rs.getString(7));
-				bean.setEmail(rs.getString(8));
-				bean.setCreatedBy(rs.getString(9));
-				bean.setModifiedBy(rs.getString(10));
-				bean.setCreatedDatetime(rs.getTimestamp(11));
-				bean.setModifiedDatetime(rs.getTimestamp(12));
-			}
-			rs.close();
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			throw new ApplicationException("Exception : Exception in getting User by pk");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-		log.debug("Model findByPK End");
-		return bean;
+	public StudentBean findByEmailId(String email) throws ApplicationException {
+		return findByUniqueColumn("EMAIL", email);
 	}
 
 	/**
@@ -182,6 +103,7 @@ public class StudentModel extends BaseModel<StudentBean> {
 	 * @throws DatabaseException
 	 */
 
+	@Override
 	public void update(StudentBean bean) throws ApplicationException, DuplicateRecordException {
 		log.debug("Model update Started");
 		Connection conn = null;
@@ -234,21 +156,9 @@ public class StudentModel extends BaseModel<StudentBean> {
 		log.debug("Model update End");
 	}
 
-	/**
-	 * Search Student with pagination
-	 * 
-	 * @return list : List of Students
-	 * @param bean     : Search Parameters
-	 * @param pageNo   : Current Page No.
-	 * @param pageSize : Size of Page
-	 * 
-	 * @throws DatabaseException
-	 */
-
-	public List search(StudentBean bean, int pageNo, int pageSize) throws ApplicationException {
-		log.debug("Model search Started");
-		StringBuffer sql = new StringBuffer("SELECT * FROM STUDENT WHERE 1=1");
-
+	@Override
+	public String getWhereClause(StudentBean bean) {
+		StringBuffer sql = new StringBuffer();
 		if (bean != null) {
 			if (bean.getId() > 0) {
 				sql.append(" AND id = " + bean.getId());
@@ -271,110 +181,19 @@ public class StudentModel extends BaseModel<StudentBean> {
 			if (bean.getCollegeName() != null && bean.getCollegeName().length() > 0) {
 				sql.append(" AND COLLEGE_NAME = " + bean.getCollegeName());
 			}
-
 		}
 
-		// if page size is greater than zero then apply pagination
-		if (pageSize > 0) {
-			// Calculate start record index
-			pageNo = (pageNo - 1) * pageSize;
-
-			sql.append(" Limit " + pageNo + ", " + pageSize);
-			// sql.append(" limit " + pageNo + "," + pageSize);
-		}
-
-		ArrayList list = new ArrayList();
-		Connection conn = null;
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				bean = new StudentBean();
-				bean.setId(rs.getLong(1));
-				bean.setCollegeId(rs.getLong(2));
-				bean.setCollegeName(rs.getString(3));
-				bean.setFirstName(rs.getString(4));
-				bean.setLastName(rs.getString(5));
-				bean.setDob(rs.getDate(6));
-				bean.setMobileNo(rs.getString(7));
-				bean.setEmail(rs.getString(8));
-				bean.setCreatedBy(rs.getString(9));
-				bean.setModifiedBy(rs.getString(10));
-				bean.setCreatedDatetime(rs.getTimestamp(11));
-				bean.setModifiedDatetime(rs.getTimestamp(12));
-				list.add(bean);
-			}
-			rs.close();
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			throw new ApplicationException("Exception : Exception in search Student");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-
-		log.debug("Model search End");
-		return list;
-	}
-
-	/**
-	 * Get List of Student with pagination
-	 * 
-	 * @return list : List of Student
-	 * @param pageNo   : Current Page No.
-	 * @param pageSize : Size of Page
-	 * @throws DatabaseException
-	 */
-
-	public List list(int pageNo, int pageSize) throws ApplicationException {
-		log.debug("Model list Started");
-		ArrayList list = new ArrayList();
-		StringBuffer sql = new StringBuffer("select * from STUDENT");
-		// if page size is greater than zero then apply pagination
-		if (pageSize > 0) {
-			// Calculate start record index
-			pageNo = (pageNo - 1) * pageSize;
-			sql.append(" limit " + pageNo + "," + pageSize);
-		}
-
-		Connection conn = null;
-
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				StudentBean bean = new StudentBean();
-				bean.setId(rs.getLong(1));
-				bean.setCollegeId(rs.getLong(2));
-				bean.setCollegeName(rs.getString(3));
-				bean.setFirstName(rs.getString(4));
-				bean.setLastName(rs.getString(5));
-				bean.setDob(rs.getDate(6));
-				bean.setMobileNo(rs.getString(7));
-				bean.setEmail(rs.getString(8));
-				bean.setCreatedBy(rs.getString(9));
-				bean.setModifiedBy(rs.getString(10));
-				bean.setCreatedDatetime(rs.getTimestamp(11));
-				bean.setModifiedDatetime(rs.getTimestamp(12));
-				list.add(bean);
-			}
-			rs.close();
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			throw new ApplicationException("Exception : Exception in getting list of Student");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-
-		log.debug("Model list End");
-		return list;
-
+		return sql.toString();
 	}
 
 	@Override
 	public String getTable() {
 		return "STUDENT";
+	}
+
+	@Override
+	public StudentBean getBean() {
+		return new StudentBean();
 	}
 
 }

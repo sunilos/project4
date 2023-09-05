@@ -1,5 +1,8 @@
 package com.sunilos.p4.bean;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  * Role JavaBean encapsulates Role attributes
  * 
@@ -50,12 +53,24 @@ public class RoleBean extends BaseBean {
 		this.description = description;
 	}
 
+	@Override
 	public String getKey() {
 		return id + "";
 	}
 
+	@Override
 	public String getValue() {
 		return name;
 	}
 
+	@Override
+	public void setResultset(ResultSet rs) {
+		try {
+			super.setResultset(rs);
+			this.setName(rs.getString(2));
+			this.setDescription(rs.getString(3));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

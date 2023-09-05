@@ -104,103 +104,7 @@ public class UserModel extends BaseModel<UserBean> {
 	 */
 
 	public UserBean findByLogin(String login) throws ApplicationException {
-		log.debug("Model findByLogin Started");
-		StringBuffer sql = new StringBuffer("SELECT * FROM ST_USER WHERE LOGIN=?");
-		UserBean bean = null;
-		Connection conn = null;
-		System.out.println("sql" + sql);
-
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setString(1, login);
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				bean = new UserBean();
-				bean.setId(rs.getLong(1));
-				bean.setFirstName(rs.getString(2));
-				bean.setLastName(rs.getString(3));
-				bean.setLogin(rs.getString(4));
-				bean.setPassword(rs.getString(5));
-				bean.setDob(rs.getDate(6));
-				bean.setMobileNo(rs.getString(7));
-				bean.setRoleId(rs.getLong(8));
-				bean.setUnSuccessfulLogin(rs.getInt(9));
-				bean.setGender(rs.getString(10));
-				bean.setLastLogin(rs.getTimestamp(11));
-				bean.setLock(rs.getString(12));
-				bean.setRegisteredIP(rs.getString(13));
-				bean.setLastLoginIP(rs.getString(14));
-				bean.setCreatedBy(rs.getString(15));
-				bean.setModifiedBy(rs.getString(16));
-				bean.setCreatedDatetime(rs.getTimestamp(17));
-				bean.setModifiedDatetime(rs.getTimestamp(18));
-
-			}
-			rs.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.error("Database Exception..", e);
-			throw new ApplicationException("Exception : Exception in getting User by login");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-		log.debug("Model findByLogin End");
-		return bean;
-	}
-
-	/**
-	 * Find User by PK
-	 * 
-	 * @param pk : get parameter
-	 * @return bean
-	 * @throws DatabaseException
-	 */
-
-	@Override
-	public UserBean findByPK(long pk) throws ApplicationException {
-		log.debug("Model findByPK Started");
-		StringBuffer sql = new StringBuffer("SELECT * FROM ST_USER WHERE ID=?");
-		UserBean bean = null;
-		Connection conn = null;
-
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setLong(1, pk);
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				bean = new UserBean();
-				bean.setId(rs.getLong(1));
-				bean.setFirstName(rs.getString(2));
-				bean.setLastName(rs.getString(3));
-				bean.setLogin(rs.getString(4));
-				bean.setPassword(rs.getString(5));
-				bean.setDob(rs.getDate(6));
-				bean.setMobileNo(rs.getString(7));
-				bean.setRoleId(rs.getLong(8));
-				bean.setUnSuccessfulLogin(rs.getInt(9));
-				bean.setGender(rs.getString(10));
-				bean.setLastLogin(rs.getTimestamp(11));
-				bean.setLock(rs.getString(12));
-				bean.setRegisteredIP(rs.getString(13));
-				bean.setLastLoginIP(rs.getString(14));
-				bean.setCreatedBy(rs.getString(15));
-				bean.setModifiedBy(rs.getString(16));
-				bean.setCreatedDatetime(rs.getTimestamp(17));
-				bean.setModifiedDatetime(rs.getTimestamp(18));
-
-			}
-			rs.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.error("Database Exception..", e);
-			throw new ApplicationException("Exception : Exception in getting User by pk");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-		log.debug("Model findByPK End");
-		return bean;
+		return findByUniqueColumn("LOGIN", login);
 	}
 
 	/**
@@ -260,179 +164,6 @@ public class UserModel extends BaseModel<UserBean> {
 			JDBCDataSource.closeConnection(conn);
 		}
 		log.debug("Model update End");
-	}
-
-	/**
-	 * Search User with pagination
-	 * 
-	 * @return list : List of Users
-	 * @param bean     : Search Parameters
-	 * @param pageNo   : Current Page No.
-	 * @param pageSize : Size of Page
-	 * 
-	 * @throws DatabaseException
-	 */
-
-	@Override
-	public List search(UserBean bean, int pageNo, int pageSize) throws ApplicationException {
-		log.debug("Model search Started");
-		StringBuffer sql = new StringBuffer("SELECT * FROM ST_USER WHERE 1=1");
-
-		if (bean != null) {
-			if (bean.getId() > 0) {
-				sql.append(" AND id = " + bean.getId());
-			}
-			if (bean.getFirstName() != null && bean.getFirstName().length() > 0) {
-				sql.append(" AND FIRST_NAME like '" + bean.getFirstName() + "%'");
-			}
-			if (bean.getLastName() != null && bean.getLastName().length() > 0) {
-				sql.append(" AND LAST_NAME like '" + bean.getLastName() + "%'");
-			}
-			if (bean.getLogin() != null && bean.getLogin().length() > 0) {
-				sql.append(" AND LOGIN like '" + bean.getLogin() + "%'");
-			}
-			if (bean.getPassword() != null && bean.getPassword().length() > 0) {
-				sql.append(" AND PASSWORD like '" + bean.getPassword() + "%'");
-			}
-			if (bean.getDob() != null && bean.getDob().getDate() > 0) {
-				sql.append(" AND DOB = " + bean.getGender());
-			}
-			if (bean.getMobileNo() != null && bean.getMobileNo().length() > 0) {
-				sql.append(" AND MOBILE_NO = " + bean.getMobileNo());
-			}
-			if (bean.getRoleId() > 0) {
-				sql.append(" AND ROLE_ID = " + bean.getRoleId());
-			}
-			if (bean.getUnSuccessfulLogin() > 0) {
-				sql.append(" AND UNSUCCESSFUL_LOGIN = " + bean.getUnSuccessfulLogin());
-			}
-			if (bean.getGender() != null && bean.getGender().length() > 0) {
-				sql.append(" AND GENDER like '" + bean.getGender() + "%'");
-			}
-			if (bean.getLastLogin() != null && bean.getLastLogin().getTime() > 0) {
-				sql.append(" AND LAST_LOGIN = " + bean.getLastLogin());
-			}
-			if (bean.getRegisteredIP() != null && bean.getRegisteredIP().length() > 0) {
-				sql.append(" AND REGISTERED_IP like '" + bean.getRegisteredIP() + "%'");
-			}
-			if (bean.getLastLoginIP() != null && bean.getLastLoginIP().length() > 0) {
-				sql.append(" AND LAST_LOGIN_IP like '" + bean.getLastLoginIP() + "%'");
-			}
-
-		}
-
-		// if page size is greater than zero then apply pagination
-		if (pageSize > 0) {
-			// Calculate start record index
-			pageNo = (pageNo - 1) * pageSize;
-
-			sql.append(" Limit " + pageNo + ", " + pageSize);
-			// sql.append(" limit " + pageNo + "," + pageSize);
-		}
-
-		System.out.println(sql);
-		ArrayList list = new ArrayList();
-		Connection conn = null;
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				bean = new UserBean();
-				bean.setId(rs.getLong(1));
-				bean.setFirstName(rs.getString(2));
-				bean.setLastName(rs.getString(3));
-				bean.setLogin(rs.getString(4));
-				bean.setPassword(rs.getString(5));
-				bean.setDob(rs.getDate(6));
-				bean.setMobileNo(rs.getString(7));
-				bean.setRoleId(rs.getLong(8));
-				bean.setUnSuccessfulLogin(rs.getInt(9));
-				bean.setGender(rs.getString(10));
-				bean.setLastLogin(rs.getTimestamp(11));
-				bean.setLock(rs.getString(12));
-				bean.setRegisteredIP(rs.getString(13));
-				bean.setLastLoginIP(rs.getString(14));
-				bean.setCreatedBy(rs.getString(15));
-				bean.setModifiedBy(rs.getString(16));
-				bean.setCreatedDatetime(rs.getTimestamp(17));
-				bean.setModifiedDatetime(rs.getTimestamp(18));
-
-				list.add(bean);
-			}
-			rs.close();
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			throw new ApplicationException("Exception : Exception in search user");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-
-		log.debug("Model search End");
-		return list;
-	}
-
-	/**
-	 * Get List of User with pagination
-	 * 
-	 * @return list : List of users
-	 * @param pageNo   : Current Page No.
-	 * @param pageSize : Size of Page
-	 * @throws DatabaseException
-	 */
-
-	@Override
-	public List list(int pageNo, int pageSize) throws ApplicationException {
-		log.debug("Model list Started");
-		ArrayList list = new ArrayList();
-		StringBuffer sql = new StringBuffer("select * from ST_USER");
-		// if page size is greater than zero then apply pagination
-		if (pageSize > 0) {
-			// Calculate start record index
-			pageNo = (pageNo - 1) * pageSize;
-			sql.append(" limit " + pageNo + "," + pageSize);
-		}
-
-		Connection conn = null;
-
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				UserBean bean = new UserBean();
-				bean.setId(rs.getLong(1));
-				bean.setFirstName(rs.getString(2));
-				bean.setLastName(rs.getString(3));
-				bean.setLogin(rs.getString(4));
-				bean.setPassword(rs.getString(5));
-				bean.setDob(rs.getDate(6));
-				bean.setMobileNo(rs.getString(7));
-				bean.setRoleId(rs.getLong(8));
-				bean.setUnSuccessfulLogin(rs.getInt(9));
-				bean.setGender(rs.getString(10));
-				bean.setLastLogin(rs.getTimestamp(11));
-				bean.setLock(rs.getString(12));
-				bean.setRegisteredIP(rs.getString(13));
-				bean.setLastLoginIP(rs.getString(14));
-				bean.setCreatedBy(rs.getString(15));
-				bean.setModifiedBy(rs.getString(16));
-				bean.setCreatedDatetime(rs.getTimestamp(17));
-				bean.setModifiedDatetime(rs.getTimestamp(18));
-
-				list.add(bean);
-			}
-			rs.close();
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			throw new ApplicationException("Exception : Exception in getting list of users");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-
-		log.debug("Model list End");
-		return list;
-
 	}
 
 	/**
@@ -704,6 +435,62 @@ public class UserModel extends BaseModel<UserBean> {
 	@Override
 	public String getTable() {
 		return "ST_USER";
+	}
+
+	@Override
+	public UserBean getBean() {
+		return new UserBean();
+	}
+
+	@Override
+	public String getWhereClause(UserBean bean) {
+
+		StringBuffer sql = new StringBuffer();
+
+		if (bean != null) {
+			if (bean.getId() > 0) {
+				sql.append(" AND id = " + bean.getId());
+			}
+			if (bean.getFirstName() != null && bean.getFirstName().length() > 0) {
+				sql.append(" AND FIRST_NAME like '" + bean.getFirstName() + "%'");
+			}
+			if (bean.getLastName() != null && bean.getLastName().length() > 0) {
+				sql.append(" AND LAST_NAME like '" + bean.getLastName() + "%'");
+			}
+			if (bean.getLogin() != null && bean.getLogin().length() > 0) {
+				sql.append(" AND LOGIN like '" + bean.getLogin() + "%'");
+			}
+			if (bean.getPassword() != null && bean.getPassword().length() > 0) {
+				sql.append(" AND PASSWORD like '" + bean.getPassword() + "%'");
+			}
+			if (bean.getDob() != null && bean.getDob().getDate() > 0) {
+				sql.append(" AND DOB = " + bean.getGender());
+			}
+			if (bean.getMobileNo() != null && bean.getMobileNo().length() > 0) {
+				sql.append(" AND MOBILE_NO = " + bean.getMobileNo());
+			}
+			if (bean.getRoleId() > 0) {
+				sql.append(" AND ROLE_ID = " + bean.getRoleId());
+			}
+			if (bean.getUnSuccessfulLogin() > 0) {
+				sql.append(" AND UNSUCCESSFUL_LOGIN = " + bean.getUnSuccessfulLogin());
+			}
+			if (bean.getGender() != null && bean.getGender().length() > 0) {
+				sql.append(" AND GENDER like '" + bean.getGender() + "%'");
+			}
+			if (bean.getLastLogin() != null && bean.getLastLogin().getTime() > 0) {
+				sql.append(" AND LAST_LOGIN = " + bean.getLastLogin());
+			}
+			if (bean.getRegisteredIP() != null && bean.getRegisteredIP().length() > 0) {
+				sql.append(" AND REGISTERED_IP like '" + bean.getRegisteredIP() + "%'");
+			}
+			if (bean.getLastLoginIP() != null && bean.getLastLoginIP().length() > 0) {
+				sql.append(" AND LAST_LOGIN_IP like '" + bean.getLastLoginIP() + "%'");
+			}
+
+		}
+
+		return sql.toString();
 	}
 
 }

@@ -1,5 +1,8 @@
 package com.sunilos.p4.bean;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  * College JavaBean encapsulates College attributes
  * 
@@ -85,4 +88,17 @@ public class CollegeBean extends BaseBean {
 		return name;
 	}
 
+	@Override
+	public void setResultset(ResultSet rs) {
+		try {
+			super.setResultset(rs);
+			this.setName(rs.getString(2));
+			this.setAddress(rs.getString(3));
+			this.setState(rs.getString(4));
+			this.setCity(rs.getString(5));
+			this.setPhoneNo(rs.getString(6));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

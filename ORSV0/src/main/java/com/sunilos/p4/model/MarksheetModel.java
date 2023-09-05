@@ -98,86 +98,7 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 	 */
 
 	public MarksheetBean findByRollNo(String rollNo) throws ApplicationException {
-		log.debug("Model findByRollNo Started");
-
-		StringBuffer sql = new StringBuffer("SELECT * FROM ST_MARKSHEET WHERE ROLL_NO=?");
-		MarksheetBean bean = null;
-		Connection conn = null;
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setString(1, rollNo);
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				bean = new MarksheetBean();
-				bean.setId(rs.getLong(1));
-				bean.setRollNo(rs.getString(2));
-				bean.setStudentId(rs.getLong(3));
-				bean.setName(rs.getString(4));
-				bean.setPhysics(rs.getInt(5));
-				bean.setChemistry(rs.getInt(6));
-				bean.setMaths(rs.getInt(7));
-				bean.setCreatedBy(rs.getString(8));
-				bean.setModifiedBy(rs.getString(9));
-				bean.setCreatedDatetime(rs.getTimestamp(10));
-				bean.setModifiedDatetime(rs.getTimestamp(11));
-			}
-			rs.close();
-		} catch (Exception e) {
-			log.error(e);
-			throw new ApplicationException("Exception in getting marksheet by roll no");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-
-		log.debug("Model findByRollNo End");
-		return bean;
-	}
-
-	/**
-	 * Finds Marksheet by PK
-	 * 
-	 * @param pk : get parameter
-	 * @return bean
-	 * @throws DatabaseException
-	 */
-
-	@Override
-	public MarksheetBean findByPK(long pk) throws ApplicationException {
-		log.debug("Model findByPK Started");
-
-		StringBuffer sql = new StringBuffer("SELECT * FROM ST_MARKSHEET WHERE ID=?");
-		MarksheetBean bean = null;
-		Connection conn = null;
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setLong(1, pk);
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				bean = new MarksheetBean();
-				bean.setId(rs.getLong(1));
-				bean.setRollNo(rs.getString(2));
-				bean.setStudentId(rs.getLong(3));
-				bean.setName(rs.getString(4));
-				bean.setPhysics(rs.getInt(5));
-				bean.setChemistry(rs.getInt(6));
-				bean.setMaths(rs.getInt(7));
-				bean.setCreatedBy(rs.getString(8));
-				bean.setModifiedBy(rs.getString(9));
-				bean.setCreatedDatetime(rs.getTimestamp(10));
-				bean.setModifiedDatetime(rs.getTimestamp(11));
-
-			}
-			rs.close();
-		} catch (Exception e) {
-			log.error(e);
-			throw new ApplicationException("Exception in getting marksheet by pk");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-		log.debug("Model findByPK End");
-		return bean;
+		return findByUniqueColumn("ROLL_NO", rollNo);
 	}
 
 	/**
@@ -242,146 +163,6 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 	}
 
 	/**
-	 * Searches Marksheet with pagination
-	 * 
-	 * @return list : List of Marksheets
-	 * @param bean     : Search Parameters
-	 * @param pageNo   : Current Page No.
-	 * @param pageSize : Size of Page
-	 * 
-	 * @throws DatabaseException
-	 */
-
-	@Override
-	public List search(MarksheetBean bean, int pageNo, int pageSize) throws ApplicationException {
-
-		log.debug("Model  search Started");
-
-		StringBuffer sql = new StringBuffer("select * from ST_MARKSHEET where true");
-
-		if (bean != null) {
-			System.out.println("service" + bean.getName());
-			if (bean.getId() > 0) {
-				sql.append(" AND id = " + bean.getId());
-			}
-			if (bean.getRollNo() != null && bean.getRollNo().length() > 0) {
-				sql.append(" AND roll_no like '" + bean.getRollNo() + "%'");
-			}
-			if (bean.getName() != null && bean.getName().length() > 0) {
-				sql.append(" AND name like '" + bean.getName() + "%'");
-			}
-			if (bean.getPhysics() != null && bean.getPhysics() > 0) {
-				sql.append(" AND physics = " + bean.getPhysics());
-			}
-			if (bean.getChemistry() != null && bean.getChemistry() > 0) {
-				sql.append(" AND chemistry = " + bean.getChemistry());
-			}
-			if (bean.getMaths() != null && bean.getMaths() > 0) {
-				sql.append(" AND maths = '" + bean.getMaths());
-			}
-
-		}
-
-		// if page size is greater than zero then apply pagination
-		if (pageSize > 0) {
-			// Calculate start record index
-			pageNo = (pageNo - 1) * pageSize;
-
-			sql.append(" Limit " + pageNo + ", " + pageSize);
-			// sql.append(" limit " + pageNo + "," + pageSize);
-		}
-
-		ArrayList list = new ArrayList();
-		Connection conn = null;
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				bean = new MarksheetBean();
-				bean.setId(rs.getLong(1));
-				bean.setRollNo(rs.getString(2));
-				bean.setStudentId(rs.getLong(3));
-				bean.setName(rs.getString(4));
-				bean.setPhysics(rs.getInt(5));
-				bean.setChemistry(rs.getInt(6));
-				bean.setMaths(rs.getInt(7));
-				bean.setCreatedBy(rs.getString(8));
-				bean.setModifiedBy(rs.getString(9));
-				bean.setCreatedDatetime(rs.getTimestamp(10));
-				bean.setModifiedDatetime(rs.getTimestamp(11));
-				list.add(bean);
-			}
-			rs.close();
-		} catch (Exception e) {
-			log.error(e);
-			throw new ApplicationException("Update rollback exception " + e.getMessage());
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-
-		log.debug("Model  search End");
-		return list;
-	}
-
-	/**
-	 * get List of Marksheet with pagination
-	 * 
-	 * @return list : List of Marksheets
-	 * @param pageNo   : Current Page No.
-	 * @param pageSize : Size of Page
-	 * @throws DatabaseException
-	 */
-
-	@Override
-	public List list(int pageNo, int pageSize) throws ApplicationException {
-
-		log.debug("Model  list Started");
-
-		ArrayList list = new ArrayList();
-		StringBuffer sql = new StringBuffer("select * from ST_MARKSHEET");
-		// if page size is greater than zero then apply pagination
-		if (pageSize > 0) {
-			// Calculate start record index
-			pageNo = (pageNo - 1) * pageSize;
-			sql.append(" limit " + pageNo + "," + pageSize);
-		}
-
-		Connection conn = null;
-
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				MarksheetBean bean = new MarksheetBean();
-				bean.setId(rs.getLong(1));
-				bean.setRollNo(rs.getString(2));
-				bean.setStudentId(rs.getLong(3));
-				bean.setName(rs.getString(4));
-				bean.setPhysics(rs.getInt(5));
-				bean.setChemistry(rs.getInt(6));
-				bean.setMaths(rs.getInt(7));
-				bean.setCreatedBy(rs.getString(8));
-				bean.setModifiedBy(rs.getString(9));
-				bean.setCreatedDatetime(rs.getTimestamp(10));
-				bean.setModifiedDatetime(rs.getTimestamp(11));
-				list.add(bean);
-			}
-			rs.close();
-		} catch (Exception e) {
-			log.error(e);
-			throw new ApplicationException("Exception in getting list of Marksheet");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-
-		log.debug("Model  list End");
-		return list;
-
-	}
-
-	/**
 	 * get Merit List of Marksheet with pagination
 	 * 
 	 * @return list : List of Marksheets
@@ -432,6 +213,40 @@ public class MarksheetModel extends BaseModel<MarksheetBean> {
 	@Override
 	public String getTable() {
 		return "ST_MARKSHEET";
+	}
+
+	@Override
+	public MarksheetBean getBean() {
+		return new MarksheetBean();
+	}
+
+	@Override
+	public String getWhereClause(MarksheetBean bean) {
+		StringBuffer sql = new StringBuffer();
+
+		if (bean != null) {
+			System.out.println("service" + bean.getName());
+			if (bean.getId() > 0) {
+				sql.append(" AND id = " + bean.getId());
+			}
+			if (bean.getRollNo() != null && bean.getRollNo().length() > 0) {
+				sql.append(" AND roll_no like '" + bean.getRollNo() + "%'");
+			}
+			if (bean.getName() != null && bean.getName().length() > 0) {
+				sql.append(" AND name like '" + bean.getName() + "%'");
+			}
+			if (bean.getPhysics() != null && bean.getPhysics() > 0) {
+				sql.append(" AND physics = " + bean.getPhysics());
+			}
+			if (bean.getChemistry() != null && bean.getChemistry() > 0) {
+				sql.append(" AND chemistry = " + bean.getChemistry());
+			}
+			if (bean.getMaths() != null && bean.getMaths() > 0) {
+				sql.append(" AND maths = '" + bean.getMaths());
+			}
+
+		}
+		return sql.toString();
 	}
 
 }

@@ -1,6 +1,8 @@
 package com.sunilos.p4.bean;
 
 import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 
 /**
@@ -86,5 +88,17 @@ public abstract class BaseBean implements Serializable, DropdownListBean, Compar
 	@Override
 	public int compareTo(BaseBean next) {
 		return getValue().compareTo(next.getValue());
+	}
+
+	public void setResultset(ResultSet rs) {
+		try {
+			this.setId(rs.getLong(1));
+			this.setCreatedBy(rs.getString(9));
+			this.setModifiedBy(rs.getString(10));
+			this.setCreatedDatetime(rs.getTimestamp(11));
+			this.setModifiedDatetime(rs.getTimestamp(12));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -2,9 +2,6 @@ package com.sunilos.p4.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -32,6 +29,7 @@ public class RoleModel extends BaseModel<RoleBean> {
 	 * @throws DatabaseException
 	 * 
 	 */
+	@Override
 	public long add(RoleBean bean) throws ApplicationException, DuplicateRecordException {
 		log.debug("Model add Started");
 		Connection conn = null;
@@ -85,74 +83,7 @@ public class RoleModel extends BaseModel<RoleBean> {
 	 */
 
 	public RoleBean findByName(String name) throws ApplicationException {
-		log.debug("Model findBy EmailId Started");
-		StringBuffer sql = new StringBuffer("SELECT * FROM ST_ROLE WHERE NAME=?");
-		RoleBean bean = null;
-		Connection conn = null;
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setString(1, name);
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				bean = new RoleBean();
-				bean.setId(rs.getLong(1));
-				bean.setName(rs.getString(2));
-				bean.setDescription(rs.getString(3));
-				bean.setCreatedBy(rs.getString(4));
-				bean.setModifiedBy(rs.getString(5));
-				bean.setCreatedDatetime(rs.getTimestamp(6));
-				bean.setModifiedDatetime(rs.getTimestamp(7));
-
-			}
-			rs.close();
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			throw new ApplicationException("Exception : Exception in getting User by emailId");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-		log.debug("Model findBy EmailId End");
-		return bean;
-	}
-
-	/**
-	 * Find Role by PK
-	 * 
-	 * @param pk : get parameter
-	 * @return bean
-	 * @throws DatabaseException
-	 */
-
-	public RoleBean findByPK(long pk) throws ApplicationException {
-		log.debug("Model findByPK Started");
-		StringBuffer sql = new StringBuffer("SELECT * FROM ST_ROLE WHERE ID=?");
-		RoleBean bean = null;
-		Connection conn = null;
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setLong(1, pk);
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				bean = new RoleBean();
-				bean.setId(rs.getLong(1));
-				bean.setName(rs.getString(2));
-				bean.setDescription(rs.getString(3));
-				bean.setCreatedBy(rs.getString(4));
-				bean.setModifiedBy(rs.getString(5));
-				bean.setCreatedDatetime(rs.getTimestamp(6));
-				bean.setModifiedDatetime(rs.getTimestamp(7));
-			}
-			rs.close();
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			throw new ApplicationException("Exception : Exception in getting User by pk");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-		log.debug("Model findByPK End");
-		return bean;
+		return findByUniqueColumn("NAME", name);
 	}
 
 	/**
@@ -162,6 +93,7 @@ public class RoleModel extends BaseModel<RoleBean> {
 	 * @throws DatabaseException
 	 */
 
+	@Override
 	public void update(RoleBean bean) throws ApplicationException, DuplicateRecordException {
 		log.debug("Model update Started");
 		Connection conn = null;
@@ -201,22 +133,14 @@ public class RoleModel extends BaseModel<RoleBean> {
 		log.debug("Model update End");
 	}
 
+	@Override
+	public String getTable() {
+		return "ST_ROLE";
+	}
 
-
-	/**
-	 * Search Role with pagination
-	 * 
-	 * @return list : List of Roles
-	 * @param bean     : Search Parameters
-	 * @param pageNo   : Current Page No.
-	 * @param pageSize : Size of Page
-	 * 
-	 * @throws DatabaseException
-	 */
-
-	public List search(RoleBean bean, int pageNo, int pageSize) throws ApplicationException {
-		log.debug("Model search Started");
-		StringBuffer sql = new StringBuffer("SELECT * FROM ST_ROLE WHERE 1=1");
+	@Override
+	public String getWhereClause(RoleBean bean) {
+		StringBuffer sql = new StringBuffer();
 
 		if (bean != null) {
 			if (bean.getId() > 0) {
@@ -231,97 +155,11 @@ public class RoleModel extends BaseModel<RoleBean> {
 
 		}
 
-		// if page size is greater than zero then apply pagination
-		if (pageSize > 0) {
-			// Calculate start record index
-			pageNo = (pageNo - 1) * pageSize;
-
-			sql.append(" Limit " + pageNo + ", " + pageSize);
-			// sql.append(" limit " + pageNo + "," + pageSize);
-		}
-
-		ArrayList list = new ArrayList();
-		Connection conn = null;
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				bean = new RoleBean();
-				bean.setId(rs.getLong(1));
-				bean.setName(rs.getString(2));
-				bean.setDescription(rs.getString(3));
-				bean.setCreatedBy(rs.getString(4));
-				bean.setModifiedBy(rs.getString(5));
-				bean.setCreatedDatetime(rs.getTimestamp(6));
-				bean.setModifiedDatetime(rs.getTimestamp(7));
-				list.add(bean);
-			}
-			rs.close();
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			throw new ApplicationException("Exception : Exception in search Role");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-
-		log.debug("Model search End");
-		return list;
-	}
-
-
-	/**
-	 * Get List of Role with pagination
-	 * 
-	 * @return list : List of Role
-	 * @param pageNo   : Current Page No.
-	 * @param pageSize : Size of Page
-	 * @throws DatabaseException
-	 */
-
-	public List list(int pageNo, int pageSize) throws ApplicationException {
-		log.debug("Model list Started");
-		ArrayList list = new ArrayList();
-		StringBuffer sql = new StringBuffer("select * from ST_ROLE");
-		// if page size is greater than zero then apply pagination
-		if (pageSize > 0) {
-			// Calculate start record index
-			pageNo = (pageNo - 1) * pageSize;
-			sql.append(" limit " + pageNo + "," + pageSize);
-		}
-
-		Connection conn = null;
-
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				RoleBean bean = new RoleBean();
-				bean.setId(rs.getLong(1));
-				bean.setName(rs.getString(2));
-				bean.setDescription(rs.getString(3));
-				bean.setCreatedBy(rs.getString(4));
-				bean.setModifiedBy(rs.getString(5));
-				bean.setCreatedDatetime(rs.getTimestamp(6));
-				bean.setModifiedDatetime(rs.getTimestamp(7));
-				list.add(bean);
-			}
-			rs.close();
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			throw new ApplicationException("Exception : Exception in getting list of Role");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-
-		log.debug("Model list End");
-		return list;
-
+		return sql.toString();
 	}
 
 	@Override
-	public String getTable() {
-		return "ST_ROLE";
+	public RoleBean getBean() {
+		return new RoleBean();
 	}
 }

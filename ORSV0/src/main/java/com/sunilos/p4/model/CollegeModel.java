@@ -2,9 +2,6 @@ package com.sunilos.p4.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -32,6 +29,7 @@ public class CollegeModel extends BaseModel<CollegeBean> {
 	 * @throws DatabaseException
 	 * 
 	 */
+	@Override
 	public long add(CollegeBean bean) throws ApplicationException, DuplicateRecordException {
 		log.debug("Model add Started");
 		Connection conn = null;
@@ -86,81 +84,7 @@ public class CollegeModel extends BaseModel<CollegeBean> {
 	 * @throws DatabaseException
 	 */
 	public CollegeBean findByName(String name) throws ApplicationException {
-		log.debug("Model findByName Started");
-		StringBuffer sql = new StringBuffer("SELECT * FROM ST_COLLEGE WHERE NAME=?");
-		CollegeBean bean = null;
-		Connection conn = null;
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setString(1, name);
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				bean = new CollegeBean();
-				bean.setId(rs.getLong(1));
-				bean.setName(rs.getString(2));
-				bean.setAddress(rs.getString(3));
-				bean.setState(rs.getString(4));
-				bean.setCity(rs.getString(5));
-				bean.setPhoneNo(rs.getString(6));
-				bean.setCreatedBy(rs.getString(7));
-				bean.setModifiedBy(rs.getString(8));
-				bean.setCreatedDatetime(rs.getTimestamp(9));
-				bean.setModifiedDatetime(rs.getTimestamp(10));
-
-			}
-			rs.close();
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			throw new ApplicationException("Exception : Exception in getting College by Name");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-		log.debug("Model findByName End");
-		return bean;
-	}
-
-	/**
-	 * Find User by College
-	 * 
-	 * @param pk : get parameter
-	 * @return bean
-	 * @throws DatabaseException
-	 */
-	public CollegeBean findByPK(long pk) throws ApplicationException {
-		log.debug("Model findByPK Started");
-		StringBuffer sql = new StringBuffer("SELECT * FROM ST_COLLEGE WHERE ID=?");
-		CollegeBean bean = null;
-		Connection conn = null;
-		try {
-
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setLong(1, pk);
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				bean = new CollegeBean();
-				bean.setId(rs.getLong(1));
-				bean.setName(rs.getString(2));
-				bean.setAddress(rs.getString(3));
-				bean.setState(rs.getString(4));
-				bean.setCity(rs.getString(5));
-				bean.setPhoneNo(rs.getString(6));
-				bean.setCreatedBy(rs.getString(7));
-				bean.setModifiedBy(rs.getString(8));
-				bean.setCreatedDatetime(rs.getTimestamp(9));
-				bean.setModifiedDatetime(rs.getTimestamp(10));
-
-			}
-			rs.close();
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			throw new ApplicationException("Exception : Exception in getting College by pk");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-		log.debug("Model findByPK End");
-		return bean;
+		return findByUniqueColumn("NAME", name);
 	}
 
 	/**
@@ -169,6 +93,7 @@ public class CollegeModel extends BaseModel<CollegeBean> {
 	 * @param bean
 	 * @throws DatabaseException
 	 */
+	@Override
 	public void update(CollegeBean bean) throws ApplicationException, DuplicateRecordException {
 		log.debug("Model update Started");
 		Connection conn = null;
@@ -215,19 +140,20 @@ public class CollegeModel extends BaseModel<CollegeBean> {
 		log.debug("Model update End");
 	}
 
-	/**
-	 * Search College with pagination
-	 * 
-	 * @return list : List of Users
-	 * @param bean     : Search Parameters
-	 * @param pageNo   : Current Page No.
-	 * @param pageSize : Size of Page
-	 * 
-	 * @throws DatabaseException
-	 */
-	public List search(CollegeBean bean, int pageNo, int pageSize) throws ApplicationException {
-		log.debug("Model search Started");
-		StringBuffer sql = new StringBuffer("SELECT * FROM ST_COLLEGE WHERE 1=1");
+	@Override
+	public String getTable() {
+		return "ST_COLLEGE";
+	}
+
+	@Override
+	public CollegeBean getBean() {
+		return new CollegeBean();
+	}
+
+	@Override
+	public String getWhereClause(CollegeBean bean) {
+
+		StringBuffer sql = new StringBuffer();
 
 		if (bean != null) {
 			if (bean.getId() > 0) {
@@ -250,102 +176,7 @@ public class CollegeModel extends BaseModel<CollegeBean> {
 			}
 
 		}
-
-		// if page size is greater than zero then apply pagination
-		if (pageSize > 0) {
-			// Calculate start record index
-			pageNo = (pageNo - 1) * pageSize;
-
-			sql.append(" Limit " + pageNo + ", " + pageSize);
-			// sql.append(" limit " + pageNo + "," + pageSize);
-		}
-
-		ArrayList list = new ArrayList();
-		Connection conn = null;
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				bean = new CollegeBean();
-				bean.setId(rs.getLong(1));
-				bean.setName(rs.getString(2));
-				bean.setAddress(rs.getString(3));
-				bean.setState(rs.getString(4));
-				bean.setCity(rs.getString(5));
-				bean.setPhoneNo(rs.getString(6));
-				bean.setCreatedBy(rs.getString(7));
-				bean.setModifiedBy(rs.getString(8));
-				bean.setCreatedDatetime(rs.getTimestamp(9));
-				bean.setModifiedDatetime(rs.getTimestamp(10));
-				list.add(bean);
-			}
-			rs.close();
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			throw new ApplicationException("Exception : Exception in search college");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-
-		log.debug("Model search End");
-		return list;
+		return sql.toString();
 	}
 
-	/**
-	 * Get List of College with pagination
-	 * 
-	 * @return list : List of College
-	 * @param pageNo   : Current Page No.
-	 * @param pageSize : Size of Page
-	 * @throws DatabaseException
-	 */
-	public List list(int pageNo, int pageSize) throws ApplicationException {
-		log.debug("Model list Started");
-		ArrayList list = new ArrayList();
-		StringBuffer sql = new StringBuffer("select * from ST_COLLEGE");
-		// if page size is greater than zero then apply pagination
-		if (pageSize > 0) {
-			// Calculate start record index
-			pageNo = (pageNo - 1) * pageSize;
-			sql.append(" limit " + pageNo + "," + pageSize);
-		}
-
-		Connection conn = null;
-
-		try {
-			conn = JDBCDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				CollegeBean bean = new CollegeBean();
-				bean.setId(rs.getLong(1));
-				bean.setName(rs.getString(2));
-				bean.setAddress(rs.getString(3));
-				bean.setState(rs.getString(4));
-				bean.setCity(rs.getString(5));
-				bean.setPhoneNo(rs.getString(6));
-				bean.setCreatedBy(rs.getString(7));
-				bean.setModifiedBy(rs.getString(8));
-				bean.setCreatedDatetime(rs.getTimestamp(9));
-				bean.setModifiedDatetime(rs.getTimestamp(10));
-				list.add(bean);
-			}
-			rs.close();
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			throw new ApplicationException("Exception : Exception in getting list of users");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-
-		log.debug("Model list End");
-		return list;
-
-	}
-
-	@Override
-	public String getTable() {
-		return "ST_COLLEGE";
-	}
 }
