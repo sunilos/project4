@@ -59,6 +59,48 @@
 
 	<build>
 		<finalName>ORSV0</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>3.0.0</version> <!-- Use the latest version -->
+				<executions>
+					<execution>
+						<id>stop-tomcat</id>
+						<phase>pre-integration-test</phase> <!-- Choose an appropriate phase -->
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<echo message="Starting tomcat" />
+								<!-- Ant tasks to stop Tomcat -->
+								<exec executable="${tomcat.home}/bin/catalina.bat" dir="${tomcat.home}/bin">
+									<arg line="stop" />
+								</exec>
+								<exec executable="${tomcat.home}/bin/catalina.bat" dir="${tomcat.home}/bin">
+									<arg line="start" />
+								</exec>
+							</target>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-war</id>
+						<phase>package</phase> <!-- Run the goal during the package phase -->
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<delete dir="${tomcat.home}/webapps/${project.build.finalName}" />
+								<delete file="${tomcat.home}/webapps/${project.build.finalName}.war" />
+								<!-- Copy the WAR file to C:\temp -->
+								<copy file="${project.build.directory}/${project.build.finalName}.war" tofile="E:/java/apache-tomcat-8.5.69/webapps/${project.build.finalName}.war" />
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 	</build>
-
 </project>
