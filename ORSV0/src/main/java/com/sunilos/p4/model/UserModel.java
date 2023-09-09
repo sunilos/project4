@@ -339,6 +339,7 @@ public class UserModel extends BaseModel<UserBean> {
 
 		long pk = add(bean);
 
+		try {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("login", bean.getLogin());
 		map.put("password", bean.getPassword());
@@ -351,8 +352,11 @@ public class UserModel extends BaseModel<UserBean> {
 		msg.setSubject("Registration is successful for ORS Project Rays Technologies");
 		msg.setMessage(message);
 		msg.setMessageType(EmailMessage.HTML_MSG);
-
 		EmailUtility.sendMail(msg);
+
+		} catch (ApplicationException e) {
+			log.error("Email Server error, your emails may get delay", e);
+		}
 		return pk;
 	}
 

@@ -29,7 +29,7 @@
         <th></th>
         <td colspan="2">
            <input type="submit"  class="primary-btn"  name="operation" value="<%=LoginCtl.OP_SIGN_IN %>"> &nbsp; 
-           <input type="submit" class="secondary-btn" name="operation" value="<%=LoginCtl.OP_SIGN_UP %>" > &nbsp;
+           <a class="success-btn" href="<%=ORSView.USER_REGISTRATION_CTL%>">SignUp</a>&nbsp;
         </td>
      </tr>
      <tr>

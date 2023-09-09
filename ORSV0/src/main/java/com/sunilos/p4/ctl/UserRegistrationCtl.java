@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,7 +11,6 @@ import org.apache.log4j.Logger;
 
 import com.sunilos.p4.bean.RoleBean;
 import com.sunilos.p4.bean.UserBean;
-import com.sunilos.p4.exception.ApplicationException;
 import com.sunilos.p4.exception.DuplicateRecordException;
 import com.sunilos.p4.model.UserModel;
 import com.sunilos.p4.util.DataUtility;
@@ -123,49 +121,28 @@ public class UserRegistrationCtl extends BaseCtl<UserBean, UserModel> {
 		return bean;
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println("in get method");
-		log.debug("UserRegistrationCtl Method doGet Started");
+
+		log.debug("CollegeCtl Method doGet Started");
 
 		String op = DataUtility.getString(request.getParameter("operation"));
 
 		// get model
-		UserModel model = new UserModel();
 
-		long id = DataUtility.getLong(request.getParameter("id"));
-
-		if (OP_SIGN_UP.equalsIgnoreCase(op)) {
-
-			UserBean bean = populateBean(request);
-
-			try {
-				long pk = model.registerUser(bean);
-				bean.setId(pk);
-				request.getSession().setAttribute("UserBean", bean);
-				ServletUtility.redirect(ORSView.LOGIN_CTL, request, response);
-				return;
-			} catch (ApplicationException e) {
-				log.error(e);
-				ServletUtility.handleException(e, request, response);
-				return;
-			} catch (DuplicateRecordException e) {
-				log.error(e);
-				ServletUtility.setBean(bean, request);
-				ServletUtility.setErrorMessage("Login id already exists", request);
-				ServletUtility.forward(ORSView.USER_REGISTRATION_VIEW, request, response);
-			}
-
-		} else {
-			ServletUtility.forward(ORSView.USER_REGISTRATION_VIEW, request, response);
+		UserBean bean = populateBean(request);
+		UserModel model = getModel();
+		try {
+			long pk = model.registerUser(bean);
+			bean.setId(pk);
+			ServletUtility.setSuccessMessage("User is registred, Login now", request);
+		} catch (DuplicateRecordException e) {
+			log.error(e);
+			ServletUtility.setErrorMessage("Login id already exists", request);
 		}
-
-		log.debug("UserRegistrationCtl Method doGet Ended");
+		ServletUtility.setBean(bean, request);
+		ServletUtility.forwardPage(getView(), request, response);
 	}
 
 	@Override

@@ -99,12 +99,11 @@ public abstract class BaseModel<T extends BaseBean> {
 		StringBuffer sql = new StringBuffer("SELECT * FROM " + getTable() + " WHERE " + column + "='" + value + "'");
 
 		T bean = null;
-		Connection conn = null;
 
+		Connection conn = null;
 		try {
 			conn = JDBCDataSource.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setString(1, value);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				bean = getBean();

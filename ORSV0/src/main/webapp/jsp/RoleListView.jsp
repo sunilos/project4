@@ -27,7 +27,7 @@
             <td align="center">
                <label>Name :</label> <input type="text" name="name" value="<%=ServletUtility.getParameter("name", request)%>">&nbsp; 
                <input  class="primary-btn" type="submit" name="operation" value="<%=BaseCtl.OP_SEARCH %>">&nbsp;
-               <a  class="success-btn" href="StudentCtl">Add</a>&nbsp;
+               <a  class="success-btn" href="<%=ORSView.ROLE_CTL%>">Add</a>&nbsp;
                <input  class="danger-btn" type="submit" name="operation" value="<%=BaseCtl.OP_DELETE%>">                  
             </td>
          </tr>
