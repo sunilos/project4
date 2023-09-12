@@ -16,6 +16,7 @@ import com.sunilos.p4.exception.DuplicateRecordException;
 import com.sunilos.p4.model.BaseModel;
 import com.sunilos.p4.util.DataUtility;
 import com.sunilos.p4.util.DataValidator;
+import com.sunilos.p4.util.MessageSource;
 import com.sunilos.p4.util.ServletUtility;
 
 /**
@@ -129,6 +130,7 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
 
 		// Load the necessary preloaded data for displaying in an HTML form
 		preload(request);
+		getMessageSource(request);
 
 		String op = DataUtility.getString(request.getParameter("operation"));
 
@@ -246,4 +248,9 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
 	 * @return
 	 */
 	protected abstract M getModel();
+
+	public MessageSource getMessageSource(HttpServletRequest request) {
+		MessageSource messagesource = (MessageSource) request.getServletContext().getAttribute("messagesource");
+		return messagesource;
+	}
 }

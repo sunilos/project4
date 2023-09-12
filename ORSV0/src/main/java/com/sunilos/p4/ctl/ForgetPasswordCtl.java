@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.sunilos.p4.bean.UserBean;
-import com.sunilos.p4.exception.ApplicationException;
 import com.sunilos.p4.exception.RecordNotFoundException;
 import com.sunilos.p4.model.UserModel;
 import com.sunilos.p4.util.DataUtility;
@@ -73,35 +72,25 @@ public class ForgetPasswordCtl extends BaseCtl<UserBean, UserModel> {
 	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		log.debug("ForgetPasswordCtl Method doGet Started");
 
-		String op = DataUtility.getString(request.getParameter("operation"));
+		log.debug("ForgetPasswordCtl Method doGet Started");
 
 		UserBean bean = populateBean(request);
 
 		// get model
-		UserModel model = new UserModel();
+		UserModel model = getModel();
 
-		if (OP_GO.equalsIgnoreCase(op)) {
-
-			try {
-				model.forgetPassword(bean.getLogin());
-				ServletUtility.setSuccessMessage("Password has been sent to your email id.", request);
-			} catch (RecordNotFoundException e) {
-				ServletUtility.setErrorMessage(e.getMessage(), request);
-				log.error(e);
-			} catch (ApplicationException e) {
-				log.error(e);
-				ServletUtility.handleException(e, request, response);
-				return;
-			}
-			ServletUtility.forward(ORSView.FORGET_PASSWORD_VIEW, request, response);
-		} else {
-			ServletUtility.forward(ORSView.FORGET_PASSWORD_VIEW, request, response);
+		try {
+			model.forgetPassword(bean.getLogin());
+			ServletUtility.setSuccessMessage("Password has been sent to your email id.", request);
+		} catch (RecordNotFoundException e) {
+			ServletUtility.setErrorMessage(e.getMessage(), request);
+			log.error(e);
 		}
 
+		ServletUtility.forwardPage(getView(), request, response);
 		log.debug("ForgetPasswordCtl Method doGet Ended");
 	}
 

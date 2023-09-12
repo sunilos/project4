@@ -3,6 +3,10 @@
 <%@page import="com.sunilos.p4.bean.UserBean"%>
 <%@page import="com.sunilos.p4.ctl.ORSView"%>
 <%
+   MessageSource ms = (MessageSource) application.getAttribute("messagesource");
+   String locale = ms.getLanguage();
+   %>
+<%
    UserBean userBean = (UserBean) session.getAttribute("user");
    
    boolean userLoggedIn = userBean != null;
@@ -15,6 +19,7 @@
    } else {
    	welcomeMsg += "Guest";
    }
+   
    %>
 <table width="100%" border="0">
    <tr>
@@ -24,17 +29,22 @@
          </h1>
       </td>
       <td align="right" >
-      		<a class="primary-btn" href="<%=ORSView.WELCOME_CTL%>">Home<i class="fas fa-home"></i></a> 
-         <%
-            if (userLoggedIn) {
-            %> <a class="primary-btn" href="<%=ORSView.LOGIN_CTL%>?operation=<%=LoginCtl.OP_LOG_OUT%>">Logout</b></a>
-         <%
-            } else {
-            %> <a class="primary-btn" href="<%=ORSView.LOGIN_CTL%>">Login</b> <i class="fas fa-star"></i> </a> <%
-            }
-            %>
+         <form>
+            <select class="primary-btn" name="lang" id="lang" onChange="this.form.submit()">
+               <option value="en"  <%=("en".equals(locale))?"selected":""%> >English</option>
+               <option value="hi"  <%=("hi".equals(locale))?"selected":""%> >Hindi</option>
+            </select>
+            <a class="primary-btn" href="<%=ORSView.WELCOME_CTL%>">Home<i class="fas fa-home"></i></a> 
+            <%
+               if (userLoggedIn) {
+               %> <a class="primary-btn" href="<%=ORSView.LOGIN_CTL%>?operation=<%=LoginCtl.OP_LOG_OUT%>">Logout</b></a>
+            <%
+               } else {
+               %> <a class="primary-btn" href="<%=ORSView.LOGIN_CTL%>">Login</b> <i class="fas fa-star"></i> </a> <%
+               }
+               %>
+         </form>
       </td>
-
    </tr>
    <tr>
       <td align="right">
@@ -52,7 +62,7 @@
          <a class="primary-btn" href="<%=ORSView.MARKSHEET_MERIT_LIST_CTL%>">Marksheet Merit List</b></a> | 
          <%
             if (userBean.getRoleId() == RoleBean.ADMIN) {
-         %> 
+            %> 
          <a class="primary-btn" href="<%=ORSView.ROLE_CTL%>">Add Role</b></a>  
          <a class="primary-btn" href="<%=ORSView.ROLE_LIST_CTL%>">Role List</b></a>   
          <a class="primary-btn" href="<%=ORSView.USER_CTL%>">Add User</b></a>  
@@ -65,7 +75,7 @@
          <a class="primary-btn" href="<%=ORSView.MARKSHEET_LIST_CTL%>">Marksheet List</b></a>  
          <%
             }
-         %>
+            %>
          <a class="primary-btn" href="<%=ORSView.MY_PROFILE_CTL%>">MyProfile</b></a>  
          <a class="primary-btn" href="<%=ORSView.CHANGE_PASSWORD_CTL%>">Change Password</b></a>  
          <a class="primary-btn" href="<%=ORSView.JAVA_DOC_VIEW%>">Java Doc</b></a> 
