@@ -43,6 +43,10 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
 	public static final String OP_BACK = "Back";
 	public static final String OP_LOG_OUT = "Logout";
 
+	// controller error constants
+	public static final String HAS_ERROR = "haserror";
+	public static final String MESSAGE = "message";
+
 	/**
 	 * Success message key constant
 	 */

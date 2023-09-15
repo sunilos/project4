@@ -3,6 +3,7 @@
 <%@page import="com.sunilos.p4.util.MessageSource"%>
 
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib uri="http://www.sunilos.com/ors-tags" prefix="ors" %>
 
 <html>
    

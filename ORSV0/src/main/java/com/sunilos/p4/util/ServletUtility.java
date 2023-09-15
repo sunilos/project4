@@ -120,6 +120,8 @@ public class ServletUtility {
 	 */
 	public static void setErrorMessage(String msg, HttpServletRequest request) {
 		setMessage(BaseCtl.MSG_ERROR, msg, request);
+		setMessage(BaseCtl.HAS_ERROR, "true", request);
+		setMessage(BaseCtl.MESSAGE, msg, request);
 	}
 
 	/**
@@ -155,6 +157,8 @@ public class ServletUtility {
 	 */
 	public static void setSuccessMessage(String msg, HttpServletRequest request) {
 		setMessage(BaseCtl.MSG_SUCCESS, msg, request);
+		setMessage(BaseCtl.HAS_ERROR, "false", request);
+		setMessage(BaseCtl.MESSAGE, msg, request);
 	}
 
 	/**

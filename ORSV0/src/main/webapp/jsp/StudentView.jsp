@@ -1,15 +1,21 @@
+<%@ taglib uri="http://www.sunilos.com/ors-tags" prefix="ors" %>
+
 <%@page import="com.sunilos.p4.ctl.StudentCtl"%>
 <%@page import="com.sunilos.p4.ctl.BaseCtl"%>
 <%@page import="com.sunilos.p4.ctl.ORSView"%>
 <%@page import="com.sunilos.p4.util.DataUtility"%>
 <%@page import="com.sunilos.p4.util.ServletUtility"%>
 <%@page import="com.sunilos.p4.util.HTMLUtility"%>
+
 <%@page import="java.util.List"%>
+
 <jsp:useBean id="bean" class="com.sunilos.p4.bean.StudentBean" scope="request"></jsp:useBean>
 <%
    List l = (List) request.getAttribute("collegeList");
    %>
+
 <h1>Add Student</h1>
+
 <form action="StudentCtl" method="POST">
 
    <input type="hidden" name="id" value="<%=bean.getId()%>">
@@ -18,12 +24,8 @@
    <input type="hidden" name="createdDatetime" value="<%=DataUtility.getTimestamp(bean.getCreatedDatetime())%>">
    <input type="hidden" name="modifiedDatetime" value="<%=DataUtility.getTimestamp(bean.getModifiedDatetime())%>">
 
-   <p class="success-message">
-      <%=ServletUtility.getSuccessMessage(request)%>
-   </p>
-   <p class="error-message">
-      <%=ServletUtility.getErrorMessage(request)%>
-   </p>
+   <ors:formMsg />
+
    <table>
       <tr>
          <th>College*</th>
