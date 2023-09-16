@@ -76,9 +76,11 @@
                   String htmlList = HTMLUtility.getList("gender", bean.getGender(),
                   		map);
                   %> <%=htmlList%>
+                  
                <b>Role :</b>
-               <%=HTMLUtility.getList("roleId",
-                  String.valueOf(bean.getRoleId()), l)%>
+               
+               <%=HTMLUtility.getList("roleId", String.valueOf(bean.getRoleId()), l)%>
+                         
             </td>
          </tr>
          <tr>

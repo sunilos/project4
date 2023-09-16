@@ -6,9 +6,16 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import com.sunilos.p4.ctl.BaseCtl;
-import com.sunilos.p4.util.DataValidator;
 import com.sunilos.p4.util.ServletUtility;
 
+/**
+ * Tag displays Success or Error message of a submitted form
+ *
+ * <ors:formMsg />
+ * 
+ * @author Sunil Sahu
+ *
+ */
 public class FormMessageTag extends TagSupport {
 
 	@Override
@@ -18,10 +25,6 @@ public class FormMessageTag extends TagSupport {
 			HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
 			String err = ServletUtility.getMessage(BaseCtl.HAS_ERROR, req);
 			String msg = ServletUtility.getMessage(BaseCtl.MESSAGE, req);
-
-			if (DataValidator.isNull(msg)) {
-				msg = "no message";
-			}
 
 			// Get the JspWriter to write content to the JSP
 			JspWriter out = pageContext.getOut();

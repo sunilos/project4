@@ -1,3 +1,11 @@
+<!--
+*Uses example of Tag lib
+*example of i18n
+-->
+
+
+<%@ taglib uri="http://www.sunilos.com/ors-tags" prefix="ors" %>
+
 <%@page import="com.sunilos.p4.ctl.MarksheetCtl"%>
 <%@page import="com.sunilos.p4.ctl.ORSView"%>
 <%@page import="java.util.List"%>
@@ -7,10 +15,6 @@
 
 <jsp:useBean id="bean" class="com.sunilos.p4.bean.MarksheetBean"
    scope="request"></jsp:useBean>
-
-<%
-   List l = (List) request.getAttribute("studentList");
-   %>
 
 <h1>Marksheet</h1>
 
@@ -22,40 +26,37 @@
   <input type="hidden" name="createdDatetime" value="<%=DataUtility.getTimestamp(bean.getCreatedDatetime())%>">
   <input type="hidden" name="modifiedDatetime" value="<%=DataUtility.getTimestamp(bean.getModifiedDatetime())%>">
 
-   <center>
-      <p class="error-message">
-         <%=ServletUtility.getErrorMessage(request)%>
-      </p>
-      <p class="success-message">
-         <%=ServletUtility.getSuccessMessage(request)%>
-      </p>
+   
+  	  <ors:formMsg />   
+
       <table>
          <tr>
-            <th>Rollno*</th>
+            <th><ors:message key="marksheet.rollno"/>*</th>
             <td><input type="text" name="rollNo"
                value="<%=DataUtility.getStringData(bean.getRollNo())%>"
                <%=(bean.getId() > 0) ? "readonly" : ""%>> <font
                color="red"> <%=ServletUtility.getErrorMessage("rollNo", request)%></font></td>
          </tr>
          <tr>
-            <th>Name*</th>
-            <td><%=HTMLUtility.getList("studentId",
-               String.valueOf(bean.getStudentId()), l)%></td>
+            <th><ors:message key="marksheet.name"/>*</th>
+            <td>
+               <ors:formSelect name="studentId" value="<%=String.valueOf(bean.getStudentId())%>" list="studentList" />
+            </td>
          </tr>
          <tr>
-            <th>Physics</th>
+            <th><ors:message key="marksheet.physics"/></th>
             <td><input type="text" name="physics"
                value="<%=DataUtility.getStringData(bean.getPhysics())%>"><font
                color="red"> <%=ServletUtility.getErrorMessage("physics", request)%></font></td>
          </tr>
          <tr>
-            <th>Chemistry</th>
+            <th><ors:message key="marksheet.chemistry"/></th>
             <td><input type="text" name="chemistry"
                value="<%=DataUtility.getStringData(bean.getChemistry())%>"><font
                color="red"> <%=ServletUtility.getErrorMessage("chemistry", request)%></font></td>
          </tr>
          <tr>
-            <th>Maths</th>
+            <th><ors:message key="marksheet.maths"/></th>
             <td><input type="text" name="maths"
                value="<%=DataUtility.getStringData(bean.getMaths())%>"><font
                color="red"> <%=ServletUtility.getErrorMessage("maths", request)%></font></td>
@@ -63,15 +64,13 @@
          <tr>
             <th></th>
             <td colspan="2">
-               <input  class="primary-btn" type="submit" name="operation"
-                  value="<%=MarksheetCtl.OP_SAVE%>"> 
+            
+               <button class="primary-btn" name="operation" type="submit" value="<%=MarksheetCtl.OP_SAVE%>"><ors:message key="button.save"/></button>	
                <%if (bean.getId() > 0) { %>
-               <input class="danger-btn" type="submit" name="operation"
-                  value="<%=MarksheetCtl.OP_DELETE%>"> 
-               <%	}  %>   
-               <a class="secondary-btn" href="MarksheetListCtl?id=0">Cancel</a> 
+               	<button class="danger-btn" name="operation" type="submit" value="<%=MarksheetCtl.OP_DELETE%>"><ors:message key="button.delete"/></button>	
+               <%} %>   
+               <a class="secondary-btn" href="MarksheetListCtl?id=0"><ors:message key="button.cancel"/></a> 
             </td>
          </tr>
       </table>
-   </center>
 </form>

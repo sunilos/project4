@@ -1,7 +1,12 @@
-<%@page import="com.sunilos.p4.ctl.LoginCtl"%>
-<%@page import="com.sunilos.p4.ctl.ORSView"%>
+<!--
+* Uses example of taglib
+* Uses example of i18n
+-->
+
 <%@ taglib uri="http://www.sunilos.com/ors-tags" prefix="ors" %>
 
+<%@page import="com.sunilos.p4.ctl.LoginCtl"%>
+<%@page import="com.sunilos.p4.ctl.ORSView"%>
 <%@page import="com.sunilos.p4.ctl.BaseCtl"%>
 <%@page import="com.sunilos.p4.util.DataUtility"%>
 <%@page import="com.sunilos.p4.util.ServletUtility"%>
@@ -10,8 +15,8 @@
 <jsp:useBean id="bean" class="com.sunilos.p4.bean.UserBean" scope="request"></jsp:useBean>
 
 <%
-	MessageSource ms = (MessageSource)application.getAttribute("messagesource");
-%>
+	MessageSource ms = MessageSource.getInstance();
+%>	
 
 <h1><ors:message key="login.title"/></h1>
 
@@ -36,7 +41,7 @@
      <tr>
         <th></th>
         <td colspan="2">
-           <button class="primary-btn" onClick="this.form.submit()" ><ors:message key="login.signin"/></button> &nbsp; 
+           <button class="primary-btn" name="operation" type="submit" ><ors:message key="login.signin"/></button> &nbsp; 
            <a class="success-btn" href="<%=ORSView.USER_REGISTRATION_CTL%>"><ors:message key="login.signup"/></a>&nbsp;
         </td>
      </tr>

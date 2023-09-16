@@ -24,5 +24,26 @@
         <tag-class>com.sunilos.p4.tag.FormMessageTag</tag-class>
         <body-content>empty</body-content>
     </tag>
+    
+    <tag>
+        <name>formSelect</name>
+        <tag-class>com.sunilos.p4.tag.FormSelect</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>    
+        <attribute>
+            <name>value</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>       
+        <attribute>
+            <name>list</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>       
+    </tag>
 
 </taglib>

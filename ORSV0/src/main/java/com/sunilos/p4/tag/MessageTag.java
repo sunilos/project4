@@ -6,10 +6,24 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import com.sunilos.p4.util.MessageSource;
 
+/**
+ * Display i18n message
+ * 
+ * <ors:message key="key" />
+ * 
+ * @author Sunil Sahu
+ *
+ */
 public class MessageTag extends TagSupport {
 
+	/**
+	 * Message source read data from properties files
+	 */
 	private MessageSource ms = MessageSource.getInstance();
 
+	/**
+	 * Property key
+	 */
 	private String key = null;
 
 	public String getKey() {
