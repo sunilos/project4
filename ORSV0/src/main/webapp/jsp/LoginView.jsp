@@ -1,6 +1,5 @@
 <!--
-* Uses example of taglib
-* Uses example of i18n
+* Provides an example of using a taglib. Demonstrates  the implementation of internationalization (i18n)
 -->
 
 <%@ taglib uri="http://www.sunilos.com/ors-tags" prefix="ors" %>

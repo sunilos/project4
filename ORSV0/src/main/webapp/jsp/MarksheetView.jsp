@@ -1,6 +1,5 @@
 <!--
-*Uses example of Tag lib
-*example of i18n
+* Provides an example of using a taglib. Demonstrates  the implementation of internationalization (i18n)
 -->
 
 
