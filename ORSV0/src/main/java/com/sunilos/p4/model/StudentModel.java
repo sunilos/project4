@@ -24,6 +24,18 @@ public class StudentModel extends BaseModel<StudentBean> {
 	private static Logger log = Logger.getLogger(StudentModel.class);
 
 	/**
+	 * Find User by Student
+	 * 
+	 * @param email : get parameter
+	 * @return bean
+	 * @throws DatabaseException
+	 */
+
+	public StudentBean findByEmailId(String email) throws ApplicationException {
+		return findByUniqueColumn("EMAIL", email);
+	}
+
+	/**
 	 * Add a Student
 	 * 
 	 * @param bean
@@ -32,6 +44,18 @@ public class StudentModel extends BaseModel<StudentBean> {
 	 */
 	@Override
 	public long add(StudentBean bean) throws ApplicationException, DuplicateRecordException {
+
+		String colums = "ID,COLLEGE_ID, COLLEGE_NAME,FIRST_NAME,LAST_NAME,DATE_OF_BIRTH, MOBILE_NO,EMAIL";
+		String values = "?,?,?,?,?,?,?,?";
+
+		StringBuffer sql = new StringBuffer("INSERT INTO " + getTable());
+		sql.append("(CREATED_DATETIME,MODIFIED_DATETIME,CREATED_BY,MODIFIED_BY, " + colums + ")");
+		sql.append(" VALUES(NOW(),NOW(),'root@sunilos.com','root@sunilos.com'," + values + " )");
+
+		System.out.println(sql);
+
+		checkDuplicate(bean);
+
 		log.debug("Model add Started");
 		Connection conn = null;
 
@@ -48,12 +72,14 @@ public class StudentModel extends BaseModel<StudentBean> {
 		}
 
 		try {
-			conn = JDBCDataSource.getConnection();
+
 			pk = nextPK();
-			// Get auto-generated next primary key
-			System.out.println(pk + " in ModelJDBC");
+
+			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false); // Begin transaction
-			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO STUDENT VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
+
+			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+
 			pstmt.setInt(1, pk);
 			pstmt.setLong(2, bean.getCollegeId());
 			pstmt.setString(3, bean.getCollegeName());
@@ -62,38 +88,18 @@ public class StudentModel extends BaseModel<StudentBean> {
 			pstmt.setDate(6, new java.sql.Date(bean.getDob().getTime()));
 			pstmt.setString(7, bean.getMobileNo());
 			pstmt.setString(8, bean.getEmail());
-			pstmt.setString(9, bean.getCreatedBy());
-			pstmt.setString(10, bean.getModifiedBy());
-			pstmt.setTimestamp(11, bean.getCreatedDatetime());
-			pstmt.setTimestamp(12, bean.getModifiedDatetime());
+
 			pstmt.executeUpdate();
+
 			conn.commit(); // End transaction
 			pstmt.close();
 		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			try {
-				conn.rollback();
-			} catch (Exception ex) {
-				throw new ApplicationException("Exception : add rollback exception " + ex.getMessage());
-			}
-			throw new ApplicationException("Exception : Exception in add Student");
+			JDBCDataSource.rollBack(conn);
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
 		log.debug("Model add End");
 		return pk;
-	}
-
-	/**
-	 * Find User by Student
-	 * 
-	 * @param email : get parameter
-	 * @return bean
-	 * @throws DatabaseException
-	 */
-
-	public StudentBean findByEmailId(String email) throws ApplicationException {
-		return findByUniqueColumn("EMAIL", email);
 	}
 
 	/**
@@ -105,7 +111,10 @@ public class StudentModel extends BaseModel<StudentBean> {
 
 	@Override
 	public void update(StudentBean bean) throws ApplicationException, DuplicateRecordException {
-		log.debug("Model update Started");
+
+		StringBuffer sql = new StringBuffer(
+				"UPDATE STUDENT SET COLLEGE_ID=?,COLLEGE_NAME=?,FIRST_NAME=?,LAST_NAME=?,DATE_OF_BIRTH=?,MOBILE_NO=?,EMAIL=? WHERE ID=?");
+
 		Connection conn = null;
 
 		StudentBean beanExist = findByEmailId(bean.getEmail());
@@ -117,7 +126,9 @@ public class StudentModel extends BaseModel<StudentBean> {
 
 		// get College Name
 		CollegeModel cModel = new CollegeModel();
+
 		CollegeBean collegeBean = cModel.findByPK(bean.getCollegeId());
+
 		bean.setCollegeName(collegeBean.getName());
 
 		try {
@@ -125,8 +136,7 @@ public class StudentModel extends BaseModel<StudentBean> {
 			conn = JDBCDataSource.getConnection();
 
 			conn.setAutoCommit(false); // Begin transaction
-			PreparedStatement pstmt = conn.prepareStatement(
-					"UPDATE STUDENT SET COLLEGE_ID=?,COLLEGE_NAME=?,FIRST_NAME=?,LAST_NAME=?,DATE_OF_BIRTH=?,MOBILE_NO=?,EMAIL=?,CREATED_BY=?,MODIFIED_BY=?,CREATED_DATETIME=?,MODIFIED_DATETIME=? WHERE ID=?");
+			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
 			pstmt.setLong(1, bean.getCollegeId());
 			pstmt.setString(2, bean.getCollegeName());
 			pstmt.setString(3, bean.getFirstName());
@@ -134,26 +144,18 @@ public class StudentModel extends BaseModel<StudentBean> {
 			pstmt.setDate(5, new java.sql.Date(bean.getDob().getTime()));
 			pstmt.setString(6, bean.getMobileNo());
 			pstmt.setString(7, bean.getEmail());
-			pstmt.setString(8, bean.getCreatedBy());
-			pstmt.setString(9, bean.getModifiedBy());
-			pstmt.setTimestamp(10, bean.getCreatedDatetime());
-			pstmt.setTimestamp(11, bean.getModifiedDatetime());
-			pstmt.setLong(12, bean.getId());
+			pstmt.setLong(8, bean.getId());
 			pstmt.executeUpdate();
+
+			updatedTimestamp(bean.getId(), conn);
+
 			conn.commit(); // End transaction
 			pstmt.close();
 		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			try {
-				conn.rollback();
-			} catch (Exception ex) {
-				throw new ApplicationException("Exception : Delete rollback exception " + ex.getMessage());
-			}
-			throw new ApplicationException("Exception in updating Student ");
+			JDBCDataSource.rollBack(conn);
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
-		log.debug("Model update End");
 	}
 
 	@Override
@@ -184,6 +186,21 @@ public class StudentModel extends BaseModel<StudentBean> {
 		}
 
 		return sql.toString();
+	}
+
+	@Override
+	public void checkDuplicate(StudentBean bean) {
+
+		StudentBean duplicateBean = this.findByEmailId(bean.getEmail());
+
+		// Check if create Role already exist
+		if (duplicateBean != null && duplicateBean.getId() != bean.getId()) {
+			throw new DuplicateRecordException("Email already exists");
+		}
+
+		if (bean.getId() == 0 && duplicateBean != null) {
+			throw new DuplicateRecordException("Email already exists");
+		}
 	}
 
 	@Override

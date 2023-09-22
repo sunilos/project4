@@ -3,7 +3,7 @@
 <%@page import="com.sunilos.p4.bean.UserBean"%>
 <%@page import="com.sunilos.p4.ctl.ORSView"%>
 <%
-   MessageSource ms = (MessageSource) application.getAttribute("messagesource");
+   MessageSource ms = MessageSource.getInstance();
    String locale = ms.getLanguage();
    %>
 <%

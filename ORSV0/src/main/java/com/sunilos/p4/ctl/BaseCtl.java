@@ -254,7 +254,10 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
 	protected abstract M getModel();
 
 	public MessageSource getMessageSource(HttpServletRequest request) {
-		MessageSource messagesource = (MessageSource) request.getServletContext().getAttribute("messagesource");
+
+		// MessageSource messagesource = (MessageSource)
+		// request.getServletContext().getAttribute("messagesource");
+		MessageSource messagesource = MessageSource.getInstance();
 		return messagesource;
 	}
 }

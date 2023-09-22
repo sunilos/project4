@@ -10,11 +10,10 @@ package com.sunilos.p4.exception;
  * 
  */
 
-public class DatabaseException extends Exception {
+public class DatabaseException extends RuntimeException {
 
 	/**
-	 * @param msg
-	 *            : Error message
+	 * @param msg : Error message
 	 */
 	public DatabaseException(String msg) {
 		super(msg);

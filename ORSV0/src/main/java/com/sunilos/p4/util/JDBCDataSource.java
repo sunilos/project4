@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.sunilos.p4.exception.DatabaseException;
 
 /**
  * JDBC DataSource is a Data Connection Pool
@@ -76,7 +77,19 @@ public class JDBCDataSource {
 		if (connection != null) {
 			try {
 				connection.close();
-			} catch (Exception e) {
+			} catch (SQLException e) {
+				throw new DatabaseException("Collection close exception" + e.getMessage());
+			}
+		}
+	}
+
+	public static void rollBack(Connection connection) {
+		if (connection != null) {
+			try {
+				connection.rollback();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new DatabaseException("Rollback exception" + e.getMessage());
 			}
 		}
 	}

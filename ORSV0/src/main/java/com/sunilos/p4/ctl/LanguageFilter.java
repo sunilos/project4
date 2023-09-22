@@ -27,7 +27,7 @@ import com.sunilos.p4.util.MessageSource;
  */
 
 @WebFilter("/*")
-public class LanguageController implements Filter {
+public class LanguageFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig conf) throws ServletException {
@@ -38,12 +38,7 @@ public class LanguageController implements Filter {
 			throws IOException, ServletException {
 
 		HttpServletRequest request = (HttpServletRequest) req;
-
-		MessageSource messagesource = (MessageSource) request.getServletContext().getAttribute("messagesource");
-		if (messagesource == null) {
-			messagesource = MessageSource.getInstance();
-			req.getServletContext().setAttribute("messagesource", messagesource);
-		}
+		MessageSource messagesource = MessageSource.getInstance();
 
 		String lang = DataUtility.getString(request.getParameter("lang"));
 		if (DataValidator.isNotNull(lang)) {

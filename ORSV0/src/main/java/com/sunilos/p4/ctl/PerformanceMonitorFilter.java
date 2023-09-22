@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 
 @WebFilter("/*")
-public class PerformanceMonitor implements Filter {
+public class PerformanceMonitorFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig conf) throws ServletException {

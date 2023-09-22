@@ -2,6 +2,7 @@ package com.sunilos.p4.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
@@ -23,58 +24,6 @@ public class RoleModel extends BaseModel<RoleBean> {
 	private static Logger log = Logger.getLogger(RoleModel.class);
 
 	/**
-	 * Add a Role
-	 * 
-	 * @param bean
-	 * @throws DatabaseException
-	 * 
-	 */
-	@Override
-	public long add(RoleBean bean) throws ApplicationException, DuplicateRecordException {
-		log.debug("Model add Started");
-		Connection conn = null;
-		int pk = 0;
-
-		RoleBean duplicataRole = findByName(bean.getName());
-		// Check if create Role already exist
-		if (duplicataRole != null) {
-			throw new DuplicateRecordException("Role already exists");
-		}
-
-		try {
-			conn = JDBCDataSource.getConnection();
-			pk = nextPK();
-			// Get auto-generated next primary key
-			System.out.println(pk + " in ModelJDBC");
-			conn.setAutoCommit(false); // Begin transaction
-			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO ST_ROLE VALUES(?,?,?,?,?,?,?)");
-			pstmt.setInt(1, pk);
-			pstmt.setString(2, bean.getName());
-			pstmt.setString(3, bean.getDescription());
-			pstmt.setString(4, bean.getCreatedBy());
-			pstmt.setString(5, bean.getModifiedBy());
-			pstmt.setTimestamp(6, bean.getCreatedDatetime());
-			pstmt.setTimestamp(7, bean.getModifiedDatetime());
-			pstmt.executeUpdate();
-			conn.commit(); // End transaction
-			pstmt.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.error("Database Exception..", e);
-			try {
-				conn.rollback();
-			} catch (Exception ex) {
-				throw new ApplicationException("Exception : add rollback exception " + ex.getMessage());
-			}
-			throw new ApplicationException("Exception : Exception in add Role");
-		} finally {
-			JDBCDataSource.closeConnection(conn);
-		}
-		log.debug("Model add End");
-		return pk;
-	}
-
-	/**
 	 * Find User by Role
 	 * 
 	 * @param name : get parameter
@@ -87,6 +36,55 @@ public class RoleModel extends BaseModel<RoleBean> {
 	}
 
 	/**
+	 * Add a Role
+	 * 
+	 * @param bean
+	 * @throws DatabaseException
+	 * 
+	 */
+	@Override
+	public long add(RoleBean bean) throws ApplicationException, DuplicateRecordException {
+
+		String colums = "ID,NAME, DESCRIPTION";
+		String values = "?,?,?";
+
+		StringBuffer sql = new StringBuffer("INSERT INTO " + getTable());
+		sql.append("(CREATED_DATETIME,MODIFIED_DATETIME,CREATED_BY,MODIFIED_BY, " + colums + ")");
+		sql.append(" VALUES(NOW(),NOW(),'root@sunilos.com','root@sunilos.com'," + values + " )");
+
+		System.out.println(sql);
+
+		checkDuplicate(bean);
+
+		Connection conn = null;
+
+		int pk = 0;
+
+		try {
+
+			conn = JDBCDataSource.getConnection();
+			conn.setAutoCommit(false); // Begin transaction
+
+			pk = nextPK();
+
+			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+			pstmt.setInt(1, pk);
+			pstmt.setString(2, bean.getName());
+			pstmt.setString(3, bean.getDescription());
+			pstmt.executeUpdate();
+
+			conn.commit(); // End transaction
+			pstmt.close();
+
+		} catch (SQLException e) {
+			JDBCDataSource.rollBack(conn);
+		} finally {
+			JDBCDataSource.closeConnection(conn);
+		}
+		return pk;
+	}
+
+	/**
 	 * Update a Role
 	 * 
 	 * @param bean
@@ -95,51 +93,38 @@ public class RoleModel extends BaseModel<RoleBean> {
 
 	@Override
 	public void update(RoleBean bean) throws ApplicationException, DuplicateRecordException {
-		log.debug("Model update Started");
+
+		String sql = "UPDATE " + getTable() + " SET NAME=?,DESCRIPTION=? WHERE ID=?";
+
+		checkDuplicate(bean);
+
 		Connection conn = null;
 
-		RoleBean duplicataRole = findByName(bean.getName());
-		// Check if updated Role already exist
-		if (duplicataRole != null && duplicataRole.getId() != bean.getId()) {
-			throw new DuplicateRecordException("Role already exists");
-		}
 		try {
 			conn = JDBCDataSource.getConnection();
-
 			conn.setAutoCommit(false); // Begin transaction
-			PreparedStatement pstmt = conn.prepareStatement(
-					"UPDATE ST_ROLE SET NAME=?,DESCRIPTION=?,CREATED_BY=?,MODIFIED_BY=?,CREATED_DATETIME=?,MODIFIED_DATETIME=? WHERE ID=?");
+
+			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, bean.getName());
 			pstmt.setString(2, bean.getDescription());
-			pstmt.setString(3, bean.getCreatedBy());
-			pstmt.setString(4, bean.getModifiedBy());
-			pstmt.setTimestamp(5, bean.getCreatedDatetime());
-			pstmt.setTimestamp(6, bean.getModifiedDatetime());
-			pstmt.setLong(7, bean.getId());
+			pstmt.setLong(3, bean.getId());
 			pstmt.executeUpdate();
+
+			updatedTimestamp(bean.getId(), conn);
+
 			conn.commit(); // End transaction
 			pstmt.close();
-		} catch (Exception e) {
-			log.error("Database Exception..", e);
-			try {
-				conn.rollback();
-			} catch (Exception ex) {
-				throw new ApplicationException("Exception : Delete rollback exception " + ex.getMessage());
-			}
-			throw new ApplicationException("Exception in updating Role ");
+
+		} catch (SQLException e) {
+			JDBCDataSource.rollBack(conn);
 		} finally {
 			JDBCDataSource.closeConnection(conn);
 		}
-		log.debug("Model update End");
-	}
-
-	@Override
-	public String getTable() {
-		return "ST_ROLE";
 	}
 
 	@Override
 	public String getWhereClause(RoleBean bean) {
+
 		StringBuffer sql = new StringBuffer();
 
 		if (bean != null) {
@@ -156,6 +141,26 @@ public class RoleModel extends BaseModel<RoleBean> {
 		}
 
 		return sql.toString();
+	}
+
+	@Override
+	public void checkDuplicate(RoleBean bean) {
+
+		RoleBean duplicateBean = this.findByName(bean.getName());
+
+		// Check if create Role already exist
+		if (duplicateBean != null && duplicateBean.getId() != bean.getId()) {
+			throw new DuplicateRecordException("Role already exists");
+		}
+
+		if (bean.getId() == 0 && duplicateBean != null) {
+			throw new DuplicateRecordException("Role already exists");
+		}
+	}
+
+	@Override
+	public String getTable() {
+		return "ST_ROLE";
 	}
 
 	@Override

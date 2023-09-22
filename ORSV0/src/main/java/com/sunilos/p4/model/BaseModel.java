@@ -3,6 +3,8 @@ package com.sunilos.p4.model;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,15 @@ public abstract class BaseModel<T extends BaseBean> {
 
 	protected static Logger log = Logger.getLogger(BaseModel.class);
 
+	protected void updatedTimestamp(long id, Connection conn) throws SQLException {
+		String createdBy = "root@sunilos.com";
+		String modifiedBy = "root@sunilos.com";
+		StringBuffer sql = new StringBuffer(" UPDATE " + getTable() + " SET  MODIFIED_DATETIME = NOW(), MODIFIED_BY = '"
+				+ modifiedBy + "' " + "WHERE ID = " + id);
+		Statement stmt = conn.createStatement();
+		stmt.execute(sql.toString());
+	}
+
 	/**
 	 * Creates the next primary key of the table. A primary key is a unique
 	 * auto-generated integer number that represents a non-business primary key.
@@ -48,7 +59,7 @@ public abstract class BaseModel<T extends BaseBean> {
 			}
 			rs.close();
 
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			log.error("Database Exception..", e);
 			throw new DatabaseException("Exception : Exception in getting PK");
 		} finally {
@@ -329,5 +340,9 @@ public abstract class BaseModel<T extends BaseBean> {
 	public abstract String getTable();
 
 	public abstract T getBean();
+
+	public void checkDuplicate(T bean) {
+		// TODO
+	}
 
 }

@@ -18,15 +18,11 @@ public final class MessageSource {
 	}
 
 	private MessageSource(String lang) {
-		rb = getBundle(lang);
+		rb = ResourceBundle.getBundle("message", new Locale(lang));
 	}
 
 	private MessageSource(Locale locale) {
 		this(locale.getLanguage());
-	}
-
-	private ResourceBundle getBundle(String lang) {
-		return ResourceBundle.getBundle("message", new Locale(lang));
 	}
 
 	public static MessageSource getInstance() {
@@ -41,7 +37,8 @@ public final class MessageSource {
 	}
 
 	public void setLocale(String lang) {
-		rb = getBundle(lang);
+		rb = ResourceBundle.getBundle("message", new Locale(lang));
+		;
 	}
 
 	public String getLanguage() {
@@ -49,7 +46,7 @@ public final class MessageSource {
 	}
 
 	public String get(String key) {
-		String val = "no value";
+		String val = "";
 		try {
 			val = rb.getString(key);
 		} catch (Exception e) {
