@@ -1,11 +1,11 @@
 <%@page import="com.rays.pro4.controller.PaymentListCtl"%>
-<%@page import="com.rays.pro4.Bean.PaymentBean"%>
-<%@page import="com.rays.pro4.Util.HTMLUtility"%>
+<%@page import="com.rays.pro4.bean.PaymentBean"%>
+<%@page import="com.rays.pro4.util.HTMLUtility"%>
 <%@page import="javax.swing.text.html.HTML"%>
 <%@page import="java.util.Iterator"%>
-<%@page import="com.rays.pro4.Util.DataUtility"%>
+<%@page import="com.rays.pro4.util.DataUtility"%>
 <%@page import="java.util.List"%>
-<%@page import="com.rays.pro4.Util.ServletUtility"%>
+<%@page import="com.rays.pro4.util.ServletUtility"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>

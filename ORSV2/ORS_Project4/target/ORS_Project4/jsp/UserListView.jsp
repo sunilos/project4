@@ -1,11 +1,11 @@
 <%@page import="java.util.HashMap"%>
-<%@page import="com.rays.pro4.Model.RoleModel"%>
-<%@page import="com.rays.pro4.Model.UserModel"%>
-<%@page import="com.rays.pro4.Util.HTMLUtility"%>
+<%@page import="com.rays.pro4.model.RoleModel"%>
+<%@page import="com.rays.pro4.model.UserModel"%>
+<%@page import="com.rays.pro4.util.HTMLUtility"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.List"%>
-<%@page import="com.rays.pro4.Util.DataUtility"%>
-<%@page import="com.rays.pro4.Util.ServletUtility"%>
+<%@page import="com.rays.pro4.util.DataUtility"%>
+<%@page import="com.rays.pro4.util.ServletUtility"%>
 <%@page import="com.rays.pro4.controller.UserListCtl"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
@@ -37,7 +37,7 @@
 
 </head>
 <body>
-	<jsp:useBean id="bean" class="com.rays.pro4.Bean.UserBean"
+	<jsp:useBean id="bean" class="com.rays.pro4.bean.UserBean"
 		scope="request"></jsp:useBean>
 	<%@include file="Header.jsp"%>
 

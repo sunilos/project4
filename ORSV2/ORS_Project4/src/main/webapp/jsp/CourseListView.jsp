@@ -1,13 +1,12 @@
-<%@page import="com.rays.pro4.Util.DataUtility"%>
-<%@page import="com.rays.pro4.Model.CourseModel"%>
-<%@page import="com.rays.pro4.Util.HTMLUtility"%>
-<%@page import="com.rays.pro4.controller.CourseListCtl"%>
+<%@page import="com.sunilos.pro4.util.DataUtility"%>
+<%@page import="com.sunilos.pro4.util.HTMLUtility"%>
+<%@page import="com.sunilos.pro4.controller.CourseListCtl"%>
 <%@page import="java.util.List"%>
-<%@page import="com.rays.pro4.Bean.CourseBean"%>
+<%@page import="com.sunilos.pro4.bean.CourseBean"%>
 <%@page import="java.util.Iterator"%>
-<%@page import="com.rays.pro4.controller.CourseCtl"%>
-<%@page import="com.rays.pro4.Util.ServletUtility"%>
-<%@page import="com.rays.pro4.controller.ORSView"%>
+<%@page import="com.sunilos.pro4.controller.CourseCtl"%>
+<%@page import="com.sunilos.pro4.util.ServletUtility"%>
+<%@page import="com.sunilos.pro4.controller.ORSView"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     
@@ -16,14 +15,14 @@
 <link rel="icon" type="image/png" href="<%=ORSView.APP_CONTEXT%>/img/logo.png" sizes="16*16"/>
 <title> Course List</title>
 
-<script src="<%=ORSView.APP_CONTEXT %>/js/jquery.min.js""></script>
-<script src="<%=ORSView.APP_CONTEXT %>/js/Checkbox11.js"></script>
+<script src="<%=ORSView.APP_CONTEXT%>/js/jquery.min.js""></script>
+<script src="<%=ORSView.APP_CONTEXT%>/js/Checkbox11.js"></script>
 
 
 </head>
 
 <body>
-<jsp:useBean id="bean" class="com.rays.pro4.Bean.CourseBean" scope="request" ></jsp:useBean>
+<jsp:useBean id="bean" class="com.sunilos.pro4.bean.CourseBean" scope="request" ></jsp:useBean>
   <form action="<%=ORSView.COURSE_LIST_CTL%>" method="post">
   <%@include file="Header.jsp"%>
 

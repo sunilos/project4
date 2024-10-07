@@ -1,8 +1,8 @@
  <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@page import="com.rays.pro4.controller.LoginCtl"%>
-<%@page import="com.rays.pro4.Util.DataUtility"%>
-<%@page import="com.rays.pro4.Util.ServletUtility"%>
+<%@page import="com.sunilos.pro4.controller.LoginCtl"%>
+<%@page import="com.sunilos.pro4.util.DataUtility"%>
+<%@page import="com.sunilos.pro4.util.ServletUtility"%>
 
 <!DOCTYPE html>
 <html>
@@ -14,7 +14,7 @@
 	<form action="<%=ORSView.LOGIN_CTL%>" method="post">
 		<%@ include file="Header.jsp"%>
 
-		<jsp:useBean id="bean" class="com.rays.pro4.Bean.UserBean"
+		<jsp:useBean id="bean" class="com.sunilos.pro4.bean.UserBean"
 			scope="request"></jsp:useBean>
 	
 		<%

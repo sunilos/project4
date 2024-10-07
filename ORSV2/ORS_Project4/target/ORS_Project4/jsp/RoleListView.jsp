@@ -1,9 +1,9 @@
-<%@page import="com.rays.pro4.Model.RoleModel"%>
+<%@page import="com.rays.pro4.model.RoleModel"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.List"%>
-<%@page import="com.rays.pro4.Util.HTMLUtility"%>
-<%@page import="com.rays.pro4.Util.DataUtility"%>
-<%@page import="com.rays.pro4.Util.ServletUtility"%>
+<%@page import="com.rays.pro4.util.HTMLUtility"%>
+<%@page import="com.rays.pro4.util.DataUtility"%>
+<%@page import="com.rays.pro4.util.ServletUtility"%>
 <%@page import="com.rays.pro4.controller.RoleListCtl"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -12,13 +12,13 @@
 <link rel="icon" type="image/png" href="<%=ORSView.APP_CONTEXT%>/img/logo.png" sizes="16*16"/>
 <title> Role List</title>
 
-<script src="<%=ORSView.APP_CONTEXT %>/js/jquery.min.js""></script>
-<script src="<%=ORSView.APP_CONTEXT %>/js/Checkbox11.js"></script>
+<script src="<%=ORSView.APP_CONTEXT%>/js/jquery.min.js""></script>
+<script src="<%=ORSView.APP_CONTEXT%>/js/Checkbox11.js"></script>
 
 
 </head>
 <body>
-<jsp:useBean id="bean" class="com.rays.pro4.Bean.RoleBean" scope="request" ></jsp:useBean>
+<jsp:useBean id="bean" class="com.rays.pro4.bean.RoleBean" scope="request" ></jsp:useBean>
     <%@include file="Header.jsp"%>
     <center>
 

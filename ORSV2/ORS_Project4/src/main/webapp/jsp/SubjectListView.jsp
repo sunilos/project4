@@ -1,14 +1,14 @@
-<%@page import="com.rays.pro4.Util.HTMLUtility"%>
+<%@page import="com.sunilos.pro4.util.HTMLUtility"%>
 <%@page import="java.text.SimpleDateFormat"%>
-<%@page import="com.rays.pro4.Util.DataUtility"%>
-<%@page import="com.rays.pro4.controller.SubjectListCtl"%>
-<%@page import="com.rays.pro4.Util.ServletUtility"%>
-<%@page import="com.rays.pro4.Bean.SubjectBean"%>
-<%@page import="com.rays.pro4.Bean.CourseBean"%>
+<%@page import="com.sunilos.pro4.util.DataUtility"%>
+<%@page import="com.sunilos.pro4.controller.SubjectListCtl"%>
+<%@page import="com.sunilos.pro4.util.ServletUtility"%>
+<%@page import="com.sunilos.pro4.bean.SubjectBean"%>
+<%@page import="com.sunilos.pro4.bean.CourseBean"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.Iterator"%>
-<%@page import="com.rays.pro4.Model.SubjectModel"%>
-<%@page import="com.rays.pro4.Model.StudentModel"%>
+<%@page import="com.sunilos.pro4.model.SubjectModel"%>
+<%@page import="com.sunilos.pro4.model.StudentModel"%>
 <%@page import="javax.management.modelmbean.ModelMBean"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -38,7 +38,7 @@
 				<font color="green"><%=ServletUtility.getSuccessMessage(request)%></font>
 			</h3>
 		</div>
-		<jsp:useBean id="bean" class="com.rays.pro4.Bean.SubjectBean"
+		<jsp:useBean id="bean" class="com.sunilos.pro4.bean.SubjectBean"
 			scope="request"></jsp:useBean>
 		<form action="<%=ORSView.SUBJECT_LIST_CTL%>" method="post">
 

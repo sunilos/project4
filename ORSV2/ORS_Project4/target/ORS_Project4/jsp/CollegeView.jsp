@@ -1,6 +1,6 @@
  <%@page import="com.rays.pro4.controller.CollegeCtl"%>
-<%@page import="com.rays.pro4.Util.DataUtility"%>
-<%@page import="com.rays.pro4.Util.ServletUtility"%> 
+<%@page import="com.rays.pro4.util.DataUtility"%>
+<%@page import="com.rays.pro4.util.ServletUtility"%> 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <html>
@@ -12,7 +12,7 @@
  <form action="CollegeCtl" method="POST">
 		<%@ include file="Header.jsp"%>
 
-		<jsp:useBean id="bean" class="com.rays.pro4.Bean.CollegeBean" scope="request"></jsp:useBean>
+		<jsp:useBean id="bean" class="com.rays.pro4.bean.CollegeBean" scope="request"></jsp:useBean>
 
 		<div align="center">
 			<h1 align="center" style="margin-bottom: -15; color: navy">

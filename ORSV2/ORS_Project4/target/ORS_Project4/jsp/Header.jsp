@@ -1,6 +1,6 @@
 <!DOCTYPE html> 
-<%@page import="com.rays.pro4.Bean.UserBean"%>
-<%@page import="com.rays.pro4.Bean.RoleBean"%>
+<%@page import="com.rays.pro4.bean.UserBean"%>
+<%@page import="com.rays.pro4.bean.RoleBean"%>
 <%@ page import ="com.rays.pro4.controller.LoginCtl" %>
 <%@page import="com.rays.pro4.controller.ORSView"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"

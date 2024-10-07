@@ -2,10 +2,10 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     <%@page import="com.rays.pro4.controller.MyProfileCtl"%>
-<%@page import="com.rays.pro4.Util.HTMLUtility"%>
+<%@page import="com.rays.pro4.util.HTMLUtility"%>
 <%@page import="java.util.HashMap"%>
-<%@page import="com.rays.pro4.Util.DataUtility"%>
-<%@page import="com.rays.pro4.Util.ServletUtility"%>
+<%@page import="com.rays.pro4.util.DataUtility"%>
+<%@page import="com.rays.pro4.util.ServletUtility"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,7 +18,7 @@
 
         <%@ include file="Header.jsp"%>
         <script type="text/javascript" src="../js/calendar.js"></script>
-        <jsp:useBean id="bean" class="com.rays.pro4.Bean.UserBean"
+        <jsp:useBean id="bean" class="com.rays.pro4.bean.UserBean"
         scope="request"></jsp:useBean>
 
         <center>

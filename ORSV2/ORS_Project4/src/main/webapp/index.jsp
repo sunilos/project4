@@ -1,10 +1,9 @@
 
-<%@page import="com.rays.pro4.Bean.UserBean"%>
+<%@page import="com.sunilos.pro4.util.ServletUtility"%>
+<%@page import="com.sunilos.pro4.bean.UserBean"%>
+<%@page import="com.sunilos.pro4.controller.ORSView"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@page import="com.rays.pro4.Util.ServletUtility"%>
-<%@page import="com.rays.pro4.Bean.UserBean"%>
-<%@page import="com.rays.pro4.controller.ORSView"%>
 <!DOCTYPE html>
 <html>
 <head>

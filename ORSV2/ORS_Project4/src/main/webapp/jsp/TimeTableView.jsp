@@ -1,11 +1,11 @@
-<%@page import="com.rays.pro4.controller.TimetableCtl"%>
+<%@page import="com.sunilos.pro4.controller.TimetableCtl"%>
 <%@page import="java.util.LinkedHashMap"%>
-<%@page import="com.rays.pro4.Util.HTMLUtility"%>
-<%@page import="com.rays.pro4.Bean.TimeTableBean"%>
+<%@page import="com.sunilos.pro4.util.HTMLUtility"%>
+<%@page import="com.sunilos.pro4.bean.TimeTableBean"%>
 <%@page import="java.util.List"%>
-<%@page import="com.rays.pro4.controller.TimetableListCtl"%>
-<%@page import="com.rays.pro4.Util.DataUtility"%>
-<%@page import="com.rays.pro4.Util.ServletUtility"%>
+<%@page import="com.sunilos.pro4.controller.TimetableListCtl"%>
+<%@page import="com.sunilos.pro4.util.DataUtility"%>
+<%@page import="com.sunilos.pro4.util.ServletUtility"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <html>
@@ -46,7 +46,7 @@
 
 </head>
 <body>
-<jsp:useBean id="bean" class="com.rays.pro4.Bean.TimeTableBean" scope="request"></jsp:useBean>
+<jsp:useBean id="bean" class="com.sunilos.pro4.bean.TimeTableBean" scope="request"></jsp:useBean>
 
 <form action="<%=ORSView.TIMETABLE_CTL %>" method="post">
 

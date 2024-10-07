@@ -1,5 +1,5 @@
-<%@page import="com.rays.pro4.controller.ForgetPasswordCtl"%>
-<%@page import="com.rays.pro4.Util.ServletUtility"%>
+<%@page import="com.sunilos.pro4.controller.ForgetPasswordCtl"%>
+<%@page import="com.sunilos.pro4.util.ServletUtility"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 
@@ -15,7 +15,7 @@ height: 580px;
 </style> 
 </head>
 <body>
-  <jsp:useBean id="bean" class="com.rays.pro4.Bean.UserBean" scope="request"></jsp:useBean>
+  <jsp:useBean id="bean" class="com.sunilos.pro4.bean.UserBean" scope="request"></jsp:useBean>
   <%@ include file="Header.jsp"%>
   <div class= "ss"> 
     <form action="<%=ORSView.FORGET_PASSWORD_CTL%>" method="post">

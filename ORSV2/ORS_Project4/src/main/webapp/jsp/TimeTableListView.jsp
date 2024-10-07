@@ -1,14 +1,14 @@
 <%@page import="java.util.LinkedHashMap"%>
-<%@page import="com.rays.pro4.controller.TimetableListCtl"%>
-<%@page import="com.rays.pro4.Model.TimeTableModel"%>
-<%@page import="com.rays.pro4.controller.TimetableListCtl"%>
-<%@page import="com.rays.pro4.Util.DataUtility"%>
-<%@page import="com.rays.pro4.Util.HTMLUtility"%>
-<%@page import="com.rays.pro4.Bean.TimeTableBean"%>
+<%@page import="com.sunilos.pro4.controller.TimetableListCtl"%>
+<%@page import="com.sunilos.pro4.model.TimeTableModel"%>
+<%@page import="com.sunilos.pro4.controller.TimetableListCtl"%>
+<%@page import="com.sunilos.pro4.util.DataUtility"%>
+<%@page import="com.sunilos.pro4.util.HTMLUtility"%>
+<%@page import="com.sunilos.pro4.bean.TimeTableBean"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.List"%>
-<%@page import="com.rays.pro4.Util.ServletUtility"%>
-<%@page import="com.rays.pro4.controller.ORSView"%>
+<%@page import="com.sunilos.pro4.util.ServletUtility"%>
+<%@page import="com.sunilos.pro4.controller.ORSView"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <html>
@@ -16,8 +16,8 @@
 <link rel="icon" type="image/png" href="<%=ORSView.APP_CONTEXT%>/img/logo.png" sizes="16*16"/>
 <title> TimeTable List</title>
 
-  <script src="<%=ORSView.APP_CONTEXT %>/js/jquery.min.js"></script>
-<script src="<%=ORSView.APP_CONTEXT %>/js/Checkbox11.js"></script>
+  <script src="<%=ORSView.APP_CONTEXT%>/js/jquery.min.js"></script>
+<script src="<%=ORSView.APP_CONTEXT%>/js/Checkbox11.js"></script>
   
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -58,7 +58,7 @@
 
 </head>
 <body >
-<jsp:useBean id="bean" class="com.rays.pro4.Bean.TimeTableBean" scope="request"></jsp:useBean>
+<jsp:useBean id="bean" class="com.sunilos.pro4.bean.TimeTableBean" scope="request"></jsp:useBean>
 <%@include file = "Header.jsp" %>
 
 

@@ -1,11 +1,11 @@
 
-<%@page import="com.rays.pro4.Util.HTMLUtility"%>
+<%@page import="com.rays.pro4.util.HTMLUtility"%>
 <%@page import="javax.swing.text.html.HTML"%>
-<%@page import="com.rays.pro4.Bean.CollegeBean"%>
+<%@page import="com.rays.pro4.bean.CollegeBean"%>
 <%@page import="java.util.List"%>
 <%@page import="com.rays.pro4.controller.StudentCtl"%>
-<%@page import="com.rays.pro4.Util.ServletUtility"%>
-<%@page import="com.rays.pro4.Util.DataUtility"%>
+<%@page import="com.rays.pro4.util.ServletUtility"%>
+<%@page import="com.rays.pro4.util.DataUtility"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 
@@ -34,7 +34,7 @@
 
 </head>
 <body>
-    <jsp:useBean id="bean" class="com.rays.pro4.Bean.StudentBean" scope="request"></jsp:useBean>
+    <jsp:useBean id="bean" class="com.rays.pro4.bean.StudentBean" scope="request"></jsp:useBean>
     	
 	<form action="<%=ORSView.STUDENT_CTL%>" method="post">
     <%@include file="Header.jsp"%>

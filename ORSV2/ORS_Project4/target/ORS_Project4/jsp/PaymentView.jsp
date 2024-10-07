@@ -1,9 +1,9 @@
 <%@page import="com.rays.pro4.controller.PaymentCtl"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.List"%>
-<%@page import="com.rays.pro4.Util.HTMLUtility"%>
-<%@page import="com.rays.pro4.Util.DataUtility"%>
-<%@page import="com.rays.pro4.Util.ServletUtility"%>
+<%@page import="com.rays.pro4.util.HTMLUtility"%>
+<%@page import="com.rays.pro4.util.DataUtility"%>
+<%@page import="com.rays.pro4.util.ServletUtility"%>
 
 <!DOCTYPE html>
 <html>

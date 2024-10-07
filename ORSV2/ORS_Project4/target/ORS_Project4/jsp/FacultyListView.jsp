@@ -1,27 +1,27 @@
-<%@page import="com.rays.pro4.Model.FacultyModel"%>
-<%@page import="com.rays.pro4.Bean.FacultyBean"%>
-<%@page import="com.rays.pro4.Util.HTMLUtility"%>
+<%@page import="com.rays.pro4.model.FacultyModel"%>
+<%@page import="com.rays.pro4.bean.FacultyBean"%>
+<%@page import="com.rays.pro4.util.HTMLUtility"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.List"%>
 <%@page import="com.rays.pro4.controller.FacultyListCtl"%>
-<%@page import="com.rays.pro4.Util.DataUtility"%>
-<%@page import="com.rays.pro4.Util.ServletUtility"%>
+<%@page import="com.rays.pro4.util.DataUtility"%>
+<%@page import="com.rays.pro4.util.ServletUtility"%>
 <html>
 <head>
 <link rel="icon" type="image/png" href="<%=ORSView.APP_CONTEXT%>/img/logo.png" sizes="16*16"/>
 <title> Faculty List</title>
 
-<script src="<%=ORSView.APP_CONTEXT %>/js/jquery.min.js"></script>
-<script src="<%=ORSView.APP_CONTEXT %>/js/Checkbox11.js"></script>
+<script src="<%=ORSView.APP_CONTEXT%>/js/jquery.min.js"></script>
+<script src="<%=ORSView.APP_CONTEXT%>/js/Checkbox11.js"></script>
 
 
 </head>
 <body>
 <%@include file ="Header.jsp"%>
 
-<jsp:useBean id="bean" class="com.rays.pro4.Bean.FacultyBean" scope="request"></jsp:useBean>
-<jsp:useBean id="colbean" class="com.rays.pro4.Bean.CollegeBean" scope="request"></jsp:useBean>
-<jsp:useBean id="corbean" class="com.rays.pro4.Bean.CourseBean" scope="request"></jsp:useBean>
+<jsp:useBean id="bean" class="com.rays.pro4.bean.FacultyBean" scope="request"></jsp:useBean>
+<jsp:useBean id="colbean" class="com.rays.pro4.bean.CollegeBean" scope="request"></jsp:useBean>
+<jsp:useBean id="corbean" class="com.rays.pro4.bean.CourseBean" scope="request"></jsp:useBean>
 
 
 <center>

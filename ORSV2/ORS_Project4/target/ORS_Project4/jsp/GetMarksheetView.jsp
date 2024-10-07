@@ -1,7 +1,7 @@
 <%@page import="java.util.List"%>
 <%@page import="com.rays.pro4.controller.GetMarksheetCtl"%>
-<%@page import="com.rays.pro4.Util.ServletUtility"%>
-<%@page import="com.rays.pro4.Util.DataUtility"%>
+<%@page import="com.rays.pro4.util.ServletUtility"%>
+<%@page import="com.rays.pro4.util.DataUtility"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <html>
@@ -13,7 +13,7 @@
 
 </head>
 <body>
-    <jsp:useBean id="bean" class="com.rays.pro4.Bean.MarksheetBean" scope="request"></jsp:useBean>
+    <jsp:useBean id="bean" class="com.rays.pro4.bean.MarksheetBean" scope="request"></jsp:useBean>
    <form action="<%=ORSView.GET_MARKSHEET_CTL%>" method="post">
     <%@ include file="Header.jsp"%>
 

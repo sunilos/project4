@@ -1,12 +1,12 @@
-<%@page import="com.rays.pro4.Bean.SubjectBean"%>
-<%@page import="com.rays.pro4.Bean.CollegeBean"%>
-<%@page import="com.rays.pro4.Bean.CourseBean"%>
+<%@page import="com.sunilos.pro4.bean.SubjectBean"%>
+<%@page import="com.sunilos.pro4.bean.CollegeBean"%>
+<%@page import="com.sunilos.pro4.bean.CourseBean"%>
 <%@page import="java.util.List"%>
-<%@page import="com.rays.pro4.Util.HTMLUtility"%>
+<%@page import="com.sunilos.pro4.util.HTMLUtility"%>
 <%@page import="java.util.HashMap"%>
-<%@page import="com.rays.pro4.controller.FacultyCtl"%>
-<%@page import="com.rays.pro4.Util.DataUtility"%>
-<%@page import="com.rays.pro4.Util.ServletUtility"%>
+<%@page import="com.sunilos.pro4.controller.FacultyCtl"%>
+<%@page import="com.sunilos.pro4.util.DataUtility"%>
+<%@page import="com.sunilos.pro4.util.ServletUtility"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <html>
@@ -34,7 +34,7 @@
 </head>
 
 <body>
-	<jsp:useBean id="bean" class="com.rays.pro4.Bean.FacultyBean"
+	<jsp:useBean id="bean" class="com.sunilos.pro4.bean.FacultyBean"
 		scope="request"></jsp:useBean>
 	<%@include file="Header.jsp"%>
 
