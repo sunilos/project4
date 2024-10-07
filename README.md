@@ -1,6 +1,6 @@
 # Project4
 
-ORS is a web application to provide marksheets and user management online.
+Online Result System (ORS) is a comprehensive web-based application designed to manage the entire lifecycle of marksheets and user administration. The system allows educational institutions or organizations to seamlessly generate, manage, and distribute marksheets to students or users through a secure online platform.
 
 ## Modules
 1. College Management
@@ -14,9 +14,11 @@ ORS is a web application to provide marksheets and user management online.
 ## Technologies
 1. JDK 11
 1. JSP/Servlet
-1. JDBC 
-1. MySQL 8.x
+1. JDBC
+1. C3P0 Data Connection Pool
 1. Java Mail API
+1. MySQL Connector
+1. MySQL 8.x
 
 ## Tools
 1. Eclipse 
@@ -25,11 +27,12 @@ ORS is a web application to provide marksheets and user management online.
 1. ER Win
 
 # Folder details 
-## ORSProject4 
-This project is depricated and will be removed soon
-
-## ORSV2
-This project contains REST endpoints 
-
 ## ORSV2
 It contains the latest project
+
+## ORSV0
+This project contains REST endpoints 
+
+## ORSProject4 
+This project is deprecated and will be removed soon
+
