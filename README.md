@@ -23,3 +23,13 @@ ORS is a web application to provide marksheets and user management online.
 1. SQLYog
 1. AroUML
 1. ER Win
+
+# Folder details 
+## ORSProject4 
+This project is depricated and will be removed soon
+
+## ORSV2
+This project contains REST endpoints 
+
+## ORSV2
+It contains the latest project
