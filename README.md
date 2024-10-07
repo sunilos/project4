@@ -1,6 +1,6 @@
 # Project4
 
-ORS is a web application to provide marksheet and user management online.
+ORS is a web application to provide marksheets and user management online.
 
 ## Modules
 1. College Management
@@ -12,14 +12,14 @@ ORS is a web application to provide marksheet and user management online.
 1. Time Table Management
 
 ## Technologies
-1. JDK 8
+1. JDK 11
 1. JSP/Servlet
 1. JDBC 
-1. MySQL 5.x
+1. MySQL 8.x
 1. Java Mail API
 
 ## Tools
-1. Eclipse Kepler
+1. Eclipse 
 1. SQLYog
 1. AroUML
 1. ER Win
