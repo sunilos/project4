@@ -36,3 +36,6 @@ This project contains REST endpoints
 ## ORSProject4 
 This project is deprecated and will be removed soon
 
+# Create Eclipse Project
+
+https://youtu.be/XM2nF-koATU
