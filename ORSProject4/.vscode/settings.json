@@ -1,0 +1,11 @@
+{
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-17",
+            "path": "E:\\java\\jdk-17.0.12",
+            "default": true
+        }
+    ],
+    "java.jdt.ls.java.home": "E:\\java\\jdk-17.0.12"
+}
