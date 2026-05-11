@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MyWebApp" default="build" basedir=".">
+
+
+	<description>Build and deploy MyWebApp</description>
+
+
+	<!-- Define properties -->
+	<property name="current.path" location="${user.dir}" />
+	<property name="project.name" value="ORSV0" />
+	<property name="project.location" value="F:/workspace/java/ORSV0" />
+	<property name="mvn.command" value="E:/java/apache-maven-3.6.3/bin/mvn" />
+	<property name="tomcat.home" value="E:/java/apache-tomcat-8.5.69" />
+	<property name="war.file" value="${project.location}/target/${project.name}.war" />
+
+	<!-- Define the working directory where your Maven project is located -->
+	<property name="project.directory" value="${project.location}" />
+
+
+	<!-- Clean task -->
+	<target name="info">
+		<echo>This is ant ${current.path}</echo>
+	</target>
+
+	<target name="copy-war" depends="clean">
+		<echo message="Copying WAR file to Tomcat webapps directory..." />
+		<copy file="${war.file}" todir="${tomcat.home}/webapps" />
+	</target>
+
+
+	<!-- Clean task -->
+	<target name="clean">
+		<delete file="${tomcat.home}/webapps/${project.name}.war" />
+		<delete dir="${tomcat.home}/webapps/${project.name}" />
+	</target>
+
+	<target name="maven-build">
+		<echo message="Making Maven build" />
+		<exec executable="${mvn.command}" dir="${project.directory}">
+			<!-- Set the working directory to your Maven project -->
+			<arg line="install" />
+
+		</exec>
+	</target>
+
+	<target name="tomcat-start">
+		<echo message="Starting tomcat" />
+		<exec executable="${tomcat.home}/bin/startup" dir="${tomcat.home}/bin">
+		</exec>
+	</target>
+
+	<target name="tomcat-stop">
+		<echo message="Stop tomcat" />
+		<exec executable="${tomcat.home}/bin/shutdown" dir="${tomcat.home}/bin">
+		</exec>
+	</target>
+
+
+	<!-- Default task -->
+	<target name="build" depends="copy-war">
+		<echo message="Build completed!" />
+	</target>
+</project>
