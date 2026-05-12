@@ -138,12 +138,16 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
 
 		String op = DataUtility.getString(request.getParameter("operation"));
 
-		/*
-		 * // Handle cancel operation if (OP_CANCEL.equalsIgnoreCase(op)) {
-		 * ServletUtility.redirect(getView(op), request, response); return; } else if
-		 * (OP_DELETE.equalsIgnoreCase(op)) { // Handle Delete operation
-		 * doDelete(request, response); return; }
-		 */
+		// Handle cancel operation
+		if (OP_CANCEL.equalsIgnoreCase(op)) {
+			ServletUtility.redirect(getView(op), request, response);
+			return;
+		} else if (OP_DELETE.equalsIgnoreCase(op)) {
+			// Handle Delete operation
+			doDelete(request, response);
+			return;
+		}
+
 		BaseBean bean = populateBean(request);
 
 		// Perform validation if form is submitted using POST method
