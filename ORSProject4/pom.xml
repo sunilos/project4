@@ -21,27 +21,27 @@
   <!-- ===== Dependencies ===== -->
   <dependencies>
 
-    <!-- Servlet API (provided by Tomcat at runtime) -->
+    <!-- Servlet API (provided by Tomcat 11 at runtime) -->
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>3.1.0</version>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>6.0.0</version>
       <scope>provided</scope>
     </dependency>
 
     <!-- JSP API - required to implement custom tag library -->
     <dependency>
-      <groupId>javax.servlet.jsp</groupId>
-      <artifactId>jsp-api</artifactId>
-      <version>2.0</version>
+      <groupId>jakarta.servlet.jsp</groupId>
+      <artifactId>jakarta.servlet.jsp-api</artifactId>
+      <version>3.1.0</version>
       <scope>provided</scope>
     </dependency>
 
-    <!-- JavaMail - for email functionality -->
+    <!-- Jakarta Mail - for email functionality -->
     <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
-      <version>1.4.5</version>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>jakarta.mail</artifactId>
+      <version>2.0.1</version>
     </dependency>
 
     <!-- C3P0 - JDBC connection pooling -->

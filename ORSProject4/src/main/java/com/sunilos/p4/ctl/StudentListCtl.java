@@ -1,7 +1,7 @@
 package com.sunilos.p4.ctl;
 
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 

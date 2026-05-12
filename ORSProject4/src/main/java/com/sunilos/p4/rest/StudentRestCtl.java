@@ -1,6 +1,6 @@
 package com.sunilos.p4.rest;
 
-import javax.servlet.annotation.WebServlet;
+import jakarta.servlet.annotation.WebServlet;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sunilos.p4.bean.StudentBean;
