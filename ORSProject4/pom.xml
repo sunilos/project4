@@ -77,11 +77,27 @@
       <version>2.12.5</version>
     </dependency>
 
-    <!-- JUnit - unit testing -->
+    <!-- JUnit 5 -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.10.2</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Mockito core (includes inline/static mocking) -->
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>5.11.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Mockito JUnit 5 extension -->
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>5.11.0</version>
       <scope>test</scope>
     </dependency>
 
@@ -114,6 +130,13 @@
           <warSourceDirectory>src/main/webapp</warSourceDirectory>
           <failOnMissingWebXml>true</failOnMissingWebXml>
         </configuration>
+      </plugin>
+
+      <!-- Surefire Plugin - required for JUnit 5 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
       </plugin>
 
       <!-- Ant Run Plugin - deploys WAR to local Tomcat on 'install' -->

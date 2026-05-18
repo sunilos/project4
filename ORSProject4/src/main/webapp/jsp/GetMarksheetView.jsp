@@ -45,7 +45,13 @@
   </div>
 
   <!-- Result Card -->
-  <% if(hasResult) { %>
+  <% if(hasResult) {
+      int physics   = bean.getPhysics()   != null ? bean.getPhysics()   : 0;
+      int chemistry = bean.getChemistry() != null ? bean.getChemistry() : 0;
+      int maths     = bean.getMaths()     != null ? bean.getMaths()     : 0;
+      int total     = physics + chemistry + maths;
+      double percentage = (total / 300.0) * 100;
+  %>
   <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
     <div class="card-header border-0 py-3 px-4 bg-success text-white">
       <h6 class="mb-0 fw-bold"><i class="bi bi-file-earmark-check-fill me-2"></i> Marksheet Result</h6>
@@ -64,19 +70,31 @@
           <tr class="border-bottom">
             <th class="ps-4 py-3 text-muted">Physics</th>
             <td class="py-3">
-              <span class="badge bg-primary rounded-pill fs-6 px-3"><%=DataUtility.getStringData(bean.getPhysics())%></span>
+              <span class="badge bg-primary rounded-pill fs-6 px-3"><%=physics%></span>
             </td>
           </tr>
           <tr class="border-bottom">
             <th class="ps-4 py-3 text-muted">Chemistry</th>
             <td class="py-3">
-              <span class="badge bg-success rounded-pill fs-6 px-3"><%=DataUtility.getStringData(bean.getChemistry())%></span>
+              <span class="badge bg-success rounded-pill fs-6 px-3"><%=chemistry%></span>
             </td>
           </tr>
-          <tr>
+          <tr class="border-bottom">
             <th class="ps-4 py-3 text-muted">Maths</th>
             <td class="py-3">
-              <span class="badge bg-warning text-dark rounded-pill fs-6 px-3"><%=DataUtility.getStringData(bean.getMaths())%></span>
+              <span class="badge bg-warning text-dark rounded-pill fs-6 px-3"><%=maths%></span>
+            </td>
+          </tr>
+          <tr class="border-bottom table-light">
+            <th class="ps-4 py-3">Total <small class="text-muted fw-normal">(out of 300)</small></th>
+            <td class="py-3">
+              <span class="badge bg-dark rounded-pill fs-6 px-3"><%=total%></span>
+            </td>
+          </tr>
+          <tr class="table-light">
+            <th class="ps-4 py-3">Percentage</th>
+            <td class="py-3">
+              <span class="badge bg-info text-dark rounded-pill fs-6 px-3"><%=String.format("%.2f", percentage)%> %</span>
             </td>
           </tr>
         </tbody>

@@ -27,7 +27,7 @@
 
       <ors:formMsg />
 
-      <form action="FacultyCtl" method="POST">
+      <form name="facultyForm" action="FacultyCtl" method="POST">
         <input type="hidden" name="id"               value="<%=bean.getId()%>">
         <input type="hidden" name="createdBy"         value="<%=bean.getCreatedBy()%>">
         <input type="hidden" name="modifiedBy"        value="<%=bean.getModifiedBy()%>">
@@ -92,11 +92,11 @@
             </select>
           </div>
           <div class="col-md-8">
-            <label class="form-label fw-semibold">Date of Birth (mm/dd/yyyy) <span class="text-danger">*</span></label>
+            <label class="form-label fw-semibold">Date of Birth (MM/dd/yyyy) <span class="text-danger">*</span></label>
             <div class="input-group">
               <input type="text" name="dob" class="form-control" readonly
                      value="<%=DataUtility.getDateString(bean.getDob())%>">
-              <a class="btn btn-outline-secondary" href="javascript:getCalendar(document.forms[0].dob);">
+              <a class="btn btn-outline-secondary" href="javascript:getCalendar(document.facultyForm.dob);">
                 <img src="../img/cal.jpg" width="16" height="15" alt="Calendar">
               </a>
             </div>

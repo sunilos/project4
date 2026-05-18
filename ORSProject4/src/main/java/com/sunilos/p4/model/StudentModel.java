@@ -113,7 +113,7 @@ public class StudentModel extends BaseModel<StudentBean> {
 	public void update(StudentBean bean) throws ApplicationException, DuplicateRecordException {
 
 		StringBuffer sql = new StringBuffer(
-				"UPDATE STUDENT SET COLLEGE_ID=?,COLLEGE_NAME=?,FIRST_NAME=?,LAST_NAME=?,DATE_OF_BIRTH=?,MOBILE_NO=?,EMAIL=? WHERE ID=?");
+				"UPDATE ST_STUDENT SET COLLEGE_ID=?,COLLEGE_NAME=?,FIRST_NAME=?,LAST_NAME=?,DATE_OF_BIRTH=?,MOBILE_NO=?,EMAIL=? WHERE ID=?");
 
 		Connection conn = null;
 
@@ -205,7 +205,7 @@ public class StudentModel extends BaseModel<StudentBean> {
 
 	@Override
 	public String getTable() {
-		return "STUDENT";
+		return "ST_STUDENT";
 	}
 
 	@Override
