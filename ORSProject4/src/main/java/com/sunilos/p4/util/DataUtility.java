@@ -3,15 +3,18 @@ package com.sunilos.p4.util;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
  * Data Utility class to format data from one format to another
- * 
- * @author Rays Technologies
+ *
+ * @author Rays EdTech
  * @version 1.0
- * @Copyright (c) Rays Technologies
+ * @Copyright (c) Rays EdTech
  */
 
 public class DataUtility {
@@ -23,18 +26,13 @@ public class DataUtility {
 
 	public static final String APP_TIME_FORMAT = "MM/dd/yyyy HH:mm:ss";
 
-	/**
-	 * Date formatter
-	 */
-	private static final SimpleDateFormat formatter = new SimpleDateFormat(APP_DATE_FORMAT);
+	// DateTimeFormatter is immutable and thread-safe — safe to share as static fields
+	private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern(APP_DATE_FORMAT);
 
-	private static final SimpleDateFormat timeFormatter = new SimpleDateFormat(APP_TIME_FORMAT);
+	private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern(APP_TIME_FORMAT);
 
 	/**
-	 * Trims and trailing and leading spaces of a String
-	 * 
-	 * @param val
-	 * @return
+	 * Trims trailing and leading spaces of a String
 	 */
 	public static String getString(String val) {
 		if (DataValidator.isNotNull(val)) {
@@ -45,10 +43,7 @@ public class DataUtility {
 	}
 
 	/**
-	 * Converts and Object to String
-	 * 
-	 * @param val
-	 * @return
+	 * Converts an Object to String
 	 */
 	public static String getStringData(Object val) {
 		if (val != null) {
@@ -60,9 +55,6 @@ public class DataUtility {
 
 	/**
 	 * Converts String into Integer
-	 * 
-	 * @param val
-	 * @return
 	 */
 	public static int getInt(String val) {
 		if (DataValidator.isInteger(val)) {
@@ -74,9 +66,6 @@ public class DataUtility {
 
 	/**
 	 * Converts String into Long
-	 * 
-	 * @param val
-	 * @return
 	 */
 	public static long getLong(String val) {
 		if (DataValidator.isLong(val)) {
@@ -87,132 +76,71 @@ public class DataUtility {
 	}
 
 	/**
-	 * Converts String into Date
-	 * 
-	 * @param val
-	 * @return
+	 * Parses a date string (MM/dd/yyyy) into a Date
 	 */
 	public static Date getDate(String val) {
-		Date date = null;
 		try {
-			date = formatter.parse(val);
+			LocalDate ld = LocalDate.parse(val, DATE_FMT);
+			return Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant());
 		} catch (Exception e) {
-
+			return null;
 		}
-		return date;
 	}
 
 	/**
-	 * Converts Date into String
-	 * 
-	 * @param date
-	 * @return
+	 * Formats a Date into a String (MM/dd/yyyy)
 	 */
 	public static String getDateString(Date date) {
+		if (date == null) return "";
 		try {
-			return formatter.format(date);
+			LocalDate ld = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			return DATE_FMT.format(ld);
 		} catch (Exception e) {
-
+			return "";
 		}
-		return "";
 	}
 
 	/**
-	 * Gets date after n number of days
-	 * 
-	 * @param date
-	 * @param day
-	 * @return
-	 */
-	public static Date getDate(Date date, int day) {
-		return null;
-	}
-
-	/**
-	 * Converts String into Time
-	 * 
-	 * @param val
-	 * @return
+	 * Parses a timestamp string (MM/dd/yyyy HH:mm:ss) into a Timestamp
 	 */
 	public static Timestamp getTimestamp(String val) {
-
-		Timestamp timeStamp = null;
 		try {
-			timeStamp = new Timestamp((timeFormatter.parse(val)).getTime());
+			LocalDateTime ldt = LocalDateTime.parse(val, TIME_FMT);
+			return Timestamp.valueOf(ldt);
 		} catch (Exception e) {
 			return null;
-		}
-		return timeStamp;
-	}
-
-	public static Timestamp getTimestamp(long l) {
-
-		Timestamp timeStamp = null;
-		try {
-			timeStamp = new Timestamp(l);
-		} catch (Exception e) {
-			return null;
-		}
-		return timeStamp;
-	}
-
-	public static Timestamp getCurrentTimestamp() {
-		Timestamp timeStamp = null;
-		try {
-			timeStamp = new Timestamp(new Date().getTime());
-		} catch (Exception e) {
-		}
-		return timeStamp;
-
-	}
-
-	public static long getTimestamp(Timestamp tm) {
-		try {
-			return tm.getTime();
-		} catch (Exception e) {
-			return 0;
 		}
 	}
 
 	/**
-	 * Converts exception into a string
-	 * 
-	 * @param e
-	 * @return
+	 * Converts a long epoch millis value into a Timestamp
 	 */
-	public static String exceptionToString(Exception e) {
-		StringBuffer errorBuffer = new StringBuffer();
-
-		// Create a ByteArrayOutputStream to capture the output
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-		// Create a custom PrintStream that writes to the ByteArrayOutputStream
-		PrintStream printStream = new PrintStream(byteArrayOutputStream);
-
-		// Redirect System.err to the custom PrintStream
-		System.setErr(printStream);
-
-		// Print the error message and stack trace to System.err
-		e.printStackTrace();
-
-		// Capture the error message and stack trace from the ByteArrayOutputStream
-		String errorMessageAndStackTrace = byteArrayOutputStream.toString();
-
-		// Close the custom PrintStream and reset System.err
-		printStream.close();
-
-		System.setErr(System.err); // Reset System.err to its original state
-
-		return errorMessageAndStackTrace;
+	public static Timestamp getTimestamp(long l) {
+		return new Timestamp(l);
 	}
 
-	public static void main(String[] args) {
-		try {
-			throw new RuntimeException("This is test message");
-		} catch (Exception e) {
-			System.out.println(DataUtility.exceptionToString(e));
-		}
+	/**
+	 * Returns the current time as a Timestamp
+	 */
+	public static Timestamp getCurrentTimestamp() {
+		return new Timestamp(System.currentTimeMillis());
+	}
 
+	/**
+	 * Returns the epoch millis of a Timestamp, or 0 if null
+	 */
+	public static long getTimestamp(Timestamp tm) {
+		if (tm == null) return 0;
+		return tm.getTime();
+	}
+
+	/**
+	 * Converts an exception's stack trace into a String
+	 */
+	public static String exceptionToString(Exception e) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		e.printStackTrace(new PrintStream(baos));
+		return baos.toString();
 	}
 
 }

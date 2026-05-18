@@ -1,36 +1,31 @@
 package com.sunilos.p4.util;
 
 import java.util.Date;
+import java.util.regex.Pattern;
 
 /**
  * This class validates input data
- * 
- * @author Rays Technologies
+ *
+ * @author Rays EdTech
  * @version 1.0
- * @Copyright (c) Rays Technologies
+ * @Copyright (c) Rays EdTech
  */
 
 public class DataValidator {
 
+	// Compiled once; handles user+tag@sub.example.com and standard addresses
+	private static final Pattern EMAIL_PATTERN = Pattern.compile(
+			"^[_A-Za-z0-9+\\-]+(\\.[_A-Za-z0-9+\\-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+
 	/**
 	 * Checks if value is Null
-	 * 
-	 * @param val
-	 * @return
 	 */
 	public static boolean isNull(String val) {
-		if (val == null || val.trim().length() == 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return val == null || val.trim().isEmpty();
 	}
 
 	/**
 	 * Checks if value is NOT Null
-	 * 
-	 * @param val
-	 * @return
 	 */
 	public static boolean isNotNull(String val) {
 		return !isNull(val);
@@ -38,98 +33,50 @@ public class DataValidator {
 
 	/**
 	 * Checks if value is an Integer
-	 * 
-	 * @param val
-	 * @return
 	 */
-
 	public static boolean isInteger(String val) {
-
 		if (isNotNull(val)) {
 			try {
-				int i = Integer.parseInt(val);
+				Integer.parseInt(val);
 				return true;
 			} catch (NumberFormatException e) {
 				return false;
 			}
-
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
 	 * Checks if value is Long
-	 * 
-	 * @param val
-	 * @return
 	 */
 	public static boolean isLong(String val) {
 		if (isNotNull(val)) {
 			try {
-				long i = Long.parseLong(val);
+				Long.parseLong(val);
 				return true;
 			} catch (NumberFormatException e) {
 				return false;
 			}
-
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
-	 * Checks if value is valid Email ID
-	 * 
-	 * @param val
-	 * @return
+	 * Checks if value is a valid Email ID
 	 */
 	public static boolean isEmail(String val) {
-
-		String emailreg = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-
-		if (isNotNull(val)) {
-			try {
-				return val.matches(emailreg);
-			} catch (NumberFormatException e) {
-				return false;
-			}
-
-		} else {
-			return false;
-		}
+		return isNotNull(val) && EMAIL_PATTERN.matcher(val).matches();
 	}
 
 	/**
-	 * Checks if value is Date
-	 * 
-	 * @param val
-	 * @return
+	 * Checks if value is a valid Date
 	 */
 	public static boolean isDate(String val) {
-
-		Date d = null;
 		if (isNotNull(val)) {
-			d = DataUtility.getDate(val);
+			Date d = DataUtility.getDate(val);
+			return d != null;
 		}
-		return d != null;
-	}
-
-	/**
-	 * Test above methods
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-
-		System.out.println("Not Null 2" + isNotNull("ABC"));
-		System.out.println("Not Null 3" + isNotNull(null));
-		System.out.println("Not Null 4" + isNull("123"));
-
-		System.out.println("Is Int " + isInteger(null));
-		System.out.println("Is Int " + isInteger("ABC1"));
-		System.out.println("Is Int " + isInteger("123"));
-		System.out.println("Is Int " + isNotNull("123"));
+		return false;
 	}
 
 }
