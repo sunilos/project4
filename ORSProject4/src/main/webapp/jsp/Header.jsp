@@ -80,38 +80,20 @@
                                             </ul>
                                         </li>
 
-                                        <!-- ---- Students (Admin only) ---- -->
+                                        <!-- ---- Academics: Colleges / Courses / Subjects (Admin only) ---- -->
                                         <% if (isAdmin) { %>
-                                            <li class="nav-item dropdown d-flex align-items-stretch">
-                                                <a class="nav-link px-3 py-3" href="<%=ORSView.STUDENT_LIST_CTL%>">
-                                                    <i class="bi bi-mortarboard me-1"></i> Students
+                                            <li class="nav-item dropdown">
+                                                <a class="nav-link dropdown-toggle px-3 py-3" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="bi bi-mortarboard me-1"></i> Academics
                                                 </a>
-                                                <button class="btn btn-link nav-link dropdown-toggle dropdown-toggle-split px-2 py-3 text-white border-0" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration:none;">
-            <span class="visually-hidden">Toggle</span>
-          </button>
-                                                <ul class="dropdown-menu dropdown-menu-dark shadow border-0 rounded-3" style="min-width:190px; background:#1a2e4a;">
-                                                    <li>
-                                                        <a class="dropdown-item" href="<%=ORSView.STUDENT_CTL%>">
-                                                            <i class="bi bi-person-plus me-2 text-success"></i> Add Student
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<%=ORSView.STUDENT_LIST_CTL%>">
-                                                            <i class="bi bi-people me-2 text-primary"></i> Student List
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </li>
+                                                <ul class="dropdown-menu dropdown-menu-dark shadow border-0 rounded-3" style="min-width:210px; background:#1a2e4a;">
 
-                                            <!-- ---- Colleges (Admin only) ---- -->
-                                            <li class="nav-item dropdown d-flex align-items-stretch">
-                                                <a class="nav-link px-3 py-3" href="<%=ORSView.COLLEGE_LIST_CTL%>">
-                                                    <i class="bi bi-bank2 me-1"></i> Colleges
-                                                </a>
-                                                <button class="btn btn-link nav-link dropdown-toggle dropdown-toggle-split px-2 py-3 text-white border-0" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration:none;">
-            <span class="visually-hidden">Toggle</span>
-          </button>
-                                                <ul class="dropdown-menu dropdown-menu-dark shadow border-0 rounded-3" style="min-width:190px; background:#1a2e4a;">
+                                                    <!-- Colleges -->
+                                                    <li>
+                                                        <h6 class="dropdown-header text-uppercase text-info small">
+                                                            <i class="bi bi-bank2 me-1"></i> Colleges
+                                                        </h6>
+                                                    </li>
                                                     <li>
                                                         <a class="dropdown-item" href="<%=ORSView.COLLEGE_CTL%>">
                                                             <i class="bi bi-plus-circle me-2 text-success"></i> Add College
@@ -122,59 +104,98 @@
                                                             <i class="bi bi-building me-2 text-primary"></i> College List
                                                         </a>
                                                     </li>
+
+                                                    <li><hr class="dropdown-divider border-secondary"></li>
+
+                                                    <!-- Courses -->
+                                                    <li>
+                                                        <h6 class="dropdown-header text-uppercase text-info small">
+                                                            <i class="bi bi-journal-bookmark me-1"></i> Courses
+                                                        </h6>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<%=ORSView.COURSE_CTL%>">
+                                                            <i class="bi bi-plus-circle me-2 text-success"></i> Add Course
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<%=ORSView.COURSE_LIST_CTL%>">
+                                                            <i class="bi bi-list-ul me-2 text-primary"></i> Course List
+                                                        </a>
+                                                    </li>
+
+                                                    <li><hr class="dropdown-divider border-secondary"></li>
+
+                                                    <!-- Subjects -->
+                                                    <li>
+                                                        <h6 class="dropdown-header text-uppercase text-info small">
+                                                            <i class="bi bi-card-text me-1"></i> Subjects
+                                                        </h6>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<%=ORSView.SUBJECT_CTL%>">
+                                                            <i class="bi bi-plus-circle me-2 text-success"></i> Add Subject
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<%=ORSView.SUBJECT_LIST_CTL%>">
+                                                            <i class="bi bi-list-ul me-2 text-primary"></i> Subject List
+                                                        </a>
+                                                    </li>
                                                 </ul>
                                             </li>
 
-                                                <!-- ---- Courses (Admin only) ---- -->
-                                                <li class="nav-item dropdown d-flex align-items-stretch">
-                                                    <a class="nav-link px-3 py-3" href="<%=ORSView.COURSE_LIST_CTL%>">
-                                                        <i class="bi bi-journal-bookmark me-1"></i> Courses
-                                                    </a>
-                                                    <button class="btn btn-link nav-link dropdown-toggle dropdown-toggle-split px-2 py-3 text-white border-0" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration:none;">
-                <span class="visually-hidden">Toggle</span>
-              </button>
-                                                    <ul class="dropdown-menu dropdown-menu-dark shadow border-0 rounded-3" style="min-width:190px; background:#1a2e4a;">
-                                                        <li>
-                                                            <a class="dropdown-item" href="<%=ORSView.COURSE_CTL%>">
-                                                                <i class="bi bi-plus-circle me-2 text-success"></i> Add Course
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item" href="<%=ORSView.COURSE_LIST_CTL%>">
-                                                                <i class="bi bi-list-ul me-2 text-primary"></i> Course List
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-
-                                                <!-- ---- Subjects (Admin only) ---- -->
-                                                <li class="nav-item dropdown d-flex align-items-stretch">
-                                                    <a class="nav-link px-3 py-3" href="<%=ORSView.SUBJECT_LIST_CTL%>">
-                                                        <i class="bi bi-card-text me-1"></i> Subjects
-                                                    </a>
-                                                    <button class="btn btn-link nav-link dropdown-toggle dropdown-toggle-split px-2 py-3 text-white border-0" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration:none;">
-                <span class="visually-hidden">Toggle</span>
-              </button>
-                                                    <ul class="dropdown-menu dropdown-menu-dark shadow border-0 rounded-3" style="min-width:190px; background:#1a2e4a;">
-                                                        <li>
-                                                            <a class="dropdown-item" href="<%=ORSView.SUBJECT_CTL%>">
-                                                                <i class="bi bi-plus-circle me-2 text-success"></i> Add Subject
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item" href="<%=ORSView.SUBJECT_LIST_CTL%>">
-                                                                <i class="bi bi-list-ul me-2 text-primary"></i> Subject List
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-
-                                            <!-- ---- Users (Admin only) ---- -->
+                                            <!-- ---- People: Students / Faculty / Users / Roles (Admin only) ---- -->
                                             <li class="nav-item dropdown">
                                                 <a class="nav-link dropdown-toggle px-3 py-3" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="bi bi-people me-1"></i> Users
+                                                    <i class="bi bi-people me-1"></i> People
                                                 </a>
-                                                <ul class="dropdown-menu dropdown-menu-dark shadow border-0 rounded-3" style="min-width:190px; background:#1a2e4a;">
+                                                <ul class="dropdown-menu dropdown-menu-dark shadow border-0 rounded-3" style="min-width:210px; background:#1a2e4a;">
+
+                                                    <!-- Students -->
+                                                    <li>
+                                                        <h6 class="dropdown-header text-uppercase text-info small">
+                                                            <i class="bi bi-mortarboard me-1"></i> Students
+                                                        </h6>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<%=ORSView.STUDENT_CTL%>">
+                                                            <i class="bi bi-person-plus me-2 text-success"></i> Add Student
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<%=ORSView.STUDENT_LIST_CTL%>">
+                                                            <i class="bi bi-people me-2 text-primary"></i> Student List
+                                                        </a>
+                                                    </li>
+
+                                                    <li><hr class="dropdown-divider border-secondary"></li>
+
+                                                    <!-- Faculty -->
+                                                    <li>
+                                                        <h6 class="dropdown-header text-uppercase text-info small">
+                                                            <i class="bi bi-person-badge me-1"></i> Faculty
+                                                        </h6>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<%=ORSView.FACULTY_CTL%>">
+                                                            <i class="bi bi-plus-circle me-2 text-success"></i> Add Faculty
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<%=ORSView.FACULTY_LIST_CTL%>">
+                                                            <i class="bi bi-person-lines-fill me-2 text-primary"></i> Faculty List
+                                                        </a>
+                                                    </li>
+
+                                                    <li><hr class="dropdown-divider border-secondary"></li>
+
+                                                    <!-- Users -->
+                                                    <li>
+                                                        <h6 class="dropdown-header text-uppercase text-info small">
+                                                            <i class="bi bi-person-gear me-1"></i> Users
+                                                        </h6>
+                                                    </li>
                                                     <li>
                                                         <a class="dropdown-item" href="<%=ORSView.USER_CTL%>">
                                                             <i class="bi bi-person-plus me-2 text-success"></i> Add User
@@ -185,18 +206,15 @@
                                                             <i class="bi bi-person-lines-fill me-2 text-primary"></i> User List
                                                         </a>
                                                     </li>
-                                                </ul>
-                                            </li>
 
-                                            <!-- ---- Roles (Admin only) ---- -->
-                                            <li class="nav-item dropdown d-flex align-items-stretch">
-                                                <a class="nav-link px-3 py-3" href="<%=ORSView.ROLE_LIST_CTL%>">
-                                                    <i class="bi bi-shield-check me-1"></i> Roles
-                                                </a>
-                                                <button class="btn btn-link nav-link dropdown-toggle dropdown-toggle-split px-2 py-3 text-white border-0" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration:none;">
-            <span class="visually-hidden">Toggle</span>
-          </button>
-                                                <ul class="dropdown-menu dropdown-menu-dark shadow border-0 rounded-3" style="min-width:190px; background:#1a2e4a;">
+                                                    <li><hr class="dropdown-divider border-secondary"></li>
+
+                                                    <!-- Roles -->
+                                                    <li>
+                                                        <h6 class="dropdown-header text-uppercase text-info small">
+                                                            <i class="bi bi-shield-check me-1"></i> Roles
+                                                        </h6>
+                                                    </li>
                                                     <li>
                                                         <a class="dropdown-item" href="<%=ORSView.ROLE_CTL%>">
                                                             <i class="bi bi-plus-circle me-2 text-success"></i> Add Role
@@ -205,25 +223,6 @@
                                                     <li>
                                                         <a class="dropdown-item" href="<%=ORSView.ROLE_LIST_CTL%>">
                                                             <i class="bi bi-shield-fill-check me-2 text-primary"></i> Role List
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-
-                                            <!-- ---- Faculty (Admin only) ---- -->
-                                            <li class="nav-item dropdown">
-                                                <a class="nav-link dropdown-toggle px-3 py-3" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="bi bi-person-badge me-1"></i> Faculty
-                                                </a>
-                                                <ul class="dropdown-menu dropdown-menu-dark shadow border-0 rounded-3" style="min-width:190px; background:#1a2e4a;">
-                                                    <li>
-                                                        <a class="dropdown-item" href="<%=ORSView.FACULTY_CTL%>">
-                                                            <i class="bi bi-plus-circle me-2 text-success"></i> Add Faculty
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<%=ORSView.FACULTY_LIST_CTL%>">
-                                                            <i class="bi bi-person-lines-fill me-2 text-primary"></i> Faculty List
                                                         </a>
                                                     </li>
                                                 </ul>
