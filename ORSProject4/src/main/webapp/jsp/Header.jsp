@@ -125,6 +125,50 @@
                                                 </ul>
                                             </li>
 
+                                                <!-- ---- Courses (Admin only) ---- -->
+                                                <li class="nav-item dropdown d-flex align-items-stretch">
+                                                    <a class="nav-link px-3 py-3" href="<%=ORSView.COURSE_LIST_CTL%>">
+                                                        <i class="bi bi-journal-bookmark me-1"></i> Courses
+                                                    </a>
+                                                    <button class="btn btn-link nav-link dropdown-toggle dropdown-toggle-split px-2 py-3 text-white border-0" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration:none;">
+                <span class="visually-hidden">Toggle</span>
+              </button>
+                                                    <ul class="dropdown-menu dropdown-menu-dark shadow border-0 rounded-3" style="min-width:190px; background:#1a2e4a;">
+                                                        <li>
+                                                            <a class="dropdown-item" href="<%=ORSView.COURSE_CTL%>">
+                                                                <i class="bi bi-plus-circle me-2 text-success"></i> Add Course
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" href="<%=ORSView.COURSE_LIST_CTL%>">
+                                                                <i class="bi bi-list-ul me-2 text-primary"></i> Course List
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+
+                                                <!-- ---- Subjects (Admin only) ---- -->
+                                                <li class="nav-item dropdown d-flex align-items-stretch">
+                                                    <a class="nav-link px-3 py-3" href="<%=ORSView.SUBJECT_LIST_CTL%>">
+                                                        <i class="bi bi-card-text me-1"></i> Subjects
+                                                    </a>
+                                                    <button class="btn btn-link nav-link dropdown-toggle dropdown-toggle-split px-2 py-3 text-white border-0" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration:none;">
+                <span class="visually-hidden">Toggle</span>
+              </button>
+                                                    <ul class="dropdown-menu dropdown-menu-dark shadow border-0 rounded-3" style="min-width:190px; background:#1a2e4a;">
+                                                        <li>
+                                                            <a class="dropdown-item" href="<%=ORSView.SUBJECT_CTL%>">
+                                                                <i class="bi bi-plus-circle me-2 text-success"></i> Add Subject
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" href="<%=ORSView.SUBJECT_LIST_CTL%>">
+                                                                <i class="bi bi-list-ul me-2 text-primary"></i> Subject List
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+
                                             <!-- ---- Users (Admin only) ---- -->
                                             <li class="nav-item dropdown">
                                                 <a class="nav-link dropdown-toggle px-3 py-3" href="#" data-bs-toggle="dropdown" aria-expanded="false">

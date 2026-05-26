@@ -30,6 +30,10 @@ public interface ORSView {
 	public String STUDENT_LIST_VIEW = PAGE_FOLDER + "/StudentListView.jsp";
 	public String ROLE_VIEW = PAGE_FOLDER + "/RoleView.jsp";
 	public String ROLE_LIST_VIEW = PAGE_FOLDER + "/RoleListView.jsp";
+	public String COURSE_VIEW = PAGE_FOLDER + "/CourseView.jsp";
+	public String COURSE_LIST_VIEW = PAGE_FOLDER + "/CourseListView.jsp";
+	public String SUBJECT_VIEW = PAGE_FOLDER + "/SubjectView.jsp";
+	public String SUBJECT_LIST_VIEW = PAGE_FOLDER + "/SubjectListView.jsp";
 	public String USER_REGISTRATION_VIEW = PAGE_FOLDER + "/UserRegistrationView.jsp";
 	public String LOGIN_VIEW = PAGE_FOLDER + "/LoginView.jsp";
 	public String WELCOME_VIEW = PAGE_FOLDER + "/Welcome.jsp";
@@ -50,6 +54,10 @@ public interface ORSView {
 	public String STUDENT_LIST_CTL = APP_CONTEXT + "/ctl/StudentListCtl";
 	public String ROLE_CTL = APP_CONTEXT + "/ctl/RoleCtl";
 	public String ROLE_LIST_CTL = APP_CONTEXT + "/ctl/RoleListCtl";
+	public String COURSE_CTL = APP_CONTEXT + "/ctl/CourseCtl";
+	public String COURSE_LIST_CTL = APP_CONTEXT + "/ctl/CourseListCtl";
+	public String SUBJECT_CTL = APP_CONTEXT + "/ctl/SubjectCtl";
+	public String SUBJECT_LIST_CTL = APP_CONTEXT + "/ctl/SubjectListCtl";
 	public String USER_REGISTRATION_CTL = APP_CONTEXT + "/UserRegistrationCtl";
 	public String LOGIN_CTL = APP_CONTEXT + "/LoginCtl";
 	public String WELCOME_CTL = APP_CONTEXT + "/WelcomeCtl";
@@ -60,9 +68,9 @@ public interface ORSView {
 	public String FORGET_PASSWORD_CTL = APP_CONTEXT + "/ForgetPasswordCtl";
 	public String MARKSHEET_MERIT_LIST_CTL = APP_CONTEXT + "/ctl/MarksheetMeritListCtl";
 
-	public String FACULTY_VIEW      = PAGE_FOLDER + "/FacultyView.jsp";
+	public String FACULTY_VIEW = PAGE_FOLDER + "/FacultyView.jsp";
 	public String FACULTY_LIST_VIEW = PAGE_FOLDER + "/FacultyListView.jsp";
-	public String FACULTY_CTL      = APP_CONTEXT + "/ctl/FacultyCtl";
+	public String FACULTY_CTL = APP_CONTEXT + "/ctl/FacultyCtl";
 	public String FACULTY_LIST_CTL = APP_CONTEXT + "/ctl/FacultyListCtl";
 
 }
