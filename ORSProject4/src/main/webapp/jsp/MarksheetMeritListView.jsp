@@ -1,3 +1,4 @@
+<%@ taglib uri="http://www.sunilos.com/ors-tags" prefix="ors" %>
 <%@page import="com.sunilos.p4.ctl.MarksheetMeritListCtl"%>
 <%@page import="com.sunilos.p4.ctl.ORSView"%>
 <%@page import="com.sunilos.p4.util.ServletUtility"%>
@@ -19,7 +20,7 @@
 
     <div class="card-header text-white border-0 py-3 px-4"
          style="background:linear-gradient(135deg,#0d2137 0%,#1565c0 100%);">
-      <h5 class="mb-0 fw-bold"><i class="bi bi-trophy-fill me-2"></i> Marksheet Merit List</h5>
+      <h5 class="mb-0 fw-bold"><i class="bi bi-trophy-fill me-2"></i> <ors:message key="marksheet.meritlist.title"/></h5>
     </div>
 
     <form action="<%=ORSView.MARKSHEET_MERIT_LIST_CTL%>" method="POST">
@@ -32,12 +33,12 @@
         <table class="table table-hover align-middle mb-0">
           <thead class="table-light">
             <tr>
-              <th width="60" class="text-center">Rank</th>
-              <th>Roll No</th>
-              <th>Student Name</th>
-              <th class="text-center">Physics</th>
-              <th class="text-center">Chemistry</th>
-              <th class="text-center">Maths</th>
+              <th width="60" class="text-center"><ors:message key="marksheet.rank"/></th>
+              <th><ors:message key="marksheet.rollno"/></th>
+              <th><ors:message key="marksheet.student.name"/></th>
+              <th class="text-center"><ors:message key="marksheet.physics"/></th>
+              <th class="text-center"><ors:message key="marksheet.chemistry"/></th>
+              <th class="text-center"><ors:message key="marksheet.maths"/></th>
             </tr>
           </thead>
           <tbody>
@@ -68,7 +69,7 @@
       <div class="p-3 border-top d-flex justify-content-end">
         <button type="submit" name="operation" value="<%=MarksheetMeritListCtl.OP_BACK%>"
                 class="btn btn-outline-secondary">
-          <i class="bi bi-arrow-left me-1"></i> Back
+          <i class="bi bi-arrow-left me-1"></i> <ors:message key="button.back"/>
         </button>
       </div>
     </form>

@@ -142,7 +142,7 @@ public abstract class BaseCtl<B extends BaseBean, M extends BaseModel> extends H
 		if (OP_CANCEL.equalsIgnoreCase(op)) {
 			ServletUtility.redirect(getView(op), request, response);
 			return;
-		} else if (OP_DELETE.equalsIgnoreCase(op)) {
+		} else if (OP_DELETE.equalsIgnoreCase(op) && !(this instanceof BaseListCtl)) {
 			// Handle Delete operation
 			doDelete(request, response);
 			return;

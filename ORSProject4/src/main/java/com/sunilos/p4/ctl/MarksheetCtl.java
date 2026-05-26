@@ -61,7 +61,7 @@ public class MarksheetCtl extends BaseCtl<MarksheetBean, MarksheetModel> {
 		}
 
 		if (DataUtility.getInt(request.getParameter("physics")) > 100) {
-			request.setAttribute("physics", "Marks can not be greater than 100");
+			request.setAttribute("physics", PropertyReader.getValue("error.marks.max"));
 			pass = false;
 		}
 
@@ -72,7 +72,7 @@ public class MarksheetCtl extends BaseCtl<MarksheetBean, MarksheetModel> {
 		}
 
 		if (DataUtility.getInt(request.getParameter("chemistry")) > 100) {
-			request.setAttribute("chemistry", "Marks can not be greater than 100");
+			request.setAttribute("chemistry", PropertyReader.getValue("error.marks.max"));
 			pass = false;
 		}
 
@@ -83,7 +83,7 @@ public class MarksheetCtl extends BaseCtl<MarksheetBean, MarksheetModel> {
 		}
 
 		if (DataUtility.getInt(request.getParameter("maths")) > 100) {
-			request.setAttribute("maths", "Marks can not be greater than 100");
+			request.setAttribute("maths", PropertyReader.getValue("error.marks.max"));
 			pass = false;
 		}
 
