@@ -22,9 +22,14 @@
     <div class="card-header text-white border-0 py-3 px-4 d-flex justify-content-between align-items-center"
          style="background:linear-gradient(135deg,#0d2137 0%,#1565c0 100%);">
       <h5 class="mb-0 fw-bold"><i class="bi bi-file-earmark-text-fill me-2"></i> <ors:message key="marksheet.list.title"/></h5>
-      <a href="MarksheetCtl" class="btn btn-sm btn-light text-primary fw-semibold">
-        <i class="bi bi-plus-circle me-1"></i> <ors:message key="marksheet.add"/>
-      </a>
+      <div class="d-flex gap-2">
+        <a href="<%=ORSView.MARKSHEET_REPORT_CTL%>" target="_blank" class="btn btn-sm btn-warning fw-semibold">
+          <i class="bi bi-file-earmark-pdf me-1"></i> Print PDF
+        </a>
+        <a href="MarksheetCtl" class="btn btn-sm btn-light text-primary fw-semibold">
+          <i class="bi bi-plus-circle me-1"></i> <ors:message key="marksheet.add"/>
+        </a>
+      </div>
     </div>
 
     <form action="<%=ORSView.MARKSHEET_LIST_CTL%>" method="POST">

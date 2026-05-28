@@ -20,9 +20,14 @@
     <div class="card-header text-white border-0 py-3 px-4 d-flex justify-content-between align-items-center"
          style="background:linear-gradient(135deg,#0d2137 0%,#1565c0 100%);">
       <h5 class="mb-0 fw-bold"><i class="bi bi-person-badge-fill me-2"></i> Faculty List</h5>
-      <a href="FacultyCtl" class="btn btn-sm btn-light text-primary fw-semibold">
-        <i class="bi bi-plus-circle me-1"></i> Add Faculty
-      </a>
+      <div class="d-flex gap-2">
+        <a href="<%=ORSView.FACULTY_REPORT_CTL%>" target="_blank" class="btn btn-sm btn-warning fw-semibold">
+          <i class="bi bi-file-earmark-pdf me-1"></i> Print PDF
+        </a>
+        <a href="FacultyCtl" class="btn btn-sm btn-light text-primary fw-semibold">
+          <i class="bi bi-plus-circle me-1"></i> Add Faculty
+        </a>
+      </div>
     </div>
 
     <form action="<%=ORSView.FACULTY_LIST_CTL%>" method="POST">

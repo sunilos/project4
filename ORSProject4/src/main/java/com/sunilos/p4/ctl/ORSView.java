@@ -74,5 +74,12 @@ public interface ORSView {
 	public String FACULTY_LIST_CTL = APP_CONTEXT + "/ctl/FacultyListCtl";
 
 	public String STUDENT_REPORT_CTL = APP_CONTEXT + "/ctl/StudentReportCtl";
+	public String COLLEGE_REPORT_CTL   = APP_CONTEXT + "/ctl/CollegeReportCtl";
+	public String USER_REPORT_CTL      = APP_CONTEXT + "/ctl/UserReportCtl";
+	public String ROLE_REPORT_CTL      = APP_CONTEXT + "/ctl/RoleReportCtl";
+	public String COURSE_REPORT_CTL    = APP_CONTEXT + "/ctl/CourseReportCtl";
+	public String SUBJECT_REPORT_CTL   = APP_CONTEXT + "/ctl/SubjectReportCtl";
+	public String MARKSHEET_REPORT_CTL = APP_CONTEXT + "/ctl/MarksheetReportCtl";
+	public String FACULTY_REPORT_CTL   = APP_CONTEXT + "/ctl/FacultyReportCtl";
 
 }
