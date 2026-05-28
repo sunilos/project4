@@ -73,4 +73,6 @@ public interface ORSView {
 	public String FACULTY_CTL = APP_CONTEXT + "/ctl/FacultyCtl";
 	public String FACULTY_LIST_CTL = APP_CONTEXT + "/ctl/FacultyListCtl";
 
+	public String STUDENT_REPORT_CTL = APP_CONTEXT + "/ctl/StudentReportCtl";
+
 }

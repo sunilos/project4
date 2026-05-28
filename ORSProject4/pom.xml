@@ -87,6 +87,13 @@
       <version>2.15.2</version>
     </dependency>
 
+    <!-- JasperReports - PDF report generation -->
+    <dependency>
+      <groupId>net.sf.jasperreports</groupId>
+      <artifactId>jasperreports</artifactId>
+      <version>6.20.6</version>
+    </dependency>
+
     <!-- JUnit 5 -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
