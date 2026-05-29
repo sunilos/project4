@@ -13,9 +13,9 @@ import com.sunilos.p4.util.DataUtility;
  * User List functionality Controller. Performs operation for list, search and
  * delete operations of User
  * 
- * @author Rays Technologies
+ * @author Rays EdTech
  * @version 1.0
- * @Copyright (c) Rays Technologies
+ * @Copyright (c) Rays EdTech
  */
 
 @WebServlet("/ctl/UserListCtl")

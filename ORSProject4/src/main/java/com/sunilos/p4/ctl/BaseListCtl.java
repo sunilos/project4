@@ -23,9 +23,9 @@ import com.sunilos.p4.util.ServletUtility;
  * इस बेस लिस्ट कंट्रोलर क्लास को एप्लीकेशन के सारे लिस्ट पेजेज इन्हेरिट करते
  * है। एसकेअंदर किसी भी लिस्ट पेज के सर्च एवं पेजिनेशन के लॉजिक लिखे गए है
  * 
- * @author Rays Technologies
+ * @author Rays EdTech
  * @version 1.0
- * @Copyright (c) Rays Technologies
+ * @Copyright (c) Rays EdTech
  */
 
 public abstract class BaseListCtl<B extends BaseBean, M extends BaseModel> extends BaseCtl<B, M> {

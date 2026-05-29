@@ -19,9 +19,9 @@ import com.sunilos.p4.util.ServletUtility;
 /**
  * Get marksheet by given roll number
  * 
- * @author Rays Technologies
+ * @author Rays EdTech
  * @version 1.0
- * @Copyright (c) Rays Technologies
+ * @Copyright (c) Rays EdTech
  */
 
 @WebServlet("/ctl/GetMarksheetCtl")

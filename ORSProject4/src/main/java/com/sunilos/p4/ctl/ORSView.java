@@ -3,9 +3,9 @@ package com.sunilos.p4.ctl;
 /**
  * Contains ORS View and Controller URI
  * 
- * @author Rays Technologies
+ * @author Rays EdTech
  * @version 1.0
- * @Copyright (c) Rays Technologies
+ * @Copyright (c) Rays EdTech
  */
 
 public interface ORSView {
