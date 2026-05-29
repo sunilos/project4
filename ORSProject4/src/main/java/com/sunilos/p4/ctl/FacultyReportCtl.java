@@ -1,65 +1,28 @@
 package com.sunilos.p4.ctl;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-
-import org.apache.log4j.Logger;
 
 import com.sunilos.p4.bean.FacultyBean;
 import com.sunilos.p4.model.FacultyModel;
 
+import jakarta.servlet.annotation.WebServlet;
+
 @WebServlet("/ctl/FacultyReportCtl")
-public class FacultyReportCtl extends HttpServlet {
+public class FacultyReportCtl extends BaseReportCtl<FacultyBean> {
 
-    private static final Logger log = Logger.getLogger(FacultyReportCtl.class);
-    private static final String COMPILED_REPORT_KEY = "FACULTY_LIST_COMPILED_REPORT";
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            JasperReport jasperReport = getCompiledReport();
-
-            FacultyModel model = new FacultyModel();
-            @SuppressWarnings("unchecked")
-            List<FacultyBean> faculty = model.list();
-
-            Map<String, Object> params = new HashMap<>();
-            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(faculty);
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, dataSource);
-
-            response.setContentType("application/pdf");
-            response.setHeader("Content-Disposition", "inline; filename=FacultyList.pdf");
-            JasperExportManager.exportReportToPdfStream(jasperPrint, response.getOutputStream());
-
-        } catch (Exception e) {
-            log.error("Faculty report generation failed", e);
-            throw new ServletException("Failed to generate faculty report: " + e.getMessage(), e);
-        }
+    public List<FacultyBean> getList() {
+        FacultyModel model = new FacultyModel();
+        @SuppressWarnings("unchecked")
+        List<FacultyBean> faculty = model.list();
+        return faculty;
     }
 
-    private JasperReport getCompiledReport() throws Exception {
-        JasperReport cached = (JasperReport) getServletContext().getAttribute(COMPILED_REPORT_KEY);
-        if (cached != null) return cached;
-        InputStream jrxml = getClass().getResourceAsStream("/reports/FacultyListReport.jrxml");
-        if (jrxml == null) throw new IllegalStateException("Report template not found: /reports/FacultyListReport.jrxml");
-        JasperReport compiled = JasperCompileManager.compileReport(jrxml);
-        getServletContext().setAttribute(COMPILED_REPORT_KEY, compiled);
-        return compiled;
+    public String getView() {
+        return ORSView.FACULTY_REPORT_VIEW;
     }
+
+    public String getCompiledReportKey() {
+        return "FACULTY_LIST_COMPILED_REPORT";
+    }
+
 }

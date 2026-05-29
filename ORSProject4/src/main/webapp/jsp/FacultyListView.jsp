@@ -24,6 +24,9 @@
         <a href="<%=ORSView.FACULTY_REPORT_CTL%>" target="_blank" class="btn btn-sm btn-warning fw-semibold">
           <i class="bi bi-file-earmark-pdf me-1"></i> Print PDF
         </a>
+        <a href="<%=ORSView.FACULTY_REPORT_CTL%>?type=doc" target="_blank" class="btn btn-sm btn-info fw-semibold">
+          <i class="bi bi-file-earmark-word me-1"></i> Print DOC
+        </a>
         <a href="FacultyCtl" class="btn btn-sm btn-light text-primary fw-semibold">
           <i class="bi bi-plus-circle me-1"></i> Add Faculty
         </a>

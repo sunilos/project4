@@ -1,78 +1,28 @@
 package com.sunilos.p4.ctl;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-
-import org.apache.log4j.Logger;
 
 import com.sunilos.p4.bean.StudentBean;
 import com.sunilos.p4.model.StudentModel;
 
-/**
- * Generates a PDF Student List report using JasperReports.
- * Accessible at /ctl/StudentReportCtl (protected by FrontController session check).
- */
+import jakarta.servlet.annotation.WebServlet;
+
 @WebServlet("/ctl/StudentReportCtl")
-public class StudentReportCtl extends HttpServlet {
+public class StudentReportCtl extends BaseReportCtl<StudentBean> {
 
-    private static final Logger log = Logger.getLogger(StudentReportCtl.class);
-    private static final String COMPILED_REPORT_KEY = "STUDENT_LIST_COMPILED_REPORT";
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            JasperReport jasperReport = getCompiledReport();
-
-            StudentModel model = new StudentModel();
-            @SuppressWarnings("unchecked")
-            List<StudentBean> students = model.list();
-
-            Map<String, Object> params = new HashMap<>();
-            params.put("reportTitle", "Student List Report");
-
-            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(students);
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, dataSource);
-
-            response.setContentType("application/pdf");
-            response.setHeader("Content-Disposition", "inline; filename=StudentList.pdf");
-            JasperExportManager.exportReportToPdfStream(jasperPrint, response.getOutputStream());
-
-        } catch (Exception e) {
-            log.error("Student report generation failed", e);
-            throw new ServletException("Failed to generate student report: " + e.getMessage(), e);
-        }
+    public List<StudentBean> getList() {
+        StudentModel model = new StudentModel();
+        @SuppressWarnings("unchecked")
+        List<StudentBean> students = model.list();
+        return students;
     }
 
-    /**
-     * Compiles the JRXML once and caches it in the ServletContext for reuse.
-     */
-    private JasperReport getCompiledReport() throws Exception {
-        JasperReport cached = (JasperReport) getServletContext().getAttribute(COMPILED_REPORT_KEY);
-        if (cached != null) {
-            return cached;
-        }
-        InputStream jrxml = getClass().getResourceAsStream("/reports/StudentListReport.jrxml");
-        if (jrxml == null) {
-            throw new IllegalStateException("Report template not found: /reports/StudentListReport.jrxml");
-        }
-        JasperReport compiled = JasperCompileManager.compileReport(jrxml);
-        getServletContext().setAttribute(COMPILED_REPORT_KEY, compiled);
-        return compiled;
+    public String getView() {
+        return ORSView.STUDENT_REPORT_VIEW;
     }
+
+    public String getCompiledReportKey() {
+        return "STUDENT_LIST_COMPILED_REPORT";
+    }
+
 }

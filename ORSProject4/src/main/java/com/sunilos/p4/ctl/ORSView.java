@@ -74,12 +74,21 @@ public interface ORSView {
 	public String FACULTY_LIST_CTL = APP_CONTEXT + "/ctl/FacultyListCtl";
 
 	public String STUDENT_REPORT_CTL = APP_CONTEXT + "/ctl/StudentReportCtl";
-	public String COLLEGE_REPORT_CTL   = APP_CONTEXT + "/ctl/CollegeReportCtl";
-	public String USER_REPORT_CTL      = APP_CONTEXT + "/ctl/UserReportCtl";
-	public String ROLE_REPORT_CTL      = APP_CONTEXT + "/ctl/RoleReportCtl";
-	public String COURSE_REPORT_CTL    = APP_CONTEXT + "/ctl/CourseReportCtl";
-	public String SUBJECT_REPORT_CTL   = APP_CONTEXT + "/ctl/SubjectReportCtl";
+	public String COLLEGE_REPORT_CTL = APP_CONTEXT + "/ctl/CollegeReportCtl";
+	public String USER_REPORT_CTL = APP_CONTEXT + "/ctl/UserReportCtl";
+	public String ROLE_REPORT_CTL = APP_CONTEXT + "/ctl/RoleReportCtl";
+	public String COURSE_REPORT_CTL = APP_CONTEXT + "/ctl/CourseReportCtl";
+	public String SUBJECT_REPORT_CTL = APP_CONTEXT + "/ctl/SubjectReportCtl";
 	public String MARKSHEET_REPORT_CTL = APP_CONTEXT + "/ctl/MarksheetReportCtl";
-	public String FACULTY_REPORT_CTL   = APP_CONTEXT + "/ctl/FacultyReportCtl";
+	public String FACULTY_REPORT_CTL = APP_CONTEXT + "/ctl/FacultyReportCtl";
+
+	public String COURSE_REPORT_VIEW    = "/reports/CourseListReport.jrxml";
+	public String STUDENT_REPORT_VIEW   = "/reports/StudentListReport.jrxml";
+	public String COLLEGE_REPORT_VIEW   = "/reports/CollegeListReport.jrxml";
+	public String USER_REPORT_VIEW      = "/reports/UserListReport.jrxml";
+	public String ROLE_REPORT_VIEW      = "/reports/RoleListReport.jrxml";
+	public String SUBJECT_REPORT_VIEW   = "/reports/SubjectListReport.jrxml";
+	public String MARKSHEET_REPORT_VIEW = "/reports/MarksheetListReport.jrxml";
+	public String FACULTY_REPORT_VIEW   = "/reports/FacultyListReport.jrxml";
 
 }

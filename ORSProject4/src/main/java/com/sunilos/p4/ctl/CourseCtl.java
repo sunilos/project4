@@ -1,17 +1,15 @@
 package com.sunilos.p4.ctl;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServletRequest;
-
 import org.apache.log4j.Logger;
 
 import com.sunilos.p4.bean.CourseBean;
-import com.sunilos.p4.exception.DuplicateRecordException;
 import com.sunilos.p4.model.CourseModel;
 import com.sunilos.p4.util.DataUtility;
 import com.sunilos.p4.util.DataValidator;
 import com.sunilos.p4.util.PropertyReader;
+
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServletRequest;
 
 @WebServlet("/ctl/CourseCtl")
 public class CourseCtl extends BaseCtl<CourseBean, CourseModel> {
