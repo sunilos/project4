@@ -14,12 +14,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 
 import com.sunilos.p4.util.DataValidator;
+import com.sunilos.p4.util.JwtUtil;
 
 /**
  * REST controller for authentication operations.
@@ -114,8 +114,8 @@ public class LoginRestCtl extends HttpServlet {
      * { "login": "user@example.com", "password": "secret" }
      * </pre>
      * <p>
-     * On success, stores the authenticated {@link UserBean} in the HTTP session
-     * under the key {@code "user"} and returns the bean in the response payload.
+     * On success, generates a JWT via {@link JwtUtil#generateToken} and returns
+     * it together with the authenticated {@link UserBean} in the response payload.
      * Returns an error response if credentials are invalid or missing.
      *
      * @param request  the HTTP request carrying login credentials as JSON
@@ -154,10 +154,10 @@ public class LoginRestCtl extends HttpServlet {
             if (bean == null) {
                 res = new ORSResponse(false, "Invalid login or password");
             } else {
-                HttpSession session = request.getSession(true);
-                session.setAttribute("user", bean);
+                String token = JwtUtil.generateToken(bean.getId(), bean.getLogin(), bean.getRoleId());
                 res = new ORSResponse(true, "Login successful");
                 res.addData(bean);
+                res.addResult("token", token);
             }
 
         } catch (Exception e) {
@@ -169,24 +169,21 @@ public class LoginRestCtl extends HttpServlet {
     }
 
     /**
-     * Logs out the current user by invalidating the HTTP session.
+     * Logs out the current user.
+     * <p>
+     * JWT authentication is stateless — no server-side session exists to
+     * invalidate. The client is responsible for discarding the token. This
+     * endpoint exists as a convenience so front-end code can call a consistent
+     * logout URL.
      * <p>
      * Request body: (none required)
-     * <p>
-     * Safe to call even when no session exists — returns a success response in
-     * both cases.
      *
      * @param request  the HTTP request
      * @param response the HTTP response; returns a success JSON message
      * @throws IOException if writing the response fails
      */
     private void doLogout(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-        sendResponse(new ORSResponse(true, "Logout successful"), response);
+        sendResponse(new ORSResponse(true, "Logout successful. Please discard your token."), response);
     }
 
     /**
