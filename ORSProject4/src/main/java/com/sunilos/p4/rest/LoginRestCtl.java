@@ -42,8 +42,14 @@ public class LoginRestCtl extends HttpServlet {
     /** Shared Jackson mapper — thread-safe and reused across all requests. */
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    /** Shared stateless model for all user/auth operations. */
-    private static final UserModel MODEL = new UserModel();
+    /**
+     * Returns a new {@link UserModel} instance; override in tests to inject a mock.
+     *
+     * @return new {@link UserModel}
+     */
+    protected UserModel getModel() {
+        return new UserModel();
+    }
 
     /**
      * Pre-processes every request by extracting the first path segment after
@@ -134,17 +140,16 @@ public class LoginRestCtl extends HttpServlet {
 
             if (password == null || password.isEmpty()) {
                 errors.put("password", "Password is required");
-                return;
             }
 
-            if (errors.size() > 0) {
+            if (!errors.isEmpty()) {
                 res = new ORSResponse(false, "Validation errors");
                 res.addResult("inputErrors", errors);
                 sendResponse(res, response);
                 return;
             }
 
-            UserBean bean = MODEL.authenticate(login, password);
+            UserBean bean = getModel().authenticate(login, password);
 
             if (bean == null) {
                 res = new ORSResponse(false, "Invalid login or password");
@@ -227,29 +232,24 @@ public class LoginRestCtl extends HttpServlet {
 
             if (firstName == null || firstName.isEmpty()) {
                 errors.put("firstName", "First name is required");
-                return;
             }
             if (lastName == null || lastName.isEmpty()) {
                 errors.put("lastName", "Last name is required");
             }
             if (login == null || login.isEmpty()) {
                 errors.put("login", "Login (email) is required");
-                return;
             } else if (!DataValidator.isEmail(login)) {
                 errors.put("login", "Login must be a valid email address");
-                return;
             }
 
             if (password == null || password.isEmpty()) {
                 errors.put("password", "Password is required");
-                return;
             }
-            if (confirmPassword != null && !password.equals(confirmPassword)) {
+            if (password != null && confirmPassword != null && !password.equals(confirmPassword)) {
                 errors.put("confirmPassword", "Password and confirm password do not match");
-                return;
             }
 
-            if (errors.size() > 0) {
+            if (!errors.isEmpty()) {
                 res = new ORSResponse(false, "Validation errors");
                 res.addResult("inputErrors", errors);
                 sendResponse(res, response);
@@ -265,7 +265,7 @@ public class LoginRestCtl extends HttpServlet {
             bean.setConfirmPassword(confirmPassword);
             bean.setGender(gender);
 
-            long pk = MODEL.registerUser(bean);
+            long pk = getModel().registerUser(bean);
             bean.setId(pk);
 
             res = new ORSResponse(true, "User registered successfully, please login");
@@ -310,13 +310,13 @@ public class LoginRestCtl extends HttpServlet {
             } else if (!DataValidator.isEmail(login)) {
                 errors.put("login", "Login must be a valid email address");
             }
-            if (errors.size() > 0) {
+            if (!errors.isEmpty()) {
                 res = new ORSResponse(false, "Validation errors");
                 res.addResult("inputErrors", errors);
                 sendResponse(res, response);
                 return;
             }
-            MODEL.forgetPassword(login);
+            getModel().forgetPassword(login);
             res = new ORSResponse(true, "Password has been sent to your email id");
 
         } catch (RecordNotFoundException e) {

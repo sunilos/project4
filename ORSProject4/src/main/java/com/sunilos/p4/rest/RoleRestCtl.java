@@ -12,23 +12,22 @@ import com.sunilos.p4.model.RoleModel;
 /**
  * REST controller for Role CRUD operations.
  * <p>
- * Mapped to {@code /rest/rolectl/*}. Supports:
+ * Mapped to {@code /rest/role/*}. Supports:
  * <ul>
- * <li>{@code GET  /rest/rolectl?id=1} — get by id</li>
- * <li>{@code GET  /rest/rolectl} — get all</li>
- * <li>{@code POST /rest/rolectl/add} — add new role</li>
- * <li>{@code PUT  /rest/rolectl/update} — update role</li>
- * <li>{@code DELETE /rest/rolectl/delete/1} — delete by id</li>
+ * <li>{@code GET    /rest/role?id=1}      — get a role by id</li>
+ * <li>{@code GET    /rest/role}            — get all roles</li>
+ * <li>{@code POST   /rest/role/add}        — add a new role</li>
+ * <li>{@code POST   /rest/role/search}     — search roles by criteria</li>
+ * <li>{@code PUT    /rest/role/update}     — update an existing role</li>
+ * <li>{@code DELETE /rest/role/delete/1}   — delete a role by id</li>
  * </ul>
  *
- * @author Rays EdTech
+ * @author Sunil Sahu
  * @version 1.0
  * @see BaseRestController
  */
 @WebServlet(urlPatterns = { "/rest/role/*" })
 public class RoleRestCtl extends BaseRestController<RoleBean, RoleModel> {
-
-	private static final RoleModel MODEL = new RoleModel();
 
 	/**
 	 * Maps JSON fields to a {@link RoleBean}, delegating base fields to
@@ -46,20 +45,27 @@ public class RoleRestCtl extends BaseRestController<RoleBean, RoleModel> {
 		return bean;
 	}
 
+	/**
+	 * No preload data is required for roles; this implementation is intentionally empty.
+	 *
+	 * @param request  the HTTP request
+	 * @param response the HTTP response
+	 * @throws ServletException if an unexpected servlet error occurs
+	 * @throws IOException      if an I/O error occurs
+	 */
 	@Override
 	protected void doGetPreload(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 	}
 
 	/**
-	 * Returns the shared stateless {@link RoleModel} instance.
+	 * Returns a new {@link RoleModel} instance; override in tests to inject a mock.
 	 *
-	 * @return singleton {@link RoleModel}
+	 * @return new {@link RoleModel}
 	 */
 	@Override
 	protected RoleModel getModel() {
-		return MODEL;
+		return new RoleModel();
 	}
 
 	/**

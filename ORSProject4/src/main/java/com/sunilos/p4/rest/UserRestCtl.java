@@ -13,11 +13,37 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * REST controller for User CRUD operations.
+ * <p>
+ * Mapped to {@code /rest/user/*}. Supports:
+ * <ul>
+ * <li>{@code GET    /rest/user?id=1}      — get a user by id</li>
+ * <li>{@code GET    /rest/user}            — get all users</li>
+ * <li>{@code GET    /rest/user/preload}    — get preload data (role list)</li>
+ * <li>{@code POST   /rest/user/add}        — add a new user</li>
+ * <li>{@code POST   /rest/user/search}     — search users by criteria</li>
+ * <li>{@code PUT    /rest/user/update}     — update an existing user</li>
+ * <li>{@code DELETE /rest/user/delete/1}   — delete a user by id</li>
+ * </ul>
+ *
+ * @author Sunil Sahu
+ * @version 1.0
+ * @see BaseRestController
+ */
 @WebServlet(urlPatterns = { "/rest/user/*" })
 public class UserRestCtl extends BaseRestController<UserBean, UserModel> {
 
-	private static final UserModel MODEL = new UserModel();
-
+	/**
+	 * Maps JSON fields to a {@link UserBean}, delegating base fields to
+	 * {@link BaseRestController#jsonToBean} before adding user-specific fields.
+	 * <p>
+	 * Note: {@code dob} is omitted — date parsing from JSON is not yet implemented.
+	 *
+	 * @param jsonNode the parsed JSON request body
+	 * @param bean     the target bean to populate
+	 * @return the populated {@link UserBean}
+	 */
 	@Override
 	public UserBean jsonToBean(JsonNode jsonNode, UserBean bean) {
 		super.jsonToBean(jsonNode, bean);
@@ -32,6 +58,16 @@ public class UserRestCtl extends BaseRestController<UserBean, UserModel> {
 		return bean;
 	}
 
+	/**
+	 * Handles {@code GET /rest/user/preload}.
+	 * Returns the full list of roles, used to populate the role dropdown
+	 * on the user form.
+	 *
+	 * @param request  the HTTP request
+	 * @param response the HTTP response; returns {@code { "preload": { "roleList": [...] } }}
+	 * @throws ServletException if an unexpected servlet error occurs
+	 * @throws IOException      if writing the response fails
+	 */
 	@Override
 	protected void doGetPreload(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -46,11 +82,21 @@ public class UserRestCtl extends BaseRestController<UserBean, UserModel> {
 		sendResponse(res, request, response);
 	}
 
+	/**
+	 * Returns a new {@link UserModel} instance; override in tests to inject a mock.
+	 *
+	 * @return new {@link UserModel}
+	 */
 	@Override
 	protected UserModel getModel() {
-		return MODEL;
+		return new UserModel();
 	}
 
+	/**
+	 * Returns a new {@link UserBean} instance for each request.
+	 *
+	 * @return new {@link UserBean}
+	 */
 	@Override
 	public UserBean getBean() {
 		return new UserBean();

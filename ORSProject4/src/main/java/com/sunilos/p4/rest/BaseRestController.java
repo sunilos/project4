@@ -18,26 +18,44 @@ import com.sunilos.p4.model.BaseModel;
 import com.sunilos.p4.util.DataUtility;
 
 /**
- * 
- * 
- * URLs
- * 
- ** HTTP GET rest/userctl/get/1
- * 
- ** HTTP GET rest/userctl/delete/1
- * 
- ** HTTP POST rest/userctl/save
- * 
- ** HTTP POST rest/userctl/add
- * 
- ** HTTP POST rest/userctl/update
- * 
- ** HTTP POST rest/userctl/search
- * 
- * @author Sunil Sahu
+ * Abstract base REST controller that provides full CRUD and diagnostic HTTP
+ * method support for all entity-specific subclasses.
+ * <p>
+ * Each concrete subclass maps to a resource-specific URL prefix via
+ * {@code @WebServlet}. The table below uses {@code /rest/{resource}} as a
+ * placeholder — replace {@code {resource}} with the actual mapping of the
+ * subclass (e.g. {@code college}, {@code student}, {@code marksheet}, …).
  *
- * @param <B>
- * @param <M>
+ * <table border="1" cellpadding="4">
+ * <caption>Supported REST API endpoints</caption>
+ * <tr><th>Method</th><th>URL</th><th>Description</th></tr>
+ * <tr><td>GET</td>    <td>/rest/{resource}?id={id}</td>         <td>Get a single record by primary key</td></tr>
+ * <tr><td>GET</td>    <td>/rest/{resource}</td>                 <td>Get all records</td></tr>
+ * <tr><td>GET</td>    <td>/rest/{resource}/preload</td>         <td>Get preload data (e.g. dropdown lists)</td></tr>
+ * <tr><td>POST</td>   <td>/rest/{resource}/add</td>             <td>Add a new record; body: JSON bean</td></tr>
+ * <tr><td>POST</td>   <td>/rest/{resource}/search</td>          <td>Search records by criteria; body: JSON bean</td></tr>
+ * <tr><td>PUT</td>    <td>/rest/{resource}/update</td>          <td>Update an existing record; body: JSON bean with id</td></tr>
+ * <tr><td>DELETE</td> <td>/rest/{resource}/delete/{id}</td>     <td>Delete a record by primary key</td></tr>
+ * <tr><td>HEAD</td>   <td>/rest/{resource}</td>                 <td>Same as GET but response body is omitted</td></tr>
+ * <tr><td>OPTIONS</td><td>/rest/{resource}</td>                 <td>Returns supported HTTP methods in Allow header</td></tr>
+ * <tr><td>TRACE</td>  <td>/rest/{resource}</td>                 <td>Echoes request headers for diagnostic purposes</td></tr>
+ * </table>
+ *
+ * <p>All responses are JSON with the following structure:
+ * <pre>
+ * {
+ *   "success": true | false,
+ *   "result": {
+ *     "message": "...",
+ *     "data":    { ... } | [ ... ]
+ *   }
+ * }
+ * </pre>
+ *
+ * @param <B> the bean type, must extend {@link com.sunilos.p4.bean.BaseBean}
+ * @param <M> the model type, must extend {@link com.sunilos.p4.model.BaseModel}
+ * @author Sunil Sahu
+ * @version 1.0
  */
 public abstract class BaseRestController<B extends BaseBean, M extends BaseModel> extends HttpServlet {
 
@@ -45,6 +63,14 @@ public abstract class BaseRestController<B extends BaseBean, M extends BaseModel
 
 	protected abstract M getModel();
 
+	/**
+	 * Serialises an {@link ORSResponse} to JSON and writes it to the HTTP response
+	 * with content-type {@code application/json}.
+	 *
+	 * @param res      the response object to serialise
+	 * @param request  the incoming HTTP request (unused; kept for subclass access)
+	 * @param response the HTTP response to write to
+	 */
 	protected void sendResponse(ORSResponse res, HttpServletRequest request, HttpServletResponse response) {
 		try {
 			response.setContentType("application/json");
@@ -63,7 +89,7 @@ public abstract class BaseRestController<B extends BaseBean, M extends BaseModel
 	 * {@link HttpServletRequest#getPathInfo()} and storing them as request
 	 * attributes before delegating to the appropriate {@code doXxx} method.
 	 * <p>
-	 * For a URL like {@code DELETE rest/userctl/delete/1}:
+	 * For a URL like {@code DELETE /rest/{resource}/delete/1}:
 	 * <ul>
 	 * <li>{@code operation} attribute → {@code "delete"}</li>
 	 * <li>{@code data} attribute → {@code "1"}</li>
@@ -72,7 +98,7 @@ public abstract class BaseRestController<B extends BaseBean, M extends BaseModel
 	 * @param request  the incoming HTTP request
 	 * @param response the HTTP response
 	 * @throws ServletException if an unexpected servlet error occurs
-	 * @throws IOException      if writing the response fails
+	 * @throws IOException      if an I/O error occurs
 	 */
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response)
@@ -96,16 +122,19 @@ public abstract class BaseRestController<B extends BaseBean, M extends BaseModel
 	/**
 	 * Handles HTTP GET requests.
 	 * <p>
-	 * If request parameter {@code id > 0}, returns the matching record.
-	 * Otherwise returns all records.
+	 * If the path segment is {@code preload}, delegates to {@link #doGetPreload}.
+	 * Otherwise, if the {@code id} query parameter is greater than zero the
+	 * matching record is returned; if {@code id} is absent or zero, all records
+	 * are returned.
 	 * <p>
 	 * Examples:
 	 * <ul>
-	 * <li>{@code GET rest/userctl?id=1} — returns single record</li>
-	 * <li>{@code GET rest/userctl} — returns all records</li>
+	 * <li>{@code GET /rest/{resource}?id=1} — returns a single record</li>
+	 * <li>{@code GET /rest/{resource}}       — returns all records</li>
+	 * <li>{@code GET /rest/{resource}/preload} — returns preload data</li>
 	 * </ul>
 	 *
-	 * @param request  the HTTP request; reads optional {@code id} parameter
+	 * @param request  the HTTP request; reads optional {@code id} query parameter
 	 * @param response the HTTP response; returns matching record(s) as JSON
 	 * @throws ServletException if an unexpected servlet error occurs
 	 * @throws IOException      if writing the response fails
@@ -147,12 +176,40 @@ public abstract class BaseRestController<B extends BaseBean, M extends BaseModel
 		sendResponse(res, request, response);
 	}
 
+	/**
+	 * Handles {@code GET /rest/{resource}/preload} requests.
+	 * <p>
+	 * Override in subclasses to return dropdown or reference data needed before a
+	 * form is rendered (e.g. a list of colleges for a student form). The default
+	 * implementation returns a {@code 200} response with {@code success: false} and
+	 * a "not implemented" message.
+	 * <p>
+	 * Example: {@code GET /rest/student/preload} → returns college list
+	 *
+	 * @param request  the HTTP request
+	 * @param response the HTTP response; returns preload data as JSON
+	 * @throws ServletException if an unexpected servlet error occurs
+	 * @throws IOException      if writing the response fails
+	 */
 	protected void doGetPreload(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		ORSResponse res = new ORSResponse(false, "Preload not implemented");
 		sendResponse(res, request, response);
 	}
 
+	/**
+	 * Handles {@code POST /rest/{resource}/search} requests.
+	 * <p>
+	 * Reads a JSON bean from the request body, uses it as search criteria, and
+	 * returns the matching records.
+	 * <p>
+	 * Example: {@code POST /rest/{resource}/search} with a partial JSON bean as body
+	 *
+	 * @param request  the HTTP request carrying the search criteria as a JSON bean
+	 * @param response the HTTP response; returns matching records as JSON
+	 * @throws ServletException if an unexpected servlet error occurs
+	 * @throws IOException      if reading the request body or writing the response fails
+	 */
 	protected void doPostSearch(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -176,24 +233,21 @@ public abstract class BaseRestController<B extends BaseBean, M extends BaseModel
 	}
 
 	/**
-	 * Handles HTTP POST requests for add, update, save (upsert), and search
-	 * operations.
+	 * Handles HTTP POST requests. The operation is determined by the first URL
+	 * path segment set by {@link #service}.
 	 * <p>
-	 * Operation is determined by the first URL segment:
+	 * Supported operations:
 	 * <ul>
-	 * <li>{@code add} — inserts a new record; returns the persisted bean</li>
-	 * <li>{@code update} — updates an existing record; returns the refreshed
-	 * bean</li>
-	 * <li>{@code save} — inserts if {@code id == 0}, updates otherwise; returns the
-	 * refreshed bean</li>
-	 * <li>{@code search} — returns a list of matching records</li>
+	 * <li>{@code POST /rest/{resource}/add}    — inserts a new record; returns the
+	 *     persisted bean</li>
+	 * <li>{@code POST /rest/{resource}/search} — delegates to
+	 *     {@link #doPostSearch}; returns matching records</li>
 	 * </ul>
 	 *
 	 * @param request  the HTTP request carrying the JSON bean in its body
-	 * @param response the HTTP response; returns the result as JSON
+	 * @param response the HTTP response; returns the added record or search results as JSON
 	 * @throws ServletException if an unexpected servlet error occurs
-	 * @throws IOException      if reading the request body or writing the response
-	 *                          fails
+	 * @throws IOException      if reading the request body or writing the response fails
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -230,15 +284,15 @@ public abstract class BaseRestController<B extends BaseBean, M extends BaseModel
 	 * Handles HTTP PUT requests to update an existing record.
 	 * <p>
 	 * Expects a JSON body representing the bean with a valid {@code id} field.
-	 * Fetches the persisted bean after the update and returns it in the response.
+	 * Returns an error if the id is missing or the record does not exist.
+	 * Fetches and returns the refreshed bean after a successful update.
 	 * <p>
-	 * Example: {@code PUT rest/userctl/update} with JSON body containing the bean.
+	 * Example: {@code PUT /rest/{resource}/update} with a JSON bean body
 	 *
 	 * @param request  the HTTP request carrying the JSON bean in its body
 	 * @param response the HTTP response; returns the updated bean as JSON
 	 * @throws ServletException if an unexpected servlet error occurs
-	 * @throws IOException      if reading the request body or writing the response
-	 *                          fails
+	 * @throws IOException      if reading the request body or writing the response fails
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -283,15 +337,15 @@ public abstract class BaseRestController<B extends BaseBean, M extends BaseModel
 	/**
 	 * Handles HTTP DELETE requests to delete a record by primary key.
 	 * <p>
-	 * The record ID is read from the {@code data} request attribute, which is
-	 * populated by {@link #service} from the URL segment after the operation.
+	 * The record id is read from the {@code data} request attribute, which is
+	 * populated by {@link #service} from the second URL path segment. Returns an
+	 * error if the id is missing or the record does not exist. Returns the deleted
+	 * bean on success.
 	 * <p>
-	 * Example: {@code DELETE rest/userctl/delete/1}
+	 * Example: {@code DELETE /rest/{resource}/delete/1}
 	 *
-	 * @param request  the HTTP request; reads {@code data} attribute for the record
-	 *                 ID
-	 * @param response the HTTP response; returns the deleted bean as JSON on
-	 *                 success
+	 * @param request  the HTTP request; reads {@code data} attribute for the record id
+	 * @param response the HTTP response; returns the deleted bean as JSON on success
 	 * @throws ServletException if an unexpected servlet error occurs
 	 * @throws IOException      if writing the response fails
 	 */
@@ -334,8 +388,15 @@ public abstract class BaseRestController<B extends BaseBean, M extends BaseModel
 
 	/**
 	 * Handles HTTP HEAD requests identically to GET but omits the response body.
-	 * Useful for clients that need to check record existence or response metadata
+	 * Useful for clients that need to check record existence or response headers
 	 * without transferring the payload.
+	 * <p>
+	 * Example: {@code HEAD /rest/{resource}?id=1}
+	 *
+	 * @param request  the HTTP request
+	 * @param response the HTTP response; headers are set but body is suppressed
+	 * @throws ServletException if an unexpected servlet error occurs
+	 * @throws IOException      if an I/O error occurs
 	 */
 	@Override
 	protected void doHead(HttpServletRequest request, HttpServletResponse response)
@@ -348,6 +409,14 @@ public abstract class BaseRestController<B extends BaseBean, M extends BaseModel
 	/**
 	 * Handles HTTP OPTIONS requests by advertising the HTTP methods supported by
 	 * this controller via the {@code Allow} response header.
+	 * <p>
+	 * Example: {@code OPTIONS /rest/{resource}} →
+	 * {@code Allow: GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE}
+	 *
+	 * @param request  the HTTP request
+	 * @param response the HTTP response; sets the {@code Allow} header and returns {@code 200 OK}
+	 * @throws ServletException if an unexpected servlet error occurs
+	 * @throws IOException      if an I/O error occurs
 	 */
 	@Override
 	protected void doOptions(HttpServletRequest request, HttpServletResponse response)
@@ -358,9 +427,16 @@ public abstract class BaseRestController<B extends BaseBean, M extends BaseModel
 	}
 
 	/**
-	 * Handles HTTP TRACE requests by echoing the incoming request headers back to
-	 * the client as {@code message/http} content, which is the standard behaviour
-	 * for diagnostic loop-back testing.
+	 * Handles HTTP TRACE requests by echoing the incoming request line and all
+	 * request headers back to the client as {@code message/http} content, which is
+	 * the standard behaviour for diagnostic loop-back testing.
+	 * <p>
+	 * Example: {@code TRACE /rest/{resource}}
+	 *
+	 * @param request  the HTTP request whose headers are echoed
+	 * @param response the HTTP response; content-type is {@code message/http}
+	 * @throws ServletException if an unexpected servlet error occurs
+	 * @throws IOException      if writing the response fails
 	 */
 	@Override
 	protected void doTrace(HttpServletRequest request, HttpServletResponse response)
@@ -378,11 +454,18 @@ public abstract class BaseRestController<B extends BaseBean, M extends BaseModel
 	}
 
 	/**
-	 * Data is populated from JSON to Bean
+	 * Populates the base {@link com.sunilos.p4.bean.BaseBean} fields of the given
+	 * bean from the parsed JSON node.
+	 * <p>
+	 * Fields mapped: {@code id}, {@code createdBy}, {@code modifiedBy},
+	 * {@code createdDatetime}, {@code modifiedDatetime}.
+	 * <p>
+	 * Subclasses must call {@code super.jsonToBean(jsonNode, bean)} and then map
+	 * their own entity-specific fields.
 	 *
-	 * @param jsonNode
-	 * @param bean
-	 * @return
+	 * @param jsonNode the parsed JSON object from the request body
+	 * @param bean     the target bean to populate
+	 * @return the populated bean (same instance passed in)
 	 */
 	public B jsonToBean(JsonNode jsonNode, B bean) {
 		bean.setId(DataUtility.getLong(getJsonValue(jsonNode, "id")));
@@ -393,8 +476,22 @@ public abstract class BaseRestController<B extends BaseBean, M extends BaseModel
 		return bean;
 	}
 
+	/**
+	 * Returns a fresh, empty bean instance for the entity managed by this
+	 * controller. Called before each {@link #jsonToBean} invocation.
+	 *
+	 * @return a new, unpopulated bean of type {@code B}
+	 */
 	public abstract B getBean();
 
+	/**
+	 * Safely reads a string value from a {@link JsonNode} by field name.
+	 *
+	 * @param jsonNode the parsed JSON object
+	 * @param key      the field name to look up
+	 * @return the field value as a {@code String}, or {@code null} if the field is
+	 *         absent or explicitly {@code null} in the JSON
+	 */
 	public String getJsonValue(JsonNode jsonNode, String key) {
 		JsonNode val = null;
 		val = jsonNode.get(key);
@@ -405,6 +502,14 @@ public abstract class BaseRestController<B extends BaseBean, M extends BaseModel
 		}
 	}
 
+	/**
+	 * Safely reads a {@code long} value from a {@link JsonNode} by field name.
+	 *
+	 * @param jsonNode the parsed JSON object
+	 * @param key      the field name to look up
+	 * @return the field value as a {@code long}, or {@code 0} if the field is
+	 *         absent or explicitly {@code null} in the JSON
+	 */
 	public long getJsonLongValue(JsonNode jsonNode, String key) {
 		JsonNode val = null;
 		val = jsonNode.get(key);

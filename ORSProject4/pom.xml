@@ -118,6 +118,33 @@
       <scope>test</scope>
     </dependency>
 
+  <!-- Spring Test — MockHttpServletRequest/Response for servlet unit tests -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>6.1.6</version>
+      <scope>test</scope>
+    <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- Required by MockHttpServletRequest (uses MediaType internally) -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>6.1.6</version>
+      <scope>test</scope>
+    <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
   </dependencies>
 
   <!-- ===== Build ===== -->

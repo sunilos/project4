@@ -16,13 +16,15 @@ import java.util.List;
 /**
  * REST controller for Subject CRUD operations.
  * <p>
- * Mapped to {@code /rest/subjectctl/*}. Supports:
+ * Mapped to {@code /rest/subject/*}. Supports:
  * <ul>
- * <li>{@code GET    /rest/subjectctl?id=1} — get by id</li>
- * <li>{@code GET    /rest/subjectctl} — get all</li>
- * <li>{@code POST   /rest/subjectctl/add} — add new subject</li>
- * <li>{@code PUT    /rest/subjectctl/update} — update subject</li>
- * <li>{@code DELETE /rest/subjectctl/delete/1} — delete by id</li>
+ * <li>{@code GET    /rest/subject?id=1}      — get a subject by id</li>
+ * <li>{@code GET    /rest/subject}            — get all subjects</li>
+ * <li>{@code GET    /rest/subject/preload}    — get preload data (course list)</li>
+ * <li>{@code POST   /rest/subject/add}        — add a new subject</li>
+ * <li>{@code POST   /rest/subject/search}     — search subjects by criteria</li>
+ * <li>{@code PUT    /rest/subject/update}     — update an existing subject</li>
+ * <li>{@code DELETE /rest/subject/delete/1}   — delete a subject by id</li>
  * </ul>
  *
  * @author Sunil Sahu
@@ -31,8 +33,6 @@ import java.util.List;
  */
 @WebServlet(urlPatterns = { "/rest/subject/*" })
 public class SubjectRestCtl extends BaseRestController<SubjectBean, SubjectModel> {
-
-    private static final SubjectModel MODEL = new SubjectModel();
 
     /**
      * Maps JSON fields to a {@link SubjectBean}, delegating base fields to
@@ -51,6 +51,16 @@ public class SubjectRestCtl extends BaseRestController<SubjectBean, SubjectModel
         return bean;
     }
 
+    /**
+     * Handles {@code GET /rest/subject/preload}.
+     * Returns the full list of courses, used to populate the course dropdown
+     * on the subject form.
+     *
+     * @param request  the HTTP request
+     * @param response the HTTP response; returns {@code { "preload": { "courseList": [...] } }}
+     * @throws ServletException if an unexpected servlet error occurs
+     * @throws IOException      if writing the response fails
+     */
     @Override
     protected void doGetPreload(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -66,13 +76,13 @@ public class SubjectRestCtl extends BaseRestController<SubjectBean, SubjectModel
     }
 
     /**
-     * Returns the shared stateless {@link SubjectModel} instance.
+     * Returns a new {@link SubjectModel} instance; override in tests to inject a mock.
      *
-     * @return singleton {@link SubjectModel}
+     * @return new {@link SubjectModel}
      */
     @Override
     protected SubjectModel getModel() {
-        return MODEL;
+        return new SubjectModel();
     }
 
     /**
