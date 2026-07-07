@@ -82,8 +82,21 @@ public class UserBean extends BaseBean {
 	private String lastLoginIP;
 
 	/**
+	 * Relative path of the Photo of User
+	 */
+	private String photo;
+
+	/**
 	 * accessor
 	 */
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
 
 	public String getMobileNo() {
 		return mobileNo;
@@ -224,6 +237,7 @@ public class UserBean extends BaseBean {
 			this.setLock(rs.getString(12));
 			this.setRegisteredIP(rs.getString(13));
 			this.setLastLoginIP(rs.getString(14));
+			this.setPhoto(rs.getString(19));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

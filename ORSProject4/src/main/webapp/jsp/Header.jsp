@@ -338,9 +338,8 @@
                                                 <% if (loggedIn) { %>
                                                     <li class="nav-item dropdown">
                                                         <a class="nav-link dropdown-toggle d-flex align-items-center gap-1 px-2" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <span class="rounded-circle bg-white text-primary d-flex align-items-center justify-content-center fw-bold" style="width:28px;height:28px;font-size:0.75rem;flex-shrink:0;">
-              <%=userBean.getFirstName().substring(0,1).toUpperCase()%>
-            </span>
+                                                            <img src="<%=ORSView.UPLOAD_PHOTO_CTL%>?id=<%=userBean.getId()%>" alt="User Photo"
+                                                                 class="rounded-circle border" width="28" height="28" style="object-fit:cover;flex-shrink:0;">
                                                             <span class="d-none d-lg-inline small"><%=userBean.getFirstName()%></span>
                                                         </a>
                                                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow border-0 rounded-3" style="min-width:210px; background:#1a2e4a;">

@@ -129,6 +129,7 @@ CREATE TABLE `st_user` (
   `MODIFIED_BY` varchar(255) default NULL,
   `CREATED_DATETIME` datetime default NULL,
   `MODIFIED_DATETIME` datetime default NULL,
+  `PHOTO` varchar(255) default NULL,
   PRIMARY KEY  (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

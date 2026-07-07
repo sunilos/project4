@@ -34,7 +34,24 @@
       <div class="alert alert-danger py-2"><i class="bi bi-exclamation-triangle-fill me-2"></i><%=_err%></div>
       <% } %>
 
-      <form action="<%=ORSView.MY_PROFILE_CTL%>" method="POST">
+      <% if(bean.getId() > 0) { %>
+      <div class="d-flex align-items-center gap-3 mb-4">
+        <img src="<%=ORSView.UPLOAD_PHOTO_CTL%>?id=<%=bean.getId()%>"
+             onerror="this.style.display='none';"
+             alt="User Photo" class="rounded-circle border" width="80" height="80"
+             style="object-fit:cover;">
+        <form action="<%=ORSView.UPLOAD_PHOTO_CTL%>" method="POST" enctype="multipart/form-data"
+              class="d-flex align-items-center gap-2">
+          <input type="hidden" name="id" value="<%=bean.getId()%>">
+          <input type="file" name="photo" class="form-control form-control-sm" accept="image/*">
+          <button type="submit" class="btn btn-sm btn-outline-primary text-nowrap">
+            <i class="bi bi-upload me-1"></i> Upload Photo
+          </button>
+        </form>
+      </div>
+      <% } %>
+
+      <form name="profileForm" action="<%=ORSView.MY_PROFILE_CTL%>" method="POST">
         <input type="hidden" name="id"              value="<%=bean.getId()%>">
         <input type="hidden" name="createdBy"        value="<%=bean.getCreatedBy()%>">
         <input type="hidden" name="modifiedBy"       value="<%=bean.getModifiedBy()%>">
@@ -80,7 +97,7 @@
           <div class="input-group">
             <input type="text" name="dob" class="form-control" readonly
                    value="<%=DataUtility.getDateString(bean.getDob())%>">
-            <a class="btn btn-outline-secondary" href="javascript:getCalendar(document.forms[0].dob);">
+            <a class="btn btn-outline-secondary" href="javascript:getCalendar(document.forms['profileForm'].dob);">
               <img src="../img/cal.jpg" width="16" height="15" alt="Calendar">
             </a>
           </div>

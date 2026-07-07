@@ -108,6 +108,41 @@ public class UserModel extends BaseModel<UserBean> {
 	}
 
 	/**
+	 * Update Photo of a user
+	 *
+	 * @param id    : User id
+	 * @param photo : relative path of the photo
+	 * @throws ApplicationException
+	 */
+
+	public void updatePhoto(long id, String photo) throws ApplicationException {
+		log.debug("Model updatePhoto Started");
+		Connection conn = null;
+
+		try {
+			conn = JDBCDataSource.getConnection();
+			conn.setAutoCommit(false); // Begin transaction
+			PreparedStatement pstmt = conn.prepareStatement("UPDATE ST_USER SET PHOTO=? WHERE ID=?");
+			pstmt.setString(1, photo);
+			pstmt.setLong(2, id);
+			pstmt.executeUpdate();
+			conn.commit(); // End transaction
+			pstmt.close();
+		} catch (Exception e) {
+			log.error("Database Exception..", e);
+			try {
+				conn.rollback();
+			} catch (Exception ex) {
+				throw new ApplicationException("Exception : updatePhoto rollback exception " + ex.getMessage());
+			}
+			throw new ApplicationException("Exception in updating User Photo");
+		} finally {
+			JDBCDataSource.closeConnection(conn);
+		}
+		log.debug("Model updatePhoto End");
+	}
+
+	/**
 	 * Update a user
 	 * 
 	 * @param bean
