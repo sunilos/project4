@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -154,6 +155,7 @@ public class LoginRestCtl extends HttpServlet {
             if (bean == null) {
                 res = new ORSResponse(false, "Invalid login or password");
             } else {
+                request.getSession(true).setAttribute("user", bean);
                 String token = JwtUtil.generateToken(bean.getId(), bean.getLogin(), bean.getRoleId());
                 res = new ORSResponse(true, "Login successful");
                 res.addData(bean);
@@ -171,10 +173,9 @@ public class LoginRestCtl extends HttpServlet {
     /**
      * Logs out the current user.
      * <p>
-     * JWT authentication is stateless — no server-side session exists to
-     * invalidate. The client is responsible for discarding the token. This
-     * endpoint exists as a convenience so front-end code can call a consistent
-     * logout URL.
+     * Invalidates the server-side session created at login, if one exists. The
+     * client is also responsible for discarding its JWT, since the token itself
+     * remains valid until it expires.
      * <p>
      * Request body: (none required)
      *
@@ -183,6 +184,10 @@ public class LoginRestCtl extends HttpServlet {
      * @throws IOException if writing the response fails
      */
     private void doLogout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
         sendResponse(new ORSResponse(true, "Logout successful. Please discard your token."), response);
     }
 
