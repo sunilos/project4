@@ -52,6 +52,7 @@ public class UserCtl extends BaseCtl<UserBean, UserModel> {
 
 		String login = request.getParameter("login");
 		String dob = request.getParameter("dob");
+		long id = DataUtility.getLong(request.getParameter("id"));
 
 		if (DataValidator.isNull(request.getParameter("firstName"))) {
 			request.setAttribute("firstName", PropertyReader.getValue("error.require", "First Name"));
@@ -71,14 +72,16 @@ public class UserCtl extends BaseCtl<UserBean, UserModel> {
 			pass = false;
 		}
 
-		if (DataValidator.isNull(request.getParameter("password"))) {
-			request.setAttribute("password", PropertyReader.getValue("error.require", "Password"));
-			pass = false;
-		}
+		if (id <= 0) {
+			if (DataValidator.isNull(request.getParameter("password"))) {
+				request.setAttribute("password", PropertyReader.getValue("error.require", "Password"));
+				pass = false;
+			}
 
-		if (DataValidator.isNull(request.getParameter("confirmPassword"))) {
-			request.setAttribute("confirmPassword", PropertyReader.getValue("error.require", "Confirm Password"));
-			pass = false;
+			if (DataValidator.isNull(request.getParameter("confirmPassword"))) {
+				request.setAttribute("confirmPassword", PropertyReader.getValue("error.require", "Confirm Password"));
+				pass = false;
+			}
 		}
 
 		if (DataValidator.isNull(request.getParameter("gender"))) {
@@ -92,7 +95,7 @@ public class UserCtl extends BaseCtl<UserBean, UserModel> {
 			request.setAttribute("dob", PropertyReader.getValue("error.date", "Date Of Birth"));
 			pass = false;
 		}
-		if (!request.getParameter("password").equals(request.getParameter("confirmPassword"))
+		if (id <= 0 && !request.getParameter("password").equals(request.getParameter("confirmPassword"))
 				&& !"".equals(request.getParameter("confirmPassword"))) {
 			ServletUtility.setErrorMessage("Confirm  Password  should not be matched.", request);
 			pass = false;

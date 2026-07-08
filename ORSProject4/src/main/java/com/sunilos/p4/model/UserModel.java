@@ -143,6 +143,43 @@ public class UserModel extends BaseModel<UserBean> {
 	}
 
 	/**
+	 * Updates the password of a user directly. update() no longer touches the
+	 * PASSWORD column, so changePassword()/resetPassword() persist it through
+	 * this method instead.
+	 *
+	 * @param id       : User id
+	 * @param password : new password
+	 * @throws ApplicationException
+	 */
+
+	public void updatePassword(long id, String password) throws ApplicationException {
+		log.debug("Model updatePassword Started");
+		Connection conn = null;
+
+		try {
+			conn = JDBCDataSource.getConnection();
+			conn.setAutoCommit(false); // Begin transaction
+			PreparedStatement pstmt = conn.prepareStatement("UPDATE ST_USER SET PASSWORD=? WHERE ID=?");
+			pstmt.setString(1, password);
+			pstmt.setLong(2, id);
+			pstmt.executeUpdate();
+			conn.commit(); // End transaction
+			pstmt.close();
+		} catch (Exception e) {
+			log.error("Database Exception..", e);
+			try {
+				conn.rollback();
+			} catch (Exception ex) {
+				throw new ApplicationException("Exception : updatePassword rollback exception " + ex.getMessage());
+			}
+			throw new ApplicationException("Exception in updating User Password");
+		} finally {
+			JDBCDataSource.closeConnection(conn);
+		}
+		log.debug("Model updatePassword End");
+	}
+
+	/**
 	 * Update a user
 	 * 
 	 * @param bean
@@ -164,25 +201,24 @@ public class UserModel extends BaseModel<UserBean> {
 			conn = JDBCDataSource.getConnection();
 			conn.setAutoCommit(false); // Begin transaction
 			PreparedStatement pstmt = conn.prepareStatement(
-					"UPDATE ST_USER SET FIRST_NAME=?,LAST_NAME=?,LOGIN=?,PASSWORD=?,DOB=?,MOBILE_NO=?,ROLE_ID=?,UNSUCCESSFUL_LOGIN=?,GENDER=?,LAST_LOGIN=?,USER_LOCK=?,REGISTERED_IP=?,LAST_LOGIN_IP=?,CREATED_BY=?,MODIFIED_BY=?,CREATED_DATETIME=?,MODIFIED_DATETIME=? WHERE ID=?");
+					"UPDATE ST_USER SET FIRST_NAME=?,LAST_NAME=?,LOGIN=?,DOB=?,MOBILE_NO=?,ROLE_ID=?,UNSUCCESSFUL_LOGIN=?,GENDER=?,LAST_LOGIN=?,USER_LOCK=?,REGISTERED_IP=?,LAST_LOGIN_IP=?,CREATED_BY=?,MODIFIED_BY=?,CREATED_DATETIME=?,MODIFIED_DATETIME=? WHERE ID=?");
 			pstmt.setString(1, bean.getFirstName());
 			pstmt.setString(2, bean.getLastName());
 			pstmt.setString(3, bean.getLogin());
-			pstmt.setString(4, bean.getPassword());
-			pstmt.setDate(5, new java.sql.Date(bean.getDob().getTime()));
-			pstmt.setString(6, bean.getMobileNo());
-			pstmt.setLong(7, bean.getRoleId());
-			pstmt.setInt(8, bean.getUnSuccessfulLogin());
-			pstmt.setString(9, bean.getGender());
-			pstmt.setTimestamp(10, bean.getLastLogin());
-			pstmt.setString(11, bean.getLock());
-			pstmt.setString(12, bean.getRegisteredIP());
-			pstmt.setString(13, bean.getLastLoginIP());
-			pstmt.setString(14, bean.getCreatedBy());
-			pstmt.setString(15, bean.getModifiedBy());
-			pstmt.setTimestamp(16, bean.getCreatedDatetime());
-			pstmt.setTimestamp(17, bean.getModifiedDatetime());
-			pstmt.setLong(18, bean.getId());
+			pstmt.setDate(4, new java.sql.Date(bean.getDob().getTime()));
+			pstmt.setString(5, bean.getMobileNo());
+			pstmt.setLong(6, bean.getRoleId());
+			pstmt.setInt(7, bean.getUnSuccessfulLogin());
+			pstmt.setString(8, bean.getGender());
+			pstmt.setTimestamp(9, bean.getLastLogin());
+			pstmt.setString(10, bean.getLock());
+			pstmt.setString(11, bean.getRegisteredIP());
+			pstmt.setString(12, bean.getLastLoginIP());
+			pstmt.setString(13, bean.getCreatedBy());
+			pstmt.setString(14, bean.getModifiedBy());
+			pstmt.setTimestamp(15, bean.getCreatedDatetime());
+			pstmt.setTimestamp(16, bean.getModifiedDatetime());
+			pstmt.setLong(17, bean.getId());
 			pstmt.executeUpdate();
 			conn.commit(); // End transaction
 			pstmt.close();
@@ -318,7 +354,7 @@ public class UserModel extends BaseModel<UserBean> {
 		beanExist = findByPK(id);
 		if (beanExist != null && beanExist.getPassword().equals(oldPassword)) {
 			beanExist.setPassword(newPassword);
-			update(beanExist);
+			updatePassword(beanExist.getId(), newPassword);
 			flag = true;
 		} else {
 			flag = false;
@@ -410,11 +446,7 @@ public class UserModel extends BaseModel<UserBean> {
 		UserBean userData = findByPK(bean.getId());
 		userData.setPassword(newPassword);
 
-		try {
-			update(userData);
-		} catch (DuplicateRecordException e) {
-			return false;
-		}
+		updatePassword(userData.getId(), newPassword);
 
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("login", bean.getLogin());

@@ -85,6 +85,7 @@
           <div class="text-danger small mt-1"><%=ServletUtility.getErrorMessage("login", request)%></div>
         </div>
 
+        <% if(bean.getId() <= 0) { %>
         <div class="row g-3 mb-3">
           <div class="col-md-6">
             <label class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
@@ -99,6 +100,7 @@
             <div class="text-danger small mt-1"><%=ServletUtility.getErrorMessage("confirmPassword", request)%></div>
           </div>
         </div>
+        <% } %>
 
         <div class="row g-3 mb-3">
           <div class="col-md-6">
