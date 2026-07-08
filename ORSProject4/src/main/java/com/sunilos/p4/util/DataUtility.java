@@ -3,6 +3,7 @@ package com.sunilos.p4.util;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -93,7 +94,7 @@ public class DataUtility {
 	public static String getDateString(Date date) {
 		if (date == null) return "";
 		try {
-			LocalDate ld = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			LocalDate ld = Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
 			return DATE_FMT.format(ld);
 		} catch (Exception e) {
 			return "";
